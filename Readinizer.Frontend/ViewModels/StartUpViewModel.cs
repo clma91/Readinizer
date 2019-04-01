@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Commands;
@@ -13,7 +14,7 @@ namespace Readinizer.Frontend.ViewModels
 {
     class StartUpViewModel : INotifyPropertyChanged
     {
-        private readonly ADDomainService domainService;
+        private readonly IADDomainService domainService;
         private readonly ADOrganisationalUnitService organisationalUnitService;
         public ADDomain Domain;
         private ICommand discoverCommand;
@@ -43,10 +44,9 @@ namespace Readinizer.Frontend.ViewModels
         }
 
 
-        public StartUpViewModel()
+        public StartUpViewModel(IADDomainService adDomainService)
         {
-            this.domainService = new ADDomainService();
-            this.organisationalUnitService = new ADOrganisationalUnitService();
+            this.domainService = adDomainService;
             CanSave = true;
             CanLoad = true;
         }
