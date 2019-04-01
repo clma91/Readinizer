@@ -1,0 +1,27 @@
+﻿<Window x:Class="Readinizer.Frontend.Views.StartUpView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Readinizer.Frontend.Views"
+        mc:Ignorable="d"
+        Title="StartUpView" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="3*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Domain:</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <Button x:Name="Save" Grid.Row="1" Grid.Column="1" Width="100" Height="50" Command="{Binding SaveCommand}">Save</Button>
+        <Button Grid.Row="1" Grid.Column="2" Width="100" Height="50" Command="{Binding LoadCommand}">Load</Button>
+        <ListBox Grid.Row="2" Grid.ColumnSpan="3"></ListBox>
+    </Grid>
+</Window>
