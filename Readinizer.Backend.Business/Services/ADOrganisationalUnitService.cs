@@ -24,7 +24,7 @@ namespace Readinizer.Backend.Business.Services
 
             foreach (SearchResult res in searcher.FindAll())
             {
-                organisationalUnits.Add(new ADOrganisationalUnit(res.Properties["ou"][0].ToString()));
+                organisationalUnits.Add(new ADOrganisationalUnit(res.Properties["ou"][0].ToString(), res.Properties.ToString()));
             }
             return organisationalUnits;
         }

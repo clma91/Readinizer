@@ -10,18 +10,19 @@ namespace Readinizer.Backend.Domain.Repositories
 {
     public class ADOrganisationalUnitRepository
     {
-        public IEnumerable<ADOrganisationalUnit> loadADOrganisationalUnits()
+        private readonly ReadinizerDbContext context;
+
+        public ADOrganisationalUnitRepository() { }
+
+        public ADOrganisationalUnitRepository(ReadinizerDbContext context)
         {
-            using (var db = new ReadinizerDbContext())
-            {
-                
-            }
-            return null;
+            this.context = context;
         }
 
-        public bool saveADOrganisationalUnits(IEnumerable<ADOrganisationalUnit> organisationalUnits)
+        public void Add(ADOrganisationalUnit organisationalUnit)
         {
-            return false;
+            context.ADOrganisationalUnits.Add(organisationalUnit);
         }
+
     }
 }
