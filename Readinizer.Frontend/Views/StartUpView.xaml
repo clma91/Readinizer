@@ -4,24 +4,80 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Readinizer.Frontend.Views"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"        
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="StartUpView" Height="450" Width="800">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-            <ColumnDefinition Width="1*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="3*"/>
-        </Grid.RowDefinitions>
+        Title="Readinizer" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_Close"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Settings"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_User Manual"/>
+                <MenuItem Header="_Central Logging"/>
+                <MenuItem Header="_Sysmon"/>
+                <MenuItem Header="_Optimised GPO"/>
+                <MenuItem Header="_About"/>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="2*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">Domain:</Label>
-        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-        <Button x:Name="Save" Grid.Row="1" Grid.Column="1" Width="100" Height="50" Command="{Binding DiscoverCommand}">Discover</Button>
-        <Button Grid.Row="1" Grid.Column="2" Width="100" Height="50" Command="{Binding AnalyseCommand}">Analyse</Button>
-        <ListBox Grid.Row="2" Grid.ColumnSpan="3"></ListBox>
-    </Grid>
+            <StackPanel Orientation="Horizontal">
+
+                <materialDesign:PackIcon Kind="Graphql" VerticalAlignment="Center" Margin="20 0 0 0"/>
+                <Label  HorizontalAlignment="Left" VerticalAlignment="Center">Domainname:</Label>
+            </StackPanel>
+            
+            <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+
+            <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+                <StackPanel VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left"/>
+                    </Grid>
+                    
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="25 10 0 10" Grid.Column="0">Include Subdomain/Trees</Label>
+                        <ToggleButton Grid.Column="1" HorizontalAlignment="Left"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Button x:Name="Discover" Grid.Row="2" Grid.Column="2" Width="100" Height="50" Command="{Binding DiscoverCommand}">Discover</Button>
+            <Button x:Name="Analyse"  Grid.Row="2" Grid.Column="3" Width="100" Height="50" Command="{Binding AnalyseCommand}">
+                <TextBlock TextAlignment="Center">Analyse<LineBreak/>Readiness</TextBlock>
+            </Button>
+        </Grid>
+    </DockPanel>
+    
 </Window>
