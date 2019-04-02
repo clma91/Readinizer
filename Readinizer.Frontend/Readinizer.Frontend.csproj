@@ -71,7 +71,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="IADDomainService.cs" />
+    <Compile Include="Interfaces\IStartUpViewModel.cs" />
     <Compile Include="ViewModels\StartUpViewModel.cs" />
     <Compile Include="Views\StartUpView.xaml.cs">
       <DependentUpon>StartUpView.xaml</DependentUpon>

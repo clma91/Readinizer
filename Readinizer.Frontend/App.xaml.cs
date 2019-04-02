@@ -2,6 +2,9 @@
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
+using Readinizer.Frontend.Interfaces;
+using Readinizer.Frontend.ViewModels;
+using Readinizer.Frontend.Views;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -21,11 +24,14 @@ namespace Readinizer.Frontend
         protected override void OnStartup(StartupEventArgs e)
         {
             IUnityContainer container = new UnityContainer();
+
+            container.RegisterType<IStartUpViewModel, StartUpViewModel>();
+
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
 
-            MainWindow mainWindow = container.Resolve<MainWindow>();
-            mainWindow.Show();
+            StartUpView startUpView = container.Resolve<StartUpView>();
+            startUpView.Show();
         }
     }
 }

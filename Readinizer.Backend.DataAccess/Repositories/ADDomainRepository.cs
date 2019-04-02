@@ -14,11 +14,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
     {
         private readonly ReadinizerDbContext context;
 
-        public ADDomainRepository() { }
+        //public ADDomainRepository() { }
 
-        public ADDomainRepository(ReadinizerDbContext context)
+        public ADDomainRepository()
         {
-            this.context = context;
+            this.context = new ReadinizerDbContext();
         }
 
         public void Add(ADDomain domain)
