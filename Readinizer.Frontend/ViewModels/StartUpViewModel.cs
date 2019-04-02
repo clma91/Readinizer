@@ -51,9 +51,9 @@ namespace Readinizer.Frontend.ViewModels
             CanAnalyse = true;
         }
 
-        private void Discover()
+        private async void Discover()
         {
-            this.adDomainService.SearchAllDomains();
+            await this.adDomainService.SearchAllDomains();
         }
 
         private void Analyse()

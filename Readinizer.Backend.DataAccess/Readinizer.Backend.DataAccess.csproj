@@ -57,8 +57,9 @@
     <Compile Include="Repositories\ADOrganisationalUnitRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Context\App.config" />
+    <None Include="App.config" />
     <None Include="Context\packages.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Readinizer.Backend.Domain\Readinizer.Backend.Domain.csproj">
