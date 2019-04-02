@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Readinizer.Frontend.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,11 +18,12 @@ namespace Readinizer.Frontend.Views
     /// <summary>
     /// Interaction logic for StartUpView.xaml
     /// </summary>
-    public partial class StartUpView : Window
+    public partial class StartUpView : Window, IStartUpViewModel
     {
-        public StartUpView()
+        public StartUpView(IStartUpViewModel startUpViewModel)
         {
             InitializeComponent();
+            DataContext = startUpViewModel;
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Readinizer.Backend.Domain.Repositories
+namespace Readinizer.Backend.DataAccess.Repositories
 {
     public class ADOrganisationalUnitRepository
     {
