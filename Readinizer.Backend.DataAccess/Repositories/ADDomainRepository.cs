@@ -5,18 +5,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
+using Readinizer.Backend.DataAccess.Interfaces;
 
-namespace Readinizer.Backend.Domain.Repositories
+namespace Readinizer.Backend.DataAccess.Repositories
 {
-    public class ADDomainRepository
+    public class ADDomainRepository : IADDomainRepository
     {
         private readonly ReadinizerDbContext context;
 
-        public ADDomainRepository() { }
+        //public ADDomainRepository() { }
 
-        public ADDomainRepository(ReadinizerDbContext context)
+        public ADDomainRepository()
         {
-            this.context = context;
+            this.context = new ReadinizerDbContext();
         }
 
         public void Add(ADDomain domain)
@@ -27,6 +29,13 @@ namespace Readinizer.Backend.Domain.Repositories
             }
 
             context.ADDomains.Add(domain);
+        }
+
+        public Task<ADDomain> GetByDomainName(string domainName)
+        {
+            return context.ADDomains
+                .Where(d => d.Name.Equals(domainName))
+                .FirstOrDefaultAsync();
         }
 
         public Task SaveChangesAsync()

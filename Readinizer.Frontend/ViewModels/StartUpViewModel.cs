@@ -5,34 +5,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Commands;
+using Readinizer.Frontend.Interfaces;
 
 namespace Readinizer.Frontend.ViewModels
 {
-    class StartUpViewModel : INotifyPropertyChanged
+    class StartUpViewModel : IStartUpViewModel, INotifyPropertyChanged
     {
-        private readonly ADDomainService domainService;
+        private readonly IADDomainService adDomainService;
         private readonly ADOrganisationalUnitService organisationalUnitService;
         public ADDomain Domain;
         private ICommand discoverCommand;
-        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Save(), () => this.CanSave));
+        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
-        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Load(), () => this.CanLoad));
+        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse(), () => this.CanAnalyse));
 
 
-        private bool canSave;
-        public bool CanSave
+        private bool canDiscover;
+        public bool CanDiscover
         {
-            get { return canSave; }
-            private set { canSave = value; }
+            get { return canDiscover; }
+            private set { canDiscover = value; }
         }
-        private bool canLoad;
-        public bool CanLoad
+        private bool canAnalyse;
+        public bool CanAnalyse
         {
-            get { return canLoad; }
-            private set { canLoad = value; }
+            get { return canAnalyse; }
+            private set { canAnalyse = value; }
         }
 
         private string domainName;
@@ -42,21 +44,19 @@ namespace Readinizer.Frontend.ViewModels
             set { domainName = value; OnPropertyChanged("DomainName"); }
         }
 
-
-        public StartUpViewModel()
+        public StartUpViewModel(IADDomainService adDomainService)
         {
-            this.domainService = new ADDomainService();
-            this.organisationalUnitService = new ADOrganisationalUnitService();
-            CanSave = true;
-            CanLoad = true;
+            this.adDomainService = adDomainService;
+            CanDiscover = true;
+            CanAnalyse = true;
         }
 
-        private void Save()
+        private async void Discover()
         {
-            
+            await this.adDomainService.SearchAllDomains();
         }
 
-        private void Load()
+        private void Analyse()
         {
             
         }

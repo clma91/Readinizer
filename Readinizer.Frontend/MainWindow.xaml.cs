@@ -24,8 +24,7 @@ namespace Readinizer.Frontend
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new StartUpViewModel();
+                
         }
     }
 }

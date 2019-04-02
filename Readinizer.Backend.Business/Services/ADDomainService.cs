@@ -1,17 +1,44 @@
-﻿using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.Repositories;
+﻿using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.Domain.Models;
+using Readinizer.Backend.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class ADDomainService
+    public class ADDomainService : IADDomainService
     {
-        ADDomainRepository adDomainRepository = new ADDomainRepository();
+
+        private readonly IADDomainRepository adDomainRepository;
+
+        public ADDomainService(IADDomainRepository adDomainRepository)
+        {
+            this.adDomainRepository = adDomainRepository;
+        }
+
+        public ADDomain SearchDomain(string fullyQualifiedDomainName)
+        {
+            ADDomain searchedDomain = new ADDomain("", false, false);
+
+            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
+            {
+                if (domain.Name.Equals(fullyQualifiedDomainName))
+                {
+                    searchedDomain = new ADDomain(domain.Name, false, false);
+                }
+                else
+                {
+                    throw new Exception("This domain does not exist in this forest");
+                }
+            }
+
+            return searchedDomain;
+        }
 
         public Task SearchAllDomains()
         {
@@ -51,34 +78,21 @@ namespace Readinizer.Backend.Business.Services
         {
             bool isInForest = false;
 
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
+            try
             {
-                if (domain.Name.Equals(fullyQualifiedDomainName))
+                foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
                 {
-                    isInForest = true;
+                    if (domain.Name.Equals(fullyQualifiedDomainName))
+                    {
+                        isInForest = true;
+                    }
                 }
+            } catch (ActiveDirectoryOperationException e)
+            {
+                // TODO: add logic to catch exception
             }
-
+            
             return isInForest;
         }
-
-        public ADDomain SearchDomain(string fullyQualifiedDomainName)
-        {
-            ADDomain searchedDomain = new ADDomain("", false, false);
-
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
-            {
-                if (domain.Name.Equals(fullyQualifiedDomainName))
-                {
-                    searchedDomain = new ADDomain(domain.Name, false, false);
-                } else
-                {
-                    throw new Exception("This domain does not exist in this forest");
-                }
-            }
-
-            return searchedDomain;
-        }
-
     }
 }

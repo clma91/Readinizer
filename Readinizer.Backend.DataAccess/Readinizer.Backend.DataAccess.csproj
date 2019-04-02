@@ -50,14 +50,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IADDomainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Context\ReadinizerDbContext.cs" />
     <Compile Include="Repositories\ADDomainRepository.cs" />
     <Compile Include="Repositories\ADOrganisationalUnitRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Context\App.config" />
+    <None Include="App.config" />
     <None Include="Context\packages.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Readinizer.Backend.Domain\Readinizer.Backend.Domain.csproj">
