@@ -5,10 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.DataAccess.Repositories
 {
-    public class ADOrganisationalUnitRepository
+    public class ADOrganisationalUnitRepository : IADOrganisationalUnitRepository
     {
         private readonly ReadinizerDbContext context;
 
@@ -24,5 +25,9 @@ namespace Readinizer.Backend.DataAccess.Repositories
             context.ADOrganisationalUnits.Add(organisationalUnit);
         }
 
+        public Task SaveChangesAsync()
+        {
+            return context.SaveChangesAsync();
+        }
     }
 }

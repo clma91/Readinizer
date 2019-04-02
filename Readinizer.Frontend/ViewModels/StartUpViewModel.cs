@@ -16,7 +16,7 @@ namespace Readinizer.Frontend.ViewModels
     class StartUpViewModel : IStartUpViewModel, INotifyPropertyChanged
     {
         private readonly IADDomainService adDomainService;
-        private readonly ADOrganisationalUnitService organisationalUnitService;
+        private readonly IADOrganisationalUnitService adOrganisationalUnitService;
         public ADDomain Domain;
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -44,21 +44,24 @@ namespace Readinizer.Frontend.ViewModels
             set { domainName = value; OnPropertyChanged("DomainName"); }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService)
+        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService)
         {
             this.adDomainService = adDomainService;
+            this.adOrganisationalUnitService = adOrganisationalUnitService;
             CanDiscover = true;
             CanAnalyse = true;
         }
 
+
         private async void Discover()
         {
             await this.adDomainService.SearchAllDomains();
+            
         }
 
-        private void Analyse()
+        private async void Analyse()
         {
-            
+            await this.adOrganisationalUnitService.GetAllOrganisationalUnits(domainName);
         }
 
         #region INotifyPropertyChanged Members

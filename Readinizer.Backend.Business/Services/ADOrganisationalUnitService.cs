@@ -5,28 +5,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.DirectoryServices;
+using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class ADOrganisationalUnitService
+    public class ADOrganisationalUnitService : IADOrganisationalUnitService
     {
-        List<ADOrganisationalUnit> organisationalUnits { get; set; }
+        private readonly IADOrganisationalUnitRepository adOrganisationalUnitsRepository;
 
-        public ADOrganisationalUnitService()
+        public ADOrganisationalUnitService(IADOrganisationalUnitRepository adOrganisationalUnitRepository)
         {
-            organisationalUnits = new List<ADOrganisationalUnit>();
+            this.adOrganisationalUnitsRepository = adOrganisationalUnitRepository;
         }
 
-        public List<ADOrganisationalUnit> GetAllOrganisationalUnits()
+        public  Task GetAllOrganisationalUnits(string domainPath)
         {
-            DirectoryEntry startingPoint = new DirectoryEntry("LDAP://DC=readinizer,DC=ch");
+            DirectoryEntry startingPoint = new DirectoryEntry(domainPath);
             DirectorySearcher searcher = new DirectorySearcher(startingPoint, "(objectCategory=organizationalUnit)");
 
             foreach (SearchResult res in searcher.FindAll())
             {
-                organisationalUnits.Add(new ADOrganisationalUnit(res.Properties["ou"][0].ToString(), res.Properties.ToString()));
+                adOrganisationalUnitsRepository.Add(new ADOrganisationalUnit(res.Properties["ou"][0].ToString(), res.Path.ToString()));
             }
-            return organisationalUnits;
+            return adOrganisationalUnitsRepository.SaveChangesAsync();
         }
     }
 }

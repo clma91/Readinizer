@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IADOrganisationalUnitRepository.cs" />
     <Compile Include="Interfaces\IADDomainRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Context\ReadinizerDbContext.cs" />

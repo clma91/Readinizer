@@ -30,6 +30,9 @@ namespace Readinizer.Frontend
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
 
+            container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
+            container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
+
             StartUpView startUpView = container.Resolve<StartUpView>();
             startUpView.Show();
         }
