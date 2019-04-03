@@ -1,14 +1,11 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.DirectoryServices.ActiveDirectory;
 using AD = System.DirectoryServices.ActiveDirectory;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -21,41 +18,60 @@ namespace Readinizer.Backend.Business.Services
         {
             this.adDomainRepository = adDomainRepository;
         }
-
-        public ADDomain SearchDomain(string fullyQualifiedDomainName)
+        
+        public Task SearchAllDomainsFrom(string domainName)
         {
-            ADDomain searchedDomain = new ADDomain();
+            var searchedDomains = new List<AD.Domain>();
+            var currentADDomain = new ADDomain();
 
-            foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
+            if (isForestRoot(domainName))
             {
-                if (domain.Name.Equals(fullyQualifiedDomainName))
+                var forestDomains = Forest.GetCurrentForest().Domains;
+                searchedDomains.Add(Forest.GetCurrentForest().RootDomain);
+                foreach (AD.Domain forestDomain in forestDomains)
                 {
-                    searchedDomain.Name = domain.Name;
+                    if (!forestDomain.Name.EndsWith(domainName))
+                    {
+                        searchedDomains.Add(forestDomain);
+                    }
                 }
-                else
+            }
+            else
+            {
+                try
                 {
-                    throw new Exception("This domain does not exist in this forest");
+                    searchedDomains.Add(AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainName)));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
                 }
             }
 
-            return searchedDomain;
+            return SearchAllDomains(searchedDomains);
         }
 
-        public Task SearchAllDomains()
+
+        public Task SearchAllDomains(List<AD.Domain> searchedDomains)
         {
-            var currentDomain = new ADDomain
+            foreach (var searchedDomain in searchedDomains)
             {
-                Name = AD.Domain.GetCurrentDomain().Name,
-                SubADDomain = new List<ADDomain>()
-            };
-            var childDomains = GetChildDomains(AD.Domain.GetCurrentDomain());
-            
-            foreach (var childDomain in childDomains)
-            {
-                currentDomain.SubADDomain.Add(childDomain);
-                adDomainRepository.Add(childDomain);
+                var currentADDomain = new ADDomain
+                {
+                    Name = searchedDomain.Name,
+                    SubADDomain = new List<ADDomain>(),
+                    IsForestRoot = isForestRoot(searchedDomain.Name),
+                };
+                var childDomains = GetChildDomains(searchedDomain);
+
+                foreach (var childDomain in childDomains)
+                {
+                    currentADDomain.SubADDomain.Add(childDomain);
+                    adDomainRepository.Add(childDomain);
+                }
+                adDomainRepository.Add(currentADDomain);
             }
-            adDomainRepository.Add(currentDomain);
 
             return adDomainRepository.SaveChangesAsync();
         }
@@ -63,40 +79,34 @@ namespace Readinizer.Backend.Business.Services
         private List<ADDomain> GetChildDomains(AD.Domain currentDomain)
         {
             var childDomains = new List<ADDomain>();
-            
-            if (currentDomain.Children == null)
+
+            foreach (AD.Domain childDomain in currentDomain.Children)
             {
-                return null;
-            } else
-            {
-                foreach(AD.Domain childDomain in currentDomain.Children)
+                childDomains.Add(new ADDomain()
                 {
-                    childDomains.Add(new ADDomain()
-                    {
-                        Name = childDomain.Name
-                    });
-                }
+                    Name = childDomain.Name
+                });
+                GetChildDomains(childDomain);
             }
 
             return childDomains;
+        }
+
+        private bool isForestRoot(string domainName)
+        {
+            return Forest.GetCurrentForest().Name.Equals(domainName);
         }
 
         public bool isDomainInForest(string fullyQualifiedDomainName)
         {
             bool isInForest = false;
 
-            try
+            foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
             {
-                foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
+                if (domain.Name.Equals(fullyQualifiedDomainName))
                 {
-                    if (domain.Name.Equals(fullyQualifiedDomainName))
-                    {
-                        isInForest = true;
-                    }
+                    isInForest = true;
                 }
-            } catch (ActiveDirectoryOperationException e)
-            {
-                // TODO: add logic to catch exception
             }
             
             return isInForest;

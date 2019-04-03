@@ -57,7 +57,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Discover()
         {
-            await this.adDomainService.SearchAllDomains();
+            await this.adDomainService.SearchAllDomainsFrom("readinizer.ch");
             
         }
 
