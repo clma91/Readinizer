@@ -37,7 +37,7 @@ namespace Readinizer.Backend.Business.Services
                     ADOrganisationalUnit foundOU = new ADOrganisationalUnit();
                     foundOU.Name = searchResult.Properties["ou"][0].ToString();
                     foundOU.LdapPath = searchResult.Path.ToString();
-                    foundOU.DomainRefId = domain.Id;
+                    foundOU.DomainRefId = domain.ADDomainId;
 
                     adOrganisationalUnitsRepository.Add(foundOU);
                 }

@@ -4,6 +4,7 @@ using Readinizer.Backend.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
+using AD = System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ namespace Readinizer.Backend.Business.Services
         {
             ADDomain searchedDomain = new ADDomain();
 
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
+            foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
             {
                 if (domain.Name.Equals(fullyQualifiedDomainName))
                 {
@@ -42,35 +43,38 @@ namespace Readinizer.Backend.Business.Services
 
         public Task SearchAllDomains()
         {
-            ADDomain currentDomain = new ADDomain();
-            currentDomain.Name = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain().Name;
-            List<System.DirectoryServices.ActiveDirectory.Domain> childDomains = new List<System.DirectoryServices.ActiveDirectory.Domain>();
-
-            childDomains = GetChildDomains(System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain());
-
-            adDomainRepository.Add(currentDomain);
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in childDomains)
+            var currentDomain = new ADDomain
             {
-                ADDomain childDomain = new ADDomain();
-                childDomain.Name = domain.Name;
+                Name = AD.Domain.GetCurrentDomain().Name,
+                SubADDomain = new List<ADDomain>()
+            };
+            var childDomains = GetChildDomains(AD.Domain.GetCurrentDomain());
+            
+            foreach (var childDomain in childDomains)
+            {
+                currentDomain.SubADDomain.Add(childDomain);
                 adDomainRepository.Add(childDomain);
             }
+            adDomainRepository.Add(currentDomain);
 
             return adDomainRepository.SaveChangesAsync();
         }
 
-        private List<System.DirectoryServices.ActiveDirectory.Domain> GetChildDomains(System.DirectoryServices.ActiveDirectory.Domain currentDomain)
+        private List<ADDomain> GetChildDomains(AD.Domain currentDomain)
         {
-            List<System.DirectoryServices.ActiveDirectory.Domain> childDomains = new List<System.DirectoryServices.ActiveDirectory.Domain>();
+            var childDomains = new List<ADDomain>();
             
             if (currentDomain.Children == null)
             {
                 return null;
             } else
             {
-                foreach(System.DirectoryServices.ActiveDirectory.Domain childDomain in currentDomain.Children)
+                foreach(AD.Domain childDomain in currentDomain.Children)
                 {
-                    childDomains.Add(childDomain);
+                    childDomains.Add(new ADDomain()
+                    {
+                        Name = childDomain.Name
+                    });
                 }
             }
 
@@ -83,7 +87,7 @@ namespace Readinizer.Backend.Business.Services
 
             try
             {
-                foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
+                foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
                 {
                     if (domain.Name.Equals(fullyQualifiedDomainName))
                     {

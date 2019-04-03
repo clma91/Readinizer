@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using Readinizer.Backend.DataAccess;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -32,6 +34,8 @@ namespace Readinizer.Frontend
 
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
+
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             StartUpView startUpView = container.Resolve<StartUpView>();
             startUpView.Show();
