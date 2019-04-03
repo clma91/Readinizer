@@ -36,7 +36,7 @@ namespace Readinizer.Backend.Business.Services
                 {
                     ADOuMember foundMember = new ADOuMember();
                     foundMember.ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length);
-                    foundMember.OURefId = OU.Id;
+                    foundMember.OURefId = OU.ADOrganisationalUnitId;
 
                     adOuMemberRepository.Add(foundMember);
                 }

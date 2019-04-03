@@ -21,5 +21,7 @@ namespace Readinizer.Backend.Domain.Models
         public bool IsForestRoot { get; set; }
 
         public List<ADDomain> SubADDomain { get; set; }
+
+        public List<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
     }
 }

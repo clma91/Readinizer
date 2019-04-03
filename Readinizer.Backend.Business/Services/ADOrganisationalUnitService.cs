@@ -27,22 +27,48 @@ namespace Readinizer.Backend.Business.Services
             
             foreach (ADDomain domain in allDomains)
             {
-                DirectoryEntry startingPoint = new DirectoryEntry("LDAP://" + domain.Name);
-                DirectorySearcher searcher = new DirectorySearcher(startingPoint, "(objectCategory=organizationalUnit)");
-
-                
+                DirectoryEntry entry = new DirectoryEntry("LDAP://" + domain.Name);
+                DirectorySearcher searcher = new DirectorySearcher(entry);
+                searcher.Filter = ("(objectCategory=organizationalUnit)");
+                searcher.SearchScope = SearchScope.OneLevel;
 
                 foreach (SearchResult searchResult in searcher.FindAll())
                 {
                     ADOrganisationalUnit foundOU = new ADOrganisationalUnit();
                     foundOU.Name = searchResult.Properties["ou"][0].ToString();
                     foundOU.LdapPath = searchResult.Path.ToString();
-                    foundOU.DomainRefId = domain.ADDomainId;
+                    foundOU.ADDomainRefId = domain.ADDomainId;
+                    foundOU.SubADOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
 
                     adOrganisationalUnitsRepository.Add(foundOU);
                 }
             }
             await adOrganisationalUnitsRepository.SaveChangesAsync();
+        }
+
+        public List<ADOrganisationalUnit> GetChildOUs(string ldapPath, ADOrganisationalUnit parentOU)
+        {
+            List<ADOrganisationalUnit> childOUs = new List<ADOrganisationalUnit>();
+
+            DirectoryEntry childEntry = new DirectoryEntry(ldapPath);
+            DirectorySearcher childSearcher = new DirectorySearcher(childEntry);
+            childSearcher.Filter = ("(objectCategory=organizationalUnit)");
+            childSearcher.SearchScope = SearchScope.OneLevel;
+
+            foreach (SearchResult childResult in childSearcher.FindAll())
+            {
+                ADOrganisationalUnit childOU = new ADOrganisationalUnit();
+                childOU.Name = childResult.Properties["ou"][0].ToString();
+                childOU.LdapPath = childResult.Path.ToString();
+                childOU.ADDomainRefId = parentOU.ADDomainRefId;
+                childOU.SubADOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
+
+                childOUs.Add(childOU);
+
+                adOrganisationalUnitsRepository.Add(childOU);
+            }
+
+            return childOUs;
         }
     }
 }
