@@ -8,12 +8,14 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class ADOuMember
     {
-        public int Id { get; set; }
+        public int ADOuMemberId { get; set; }
 
         public string ComputerName { get; set; }
 
         public bool IsDomainController { get; set; }
 
         public int OURefId { get; set; }
+
+        public ADOrganisationalUnit ADOrganisationalUnit { get; set; }
     }
 }

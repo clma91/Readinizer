@@ -23,5 +23,7 @@ namespace Readinizer.Backend.Domain.Models
         public int Test { get; set; }
 
         public List<ADDomain> SubADDomain { get; set; }
+
+        public List<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
     }
 }
