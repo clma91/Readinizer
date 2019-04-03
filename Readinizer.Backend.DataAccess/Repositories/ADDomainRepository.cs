@@ -31,6 +31,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
             context.ADDomains.Add(domain);
         }
 
+        public Task<List<ADDomain>> GetAllDomains()
+        {
+            return context.ADDomains.ToListAsync<ADDomain>();
+        }
+
         public Task<ADDomain> GetByDomainName(string domainName)
         {
             return context.ADDomains

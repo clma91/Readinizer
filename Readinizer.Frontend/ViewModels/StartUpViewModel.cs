@@ -61,7 +61,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            await this.adOrganisationalUnitService.GetAllOrganisationalUnits(domainName);
+            await this.adOrganisationalUnitService.GetAllOrganisationalUnits();
         }
 
         #region INotifyPropertyChanged Members

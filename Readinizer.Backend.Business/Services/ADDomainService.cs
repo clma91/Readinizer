@@ -23,13 +23,13 @@ namespace Readinizer.Backend.Business.Services
 
         public ADDomain SearchDomain(string fullyQualifiedDomainName)
         {
-            ADDomain searchedDomain = new ADDomain("", false, false);
+            ADDomain searchedDomain = new ADDomain();
 
             foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
             {
                 if (domain.Name.Equals(fullyQualifiedDomainName))
                 {
-                    searchedDomain = new ADDomain(domain.Name, false, false);
+                    searchedDomain.Name = domain.Name;
                 }
                 else
                 {
@@ -42,15 +42,18 @@ namespace Readinizer.Backend.Business.Services
 
         public Task SearchAllDomains()
         {
-            System.DirectoryServices.ActiveDirectory.Domain currentDomain = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain();
+            ADDomain currentDomain = new ADDomain();
+            currentDomain.Name = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain().Name;
             List<System.DirectoryServices.ActiveDirectory.Domain> childDomains = new List<System.DirectoryServices.ActiveDirectory.Domain>();
 
-            childDomains = GetChildDomains(currentDomain);
+            childDomains = GetChildDomains(System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain());
 
-            adDomainRepository.Add(new ADDomain(currentDomain.Name, false, false));
+            adDomainRepository.Add(currentDomain);
             foreach (System.DirectoryServices.ActiveDirectory.Domain domain in childDomains)
             {
-                adDomainRepository.Add(new ADDomain(domain.Name, false, false));
+                ADDomain childDomain = new ADDomain();
+                childDomain.Name = domain.Name;
+                adDomainRepository.Add(childDomain);
             }
 
             return adDomainRepository.SaveChangesAsync();

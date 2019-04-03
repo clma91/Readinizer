@@ -13,22 +13,29 @@ namespace Readinizer.Backend.Business.Services
     public class ADOrganisationalUnitService : IADOrganisationalUnitService
     {
         private readonly IADOrganisationalUnitRepository adOrganisationalUnitsRepository;
+        private readonly IADDomainRepository adDomainRepository;
 
-        public ADOrganisationalUnitService(IADOrganisationalUnitRepository adOrganisationalUnitRepository)
+        public ADOrganisationalUnitService(IADOrganisationalUnitRepository adOrganisationalUnitRepository, IADDomainRepository aDDomainRepository)
         {
             this.adOrganisationalUnitsRepository = adOrganisationalUnitRepository;
+            this.adDomainRepository = aDDomainRepository;
         }
 
-        public  Task GetAllOrganisationalUnits(string domainPath)
+        public async Task GetAllOrganisationalUnits()
         {
-            DirectoryEntry startingPoint = new DirectoryEntry(domainPath);
-            DirectorySearcher searcher = new DirectorySearcher(startingPoint, "(objectCategory=organizationalUnit)");
-
-            foreach (SearchResult res in searcher.FindAll())
+            List<ADDomain> allDomains = await adDomainRepository.GetAllDomains();
+            
+            foreach (ADDomain domain in allDomains)
             {
-                adOrganisationalUnitsRepository.Add(new ADOrganisationalUnit(res.Properties["ou"][0].ToString(), res.Path.ToString()));
+                DirectoryEntry startingPoint = new DirectoryEntry("LDAP://" + domain.Name);
+                DirectorySearcher searcher = new DirectorySearcher(startingPoint, "(objectCategory=organizationalUnit)");
+
+                foreach (SearchResult searchResult in searcher.FindAll())
+                {
+                    adOrganisationalUnitsRepository.Add(new ADOrganisationalUnit(searchResult.Properties["ou"][0].ToString(), searchResult.Path.ToString(), domain.Id));
+                }
             }
-            return adOrganisationalUnitsRepository.SaveChangesAsync();
+            await adOrganisationalUnitsRepository.SaveChangesAsync();
         }
     }
 }
