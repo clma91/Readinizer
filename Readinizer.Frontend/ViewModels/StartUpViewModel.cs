@@ -17,6 +17,7 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IADDomainService adDomainService;
         private readonly IADOrganisationalUnitService adOrganisationalUnitService;
+        private readonly IADOuMemberService adOuMemberService;
         public ADDomain Domain;
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -44,10 +45,11 @@ namespace Readinizer.Frontend.ViewModels
             set { domainName = value; OnPropertyChanged("DomainName"); }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService)
+        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService)
         {
             this.adDomainService = adDomainService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;
+            this.adOuMemberService = adOuMemberService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -62,6 +64,7 @@ namespace Readinizer.Frontend.ViewModels
         private async void Analyse()
         {
             await this.adOrganisationalUnitService.GetAllOrganisationalUnits();
+            await this.adOuMemberService.GetMembersOfOu();
         }
 
         #region INotifyPropertyChanged Members

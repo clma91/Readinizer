@@ -14,5 +14,6 @@ namespace Readinizer.Backend.DataAccess
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
         public virtual DbSet<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
+        public virtual DbSet<ADOuMember> ADOuMembers { get; set; }
     }
 }

@@ -15,6 +15,6 @@ namespace Readinizer.Backend.DataAccess.Interfaces
 
         Task SaveChangesAsync();
 
-        Task <List<ADDomain>> GetAllDomains();
+        Task<List<ADDomain>> GetAllDomains();
     }
 }

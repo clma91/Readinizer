@@ -1,5 +1,6 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
+using Readinizer.Backend.DataAccess;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Frontend.Interfaces;
@@ -9,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,6 +34,11 @@ namespace Readinizer.Frontend
 
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
+
+            container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
+            container.RegisterType<IADOuMemberService, ADOuMemberService>();
+
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             StartUpView startUpView = container.Resolve<StartUpView>();
             startUpView.Show();
