@@ -1,5 +1,6 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
+using Readinizer.Backend.DataAccess;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Frontend.Interfaces;
@@ -13,7 +14,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using Readinizer.Backend.DataAccess;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -34,6 +34,9 @@ namespace Readinizer.Frontend
 
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
+
+            container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
+            container.RegisterType<IADOuMemberService, ADOuMemberService>();
 
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 

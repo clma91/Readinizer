@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Readinizer.Backend.DataAccess.Interfaces;
+using System.Data.Entity;
 
 namespace Readinizer.Backend.DataAccess.Repositories
 {
@@ -23,6 +24,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
         public void Add(ADOrganisationalUnit organisationalUnit)
         {
             context.ADOrganisationalUnits.Add(organisationalUnit);
+        }
+
+        public Task<List<ADOrganisationalUnit>> getAllOUs()
+        {
+            return context.ADOrganisationalUnits.ToListAsync<ADOrganisationalUnit>();
         }
 
         public Task SaveChangesAsync()

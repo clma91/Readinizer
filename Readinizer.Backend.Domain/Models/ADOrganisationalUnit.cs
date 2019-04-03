@@ -11,7 +11,6 @@ namespace Readinizer.Backend.Domain.Models
     {
         public int Id { get; set; }
 
-        private string name;
         public string Name { get; set; }
         public string LdapPath { get; set; }
 

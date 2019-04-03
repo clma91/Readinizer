@@ -56,6 +56,8 @@
     <Compile Include="Context\ReadinizerDbContext.cs" />
     <Compile Include="Repositories\ADDomainRepository.cs" />
     <Compile Include="Repositories\ADOrganisationalUnitRepository.cs" />
+    <Compile Include="Repositories\ADOuMemberRepository.cs" />
+    <Compile Include="Interfaces\IADOuMemberRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
