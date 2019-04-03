@@ -30,9 +30,16 @@ namespace Readinizer.Backend.Business.Services
                 DirectoryEntry startingPoint = new DirectoryEntry("LDAP://" + domain.Name);
                 DirectorySearcher searcher = new DirectorySearcher(startingPoint, "(objectCategory=organizationalUnit)");
 
+                
+
                 foreach (SearchResult searchResult in searcher.FindAll())
                 {
-                    adOrganisationalUnitsRepository.Add(new ADOrganisationalUnit(searchResult.Properties["ou"][0].ToString(), searchResult.Path.ToString(), domain.Id));
+                    ADOrganisationalUnit foundOU = new ADOrganisationalUnit();
+                    foundOU.Name = searchResult.Properties["ou"][0].ToString();
+                    foundOU.LdapPath = searchResult.Path.ToString();
+                    foundOU.DomainRefId = domain.Id;
+
+                    adOrganisationalUnitsRepository.Add(foundOU);
                 }
             }
             await adOrganisationalUnitsRepository.SaveChangesAsync();

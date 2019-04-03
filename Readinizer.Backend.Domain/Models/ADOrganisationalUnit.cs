@@ -9,13 +9,6 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class ADOrganisationalUnit
     {
-        public ADOrganisationalUnit(string Name, string LdapPath, int DomainRefId)
-        {
-            this.Name = Name;
-            this.LdapPath = LdapPath;
-            this.DomainRefId = DomainRefId;
-        }
-
         public int Id { get; set; }
 
         private string name;
