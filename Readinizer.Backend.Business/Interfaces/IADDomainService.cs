@@ -1,4 +1,5 @@
 ﻿using Readinizer.Backend.Domain.Models;
+using AD = System.DirectoryServices.ActiveDirectory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,7 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface IADDomainService
     {
-        Task SearchAllDomains();
-
-        ADDomain SearchDomain(string fullyQualifiedDomainName);
+        Task<List<ADDomain>> SearchAllDomains();
 
         bool isDomainInForest(string fullyQualifiedDomainName);
     }

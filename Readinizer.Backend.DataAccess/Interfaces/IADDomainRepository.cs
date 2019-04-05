@@ -11,10 +11,12 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     {
         void Add(ADDomain domain);
 
+        void AddRange(List<ADDomain> domains);
+
         Task<ADDomain> GetByDomainName(string domainName);
 
         Task SaveChangesAsync();
 
-        Task <List<ADDomain>> GetAllDomains();
+        Task<List<ADDomain>> GetAllDomains();
     }
 }
