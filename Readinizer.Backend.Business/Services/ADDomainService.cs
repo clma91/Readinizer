@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
 using AD = System.DirectoryServices.ActiveDirectory;
 
 namespace Readinizer.Backend.Business.Services
@@ -18,88 +19,85 @@ namespace Readinizer.Backend.Business.Services
         {
             this.adDomainRepository = adDomainRepository;
         }
+
+        public async Task<List<ADDomain>> SearchAllDomains()
+        {
+            var domains = new List<AD.Domain>();
+            var treeDomains = new List<AD.Domain>();
+            var treeDomainsWithChildren = new List<AD.Domain>();
+            var forestRootDomain = Forest.GetCurrentForest().RootDomain;
+            var domainTrusts = forestRootDomain.GetAllTrustRelationships();
+
+            foreach (TrustRelationshipInformation domainTrust in domainTrusts)
+            {
+                if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
+                {
+                    var treeDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainTrust.TargetName));
+                    treeDomains.Add(treeDomain);
+                }
+            }
+
+            AddAllChildDomains(forestRootDomain, domains);
+            foreach (var treeDomain in treeDomains)
+            {
+                AddAllChildDomains(treeDomain, treeDomainsWithChildren);
+            }
+
+            var models = MapToDomainModel(domains, treeDomainsWithChildren);
+
+            adDomainRepository.AddRange(models);
+
+            await adDomainRepository.SaveChangesAsync();
+            return models;
+        }
         
-        public Task SearchAllDomainsFrom(string domainName)
+        private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
         {
-            var searchedDomains = new List<AD.Domain>();
-            var currentADDomain = new ADDomain();
+            domains.Add(root);
 
-            if (isForestRoot(domainName))
+            for (var i = 0; i < root.Children.Count; ++i)
             {
-                var forestDomains = Forest.GetCurrentForest().Domains;
-                searchedDomains.Add(Forest.GetCurrentForest().RootDomain);
-                foreach (AD.Domain forestDomain in forestDomains)
-                {
-                    if (!forestDomain.Name.EndsWith(domainName))
-                    {
-                        searchedDomains.Add(forestDomain);
-                    }
-                }
+                AddAllChildDomains(root.Children[i], domains);
             }
-            else
-            {
-                try
-                {
-                    searchedDomains.Add(AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainName)));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
-                    throw;
-                }
-            }
-
-            return SearchAllDomains(searchedDomains);
         }
 
-
-        public Task SearchAllDomains(List<AD.Domain> searchedDomains)
+        private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
-            foreach (var searchedDomain in searchedDomains)
-            {
-                var currentADDomain = new ADDomain
-                {
-                    Name = searchedDomain.Name,
-                    SubADDomain = new List<ADDomain>(),
-                    IsForestRoot = isForestRoot(searchedDomain.Name),
-                };
-                var childDomains = GetChildDomains(searchedDomain);
+            var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomain = new List<ADDomain>() }).ToList();
+            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomain = new List<ADDomain>()}).ToList();
 
-                foreach (var childDomain in childDomains)
-                {
-                    currentADDomain.SubADDomain.Add(childDomain);
-                    adDomainRepository.Add(childDomain);
-                }
-                adDomainRepository.Add(currentADDomain);
+            AddSubDomains(domains, models);
+            AddSubDomains(treeDomains, treeModels);
+
+            var allModels = models.Union(treeModels).ToList();
+
+            var root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+            if (root != null)
+            {
+                root.IsForestRoot = true;
+                root.SubADDomain.AddRange(treeModels);
             }
 
-            return adDomainRepository.SaveChangesAsync();
+            return allModels;
         }
 
-        private List<ADDomain> GetChildDomains(AD.Domain currentDomain)
+        private static void AddSubDomains(List<AD.Domain> domains, List<ADDomain> models)
         {
-            var childDomains = new List<ADDomain>();
-
-            foreach (AD.Domain childDomain in currentDomain.Children)
+            foreach (var adDomain in models)
             {
-                childDomains.Add(new ADDomain()
-                {
-                    Name = childDomain.Name
-                });
-                GetChildDomains(childDomain);
+                var children = domains.ToArray().Where(d => d.Parent?.Name == adDomain.Name).Select(x => x.Name);
+                adDomain.SubADDomain.AddRange(models.Where(m => children.Contains(m.Name)));
             }
-
-            return childDomains;
         }
 
-        private bool isForestRoot(string domainName)
+        private static bool IsForestRoot(string domainName)
         {
-            return Forest.GetCurrentForest().Name.Equals(domainName);
+            return Forest.GetCurrentForest().RootDomain.Name.Equals(domainName);
         }
 
         public bool isDomainInForest(string fullyQualifiedDomainName)
         {
-            bool isInForest = false;
+            var isInForest = false;
 
             foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
             {
@@ -108,7 +106,7 @@ namespace Readinizer.Backend.Business.Services
                     isInForest = true;
                 }
             }
-            
+
             return isInForest;
         }
     }
