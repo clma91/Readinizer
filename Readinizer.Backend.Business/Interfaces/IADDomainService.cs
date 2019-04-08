@@ -12,6 +12,6 @@ namespace Readinizer.Backend.Business.Interfaces
     {
         Task<List<ADDomain>> SearchAllDomains();
 
-        bool isDomainInForest(string fullyQualifiedDomainName);
+        bool IsDomainInForest(string fullyQualifiedDomainName);
     }
 }

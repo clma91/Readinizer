@@ -4,7 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using MaterialDesignThemes.Wpf;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
@@ -17,6 +19,7 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IADDomainService adDomainService;
         private readonly IADOrganisationalUnitService adOrganisationalUnitService;
+        public ISnackbarMessageQueue snackbarMessageQueue;
         public ADDomain Domain;
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -44,22 +47,31 @@ namespace Readinizer.Frontend.ViewModels
             set { domainName = value; OnPropertyChanged("DomainName"); }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService)
+        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, ISnackbarMessageQueue snackbarMessageQueue)
         {
             this.adDomainService = adDomainService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;
+            this.snackbarMessageQueue = snackbarMessageQueue;
             CanDiscover = true;
             CanAnalyse = true;
         }
 
         private async void Discover()
         {
-            await this.adDomainService.SearchAllDomains();
+            try
+            {
+                await adDomainService.SearchAllDomains();
+            }
+            catch (Exception e)
+            {
+                snackbarMessageQueue.Enqueue(e.Message);
+            }
+            
         }
 
         private async void Analyse()
         {
-            await this.adOrganisationalUnitService.GetAllOrganisationalUnits();
+            await adOrganisationalUnitService.GetAllOrganisationalUnits();
         }
 
         #region INotifyPropertyChanged Members

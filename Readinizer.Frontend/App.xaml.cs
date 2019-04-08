@@ -13,8 +13,10 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
 using Readinizer.Backend.DataAccess;
 using Unity;
+using Unity.Injection;
 
 namespace Readinizer.Frontend
 {
@@ -35,10 +37,22 @@ namespace Readinizer.Frontend
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
 
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
+            container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+            container.RegisterType<IReadinizerDbContext, ReadinizerDbContext>();
 
             StartUpView startUpView = container.Resolve<StartUpView>();
             startUpView.Show();
+        }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string friendlyMsg = string.Format("Sorry something went wrong.  The error was: [{0}]", e.Exception.Message);
+            string caption = "Error";
+            MessageBox.Show(friendlyMsg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Signal that we handled things--prevents Application from exiting
+            e.Handled = true;
         }
     }
 }

@@ -48,7 +48,7 @@
                 <materialDesign:PackIcon Kind="Graphql" VerticalAlignment="Center" Margin="20 0 0 0"/>
                 <Label  HorizontalAlignment="Left" VerticalAlignment="Center">Domainname:</Label>
             </StackPanel>
-            
+
             <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
             <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
@@ -61,7 +61,7 @@
                         <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
                         <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left"/>
                     </Grid>
-                    
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -77,7 +77,10 @@
             <Button x:Name="Analyse"  Grid.Row="2" Grid.Column="3" Width="100" Height="50" Command="{Binding AnalyseCommand}">
                 <TextBlock TextAlignment="Center">Analyse<LineBreak/>Readiness</TextBlock>
             </Button>
+            
+            <materialDesign:Snackbar x:Name="Snackbar" Grid.Row="2" Grid.ColumnSpan="4" IsActive="True" MessageQueue="{Binding snackbarMessageQueue}" />
         </Grid>
     </DockPanel>
+
     
 </Window>

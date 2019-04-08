@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
+using Readinizer.Backend.Domain.Exceptions;
 using AD = System.DirectoryServices.ActiveDirectory;
 
 namespace Readinizer.Backend.Business.Services
 {
     public class ADDomainService : IADDomainService
     {
-
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IADDomainRepository adDomainRepository;
 
         public ADDomainService(IADDomainRepository adDomainRepository)
@@ -22,22 +23,36 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task<List<ADDomain>> SearchAllDomains()
         {
+            
             var domains = new List<AD.Domain>();
             var treeDomains = new List<AD.Domain>();
             var treeDomainsWithChildren = new List<AD.Domain>();
-            var forestRootDomain = Forest.GetCurrentForest().RootDomain;
-            var domainTrusts = forestRootDomain.GetAllTrustRelationships();
-
-            foreach (TrustRelationshipInformation domainTrust in domainTrusts)
+            try
             {
-                if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
-                {
-                    var treeDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainTrust.TargetName));
-                    treeDomains.Add(treeDomain);
-                }
-            }
+                throw new UnauthorizedAccessException("Test");
+                var forestRootDomain = Forest.GetCurrentForest().RootDomain;
+                var domainTrusts = forestRootDomain.GetAllTrustRelationships();
 
-            AddAllChildDomains(forestRootDomain, domains);
+                foreach (TrustRelationshipInformation domainTrust in domainTrusts)
+                {
+                    if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
+                    {
+                        var treeDomain =
+                            AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain,
+                                domainTrust.TargetName));
+                        treeDomains.Add(treeDomain);
+                    }
+                }
+
+                AddAllChildDomains(forestRootDomain, domains);
+            }
+            catch (UnauthorizedAccessException accessException)
+            {
+                var message = "Invalid access rights for domain call.";
+                logger.Error(accessException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            
             foreach (var treeDomain in treeDomains)
             {
                 AddAllChildDomains(treeDomain, treeDomainsWithChildren);
@@ -95,7 +110,7 @@ namespace Readinizer.Backend.Business.Services
             return Forest.GetCurrentForest().RootDomain.Name.Equals(domainName);
         }
 
-        public bool isDomainInForest(string fullyQualifiedDomainName)
+        public bool IsDomainInForest(string fullyQualifiedDomainName)
         {
             var isInForest = false;
 

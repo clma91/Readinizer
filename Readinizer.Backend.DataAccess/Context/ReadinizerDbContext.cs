@@ -1,3 +1,5 @@
+using Readinizer.Backend.DataAccess.Interfaces;
+
 namespace Readinizer.Backend.DataAccess
 {
     using Readinizer.Backend.Domain.Models;
@@ -5,7 +7,7 @@ namespace Readinizer.Backend.DataAccess
     using System.Data.Entity;
     using System.Linq;
 
-    public class ReadinizerDbContext : DbContext
+    public class ReadinizerDbContext : DbContext, IReadinizerDbContext
     {
         public ReadinizerDbContext()
             : base("name=ReadinizerDbContext")

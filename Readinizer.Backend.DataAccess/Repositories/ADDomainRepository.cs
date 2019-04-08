@@ -16,7 +16,7 @@ namespace Readinizer.Backend.DataAccess.Repositories
 
         //public ADDomainRepository() { }
 
-        public ADDomainRepository()
+        public ADDomainRepository(IReadinizerDbContext context)
         {
             this.context = new ReadinizerDbContext();
         }
