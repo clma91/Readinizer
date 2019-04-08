@@ -24,7 +24,7 @@ namespace Readinizer.Backend.Business.Services
         {
             var domains = new List<AD.Domain>();
             var treeDomains = new List<AD.Domain>();
-            var treeDomainsWithChilds = new List<AD.Domain>();
+            var treeDomainsWithChildren = new List<AD.Domain>();
             var forestRootDomain = Forest.GetCurrentForest().RootDomain;
             var domainTrusts = forestRootDomain.GetAllTrustRelationships();
 
@@ -40,10 +40,10 @@ namespace Readinizer.Backend.Business.Services
             AddAllChildDomains(forestRootDomain, domains);
             foreach (var treeDomain in treeDomains)
             {
-                AddAllChildDomains(treeDomain, treeDomainsWithChilds);
+                AddAllChildDomains(treeDomain, treeDomainsWithChildren);
             }
 
-            var models = MapToDomainModel(domains, treeDomainsWithChilds);
+            var models = MapToDomainModel(domains, treeDomainsWithChildren);
 
             adDomainRepository.AddRange(models);
 
@@ -51,7 +51,7 @@ namespace Readinizer.Backend.Business.Services
             return models;
         }
         
-        private void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
+        private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
         {
             domains.Add(root);
 
@@ -61,7 +61,7 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        private List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
+        private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
             var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomain = new List<ADDomain>() }).ToList();
             var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomain = new List<ADDomain>()}).ToList();
@@ -71,7 +71,7 @@ namespace Readinizer.Backend.Business.Services
 
             var allModels = models.Union(treeModels).ToList();
 
-            var root = allModels.FirstOrDefault(m => isForestRoot(m.Name));
+            var root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
             if (root != null)
             {
                 root.IsForestRoot = true;
@@ -90,14 +90,14 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        private bool isForestRoot(string domainName)
+        private static bool IsForestRoot(string domainName)
         {
             return Forest.GetCurrentForest().RootDomain.Name.Equals(domainName);
         }
 
         public bool isDomainInForest(string fullyQualifiedDomainName)
         {
-            bool isInForest = false;
+            var isInForest = false;
 
             foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
             {
