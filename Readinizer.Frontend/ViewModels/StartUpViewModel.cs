@@ -28,10 +28,6 @@ namespace Readinizer.Frontend.ViewModels
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
         public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse(), () => this.CanAnalyse));
-        private ICommand showTreeStructureResultCommand;
-
-        public ICommand ShowTreeStructureResultCommand =>
-            showTreeStructureResultCommand ?? (showTreeStructureResultCommand = new RelayCommand(() => ShowTreeStructureResult()));
 
         public bool CanDiscover { get; private set; }
         public bool CanAnalyse { get; private set; }
@@ -63,19 +59,19 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Discover()
         {
-            await this.adDomainService.SearchAllDomains();
+            await Task.Run(() => adDomainService.SearchAllDomains());
         }
 
         private async void Analyse()
         {
-            //await this.adOrganisationalUnitService.GetAllOrganisationalUnits();
-            //await this.adOuMemberService.GetMembersOfOu();
-            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
+            await Task.Run(() => adOrganisationalUnitService.GetAllOrganisationalUnits());
+            await Task.Run(() => adOuMemberService.GetMembersOfOu());
+            ShowTreeStructureResult();
         }
 
         private void ShowTreeStructureResult()
         {
-            
+            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
         }
     }
 }
