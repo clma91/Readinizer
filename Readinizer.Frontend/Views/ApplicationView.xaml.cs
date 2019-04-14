@@ -1,5 +1,4 @@
-﻿using Readinizer.Frontend.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,17 +11,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Readinizer.Frontend.ViewModels;
 
 namespace Readinizer.Frontend.Views
 {
     /// <summary>
-    /// Interaction logic for StartUpView.xaml
+    /// Interaction logic for ApplicationView.xaml
     /// </summary>
-    public partial class StartUpView : UserControl
+    public partial class ApplicationView : Window
     {
-        public StartUpView()
+        public ApplicationView(ApplicationViewModel applicationViewModel)
         {
             InitializeComponent();
+            this.DataContext = applicationViewModel;
         }
     }
 }

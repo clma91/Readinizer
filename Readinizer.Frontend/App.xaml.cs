@@ -27,7 +27,10 @@ namespace Readinizer.Frontend
         {
             IUnityContainer container = new UnityContainer();
 
+            container.RegisterType<IApplicationViewModel, ApplicationViewModel>();
+            container.RegisterType<ApplicationView>();
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
+            container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
@@ -40,8 +43,8 @@ namespace Readinizer.Frontend
 
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
-            StartUpView startUpView = container.Resolve<StartUpView>();
-            startUpView.Show();
+            var applicationView = container.Resolve<ApplicationView>();
+            applicationView.Show();
         }
     }
 }
