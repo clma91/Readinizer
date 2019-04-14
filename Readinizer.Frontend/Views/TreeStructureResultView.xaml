@@ -17,6 +17,6 @@
              d:DataContext="{d:DesignInstance viewModels:TreeStructureResultViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <materialDesign:PackIcon Kind="SmileyExcited" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Height="200"/>
-        <Button x:Name="Discover" Grid.Row="2" Grid.Column="2" Width="100" Height="50" Command="{Binding DiscoverCommand}">Discover</Button>
+        <Button x:Name="Discover" Width="100" Height="50" Command="{Binding DiscoverCommand}" Margin="639,369,61,31">Go Back</Button>
     </Grid>
 </UserControl>

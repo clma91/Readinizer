@@ -25,6 +25,8 @@ namespace Readinizer.Frontend
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             IUnityContainer container = new UnityContainer();
 
             container.RegisterType<IApplicationViewModel, ApplicationViewModel>();

@@ -23,7 +23,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel()
+        public ApplicationViewModel() : this(new StartUpViewModel(), null)
         {
             if (!IsInDesignMode)
             {
@@ -36,18 +36,18 @@ namespace Readinizer.Frontend.ViewModels
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
 
-            ShowTreeStructureResultView();
+            ShowStartUpView();
             Messenger.Default.Register<ChangeView>(this, ChangeView);
         }
 
         private void ShowStartUpView()
         {
-            currentViewModel = startUpViewModel;
+            CurrentViewModel = startUpViewModel;
         }
 
         private void ShowTreeStructureResultView()
         {
-            currentViewModel = treeStructureResultViewModel;
+            CurrentViewModel = treeStructureResultViewModel;
         }
 
         private void ChangeView(ChangeView message)
