@@ -7,12 +7,9 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.DataAccess.Interfaces
 {
-    public interface IADOrganisationalUnitRepository
+    public interface IADOuMemberRepository
     {
-        void Add(ADOrganisationalUnit organisationalUnit);
-
+        void Add(ADOuMember member);
         Task SaveChangesAsync();
-
-        Task<List<ADOrganisationalUnit>> getAllOUs();
     }
 }

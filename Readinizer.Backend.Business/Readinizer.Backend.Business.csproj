@@ -50,11 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IADOuMemberService.cs" />
     <Compile Include="Interfaces\IADOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IADDomainService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ADDomainService.cs" />
     <Compile Include="Services\ADOrganisationalUnitService.cs" />
+    <Compile Include="Services\ADOuMemberService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Readinizer.Backend.DataAccess\Readinizer.Backend.DataAccess.csproj">

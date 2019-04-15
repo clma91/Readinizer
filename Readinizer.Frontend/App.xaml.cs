@@ -1,5 +1,6 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
+using Readinizer.Backend.DataAccess;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Frontend.Interfaces;
@@ -13,10 +14,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
-using MaterialDesignThemes.Wpf;
-using Readinizer.Backend.DataAccess;
 using Unity;
-using Unity.Injection;
 
 namespace Readinizer.Frontend
 {
@@ -27,9 +25,14 @@ namespace Readinizer.Frontend
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             IUnityContainer container = new UnityContainer();
 
+            container.RegisterType<IApplicationViewModel, ApplicationViewModel>();
+            container.RegisterType<ApplicationView>();
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
+            container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
@@ -37,22 +40,13 @@ namespace Readinizer.Frontend
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
 
-            container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+            container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
+            container.RegisterType<IADOuMemberService, ADOuMemberService>();
 
-            container.RegisterType<IReadinizerDbContext, ReadinizerDbContext>();
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
-            StartUpView startUpView = container.Resolve<StartUpView>();
-            startUpView.Show();
-        }
-
-        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
-        {
-            string friendlyMsg = string.Format("Sorry something went wrong.  The error was: [{0}]", e.Exception.Message);
-            string caption = "Error";
-            MessageBox.Show(friendlyMsg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
-
-            // Signal that we handled things--prevents Application from exiting
-            e.Handled = true;
+            var applicationView = container.Resolve<ApplicationView>();
+            applicationView.Show();
         }
     }
 }
