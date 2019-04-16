@@ -9,6 +9,6 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface IADRSoPService
     {
-        void getRSoP();
+        void getRSoP(string user, string computer);
     }
 }

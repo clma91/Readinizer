@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.Linq;
@@ -14,16 +15,41 @@ namespace Readinizer.Backend.Business.Services
 {
     public class ADRSoPService : IADRSoPService
     {
-        public void getRSoP()
+        private readonly IADOuMemberRepository adOuMemberRepository;
+
+        public ADRSoPService(IADOuMemberRepository adOuMemberRepository)
+        {
+            this.adOuMemberRepository = adOuMemberRepository;
+        }
+
+
+        public async Task getRSoPOfOUMembers()
         {
 
-            GPRsop test = new GPRsop(RsopMode.Logging, "");
-            test.LoggingComputer = "sysadmWS01";
-            test.LoggingUser = "readinizer.ch\\lkellenb";
-            test.LoggingMode = LoggingMode.Computer;
-            test.CreateQueryResults();
-            test.GenerateReportToFile(ReportType.Xml, "C:\\Users\\lkellenb\\Desktop\\test.xml");
+            List<ADOuMember> allMembers = await adOuMemberRepository.getAllOUMembers();
 
+        }
+
+        
+
+        public void getRSoP(string computer, string user)
+        {
+            try
+            {
+                GPRsop test = new GPRsop(RsopMode.Logging, "");
+                test.LoggingMode = LoggingMode.Computer;
+                test.LoggingComputer = computer;
+                test.LoggingUser = user;
+                test.CreateQueryResults();
+                test.GenerateReportToFile(ReportType.Xml, @"C:\Users\lkellenb\Desktop\test.xml");
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            
         }
 
     }

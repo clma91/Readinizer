@@ -11,5 +11,6 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     {
         void Add(ADOuMember member);
         Task SaveChangesAsync();
+        Task<List<ADOuMember>> getAllOUMembers();
     }
 }

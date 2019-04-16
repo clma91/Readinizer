@@ -21,6 +21,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IADDomainService adDomainService;
         private readonly IADOrganisationalUnitService adOrganisationalUnitService;
         private readonly IADOuMemberService adOuMemberService;
+        private readonly IADRSoPService adRSoPService;
 
         public ADDomain Domain;
 
@@ -48,22 +49,24 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService)
+        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService, IADRSoPService adRSopService)
         {
             this.adDomainService = adDomainService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;
             this.adOuMemberService = adOuMemberService;
+            this.adRSoPService = adRSopService;
             CanDiscover = true;
             CanAnalyse = true;
         }
 
         private async void Discover()
         {
-            await Task.Run(() => adDomainService.SearchAllDomains());
+            await Task.Run(() => adRSoPService.getRSoP("readinizertree.ch\\TreeWS", "readinizer.ch\\domainadmin"));
         }
 
         private async void Analyse()
         {
+            await Task.Run(() => adDomainService.SearchAllDomains());
             await Task.Run(() => adOrganisationalUnitService.GetAllOrganisationalUnits());
             await Task.Run(() => adOuMemberService.GetMembersOfOu());
             ShowTreeStructureResult();

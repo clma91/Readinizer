@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
                 throw new ArgumentNullException(nameof(member));
             }
             context.ADOuMembers.Add(member);
+        }
+
+        public Task<List<ADOuMember>> getAllOUMembers()
+        {
+            return context.ADOuMembers.ToListAsync<ADOuMember>();
         }
 
         public Task SaveChangesAsync()

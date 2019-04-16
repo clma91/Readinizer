@@ -43,6 +43,8 @@ namespace Readinizer.Frontend
             container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
             container.RegisterType<IADOuMemberService, ADOuMemberService>();
 
+            container.RegisterType<IADRSoPService, ADRSoPService>();
+
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             var applicationView = container.Resolve<ApplicationView>();
