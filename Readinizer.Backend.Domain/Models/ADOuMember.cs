@@ -20,5 +20,6 @@ namespace Readinizer.Backend.Domain.Models
 
         public string IpAddress { get; set; }
 
+
     }
 }

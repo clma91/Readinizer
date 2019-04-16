@@ -29,7 +29,7 @@ namespace Readinizer.Backend.Business.Services
         {
             List<ADOrganisationalUnit> allOUs = await adOrganisationalUnitsRepository.getAllOUs();
             List<ADDomain> allDomains = await adDomainRepository.GetAllDomains();
-            List<string> DCnames = getDCs();
+            List<string> DCnames = getDcNames();
 
             foreach (ADOrganisationalUnit OU in allOUs)
             {
@@ -52,7 +52,7 @@ namespace Readinizer.Backend.Business.Services
             await adOuMemberRepository.SaveChangesAsync();
         }
 
-        List<string> getDCs()
+        List<string> getDcNames()
         {
             List<string> DCs = new List<string>();
             foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
