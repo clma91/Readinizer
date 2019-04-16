@@ -5,8 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
+using MaterialDesignThemes.Wpf;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
+using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
 
 namespace Readinizer.Frontend.ViewModels
 {
@@ -19,11 +21,13 @@ namespace Readinizer.Frontend.ViewModels
             set { Set(ref currentViewModel, value); }
         }
 
+        public ISnackbarMessageQueue SnackbarMessageQueue { get; }
+
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null)
         {
             if (!IsInDesignMode)
             {
@@ -31,13 +35,16 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel)
+        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue)
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
 
+            this.SnackbarMessageQueue = snackbarMessageQueue;
+
             ShowStartUpView();
             Messenger.Default.Register<ChangeView>(this, ChangeView);
+            Messenger.Default.Register<SnackbarMessage>(this, OnShowMessage);
         }
 
         private void ShowStartUpView()
@@ -60,6 +67,11 @@ namespace Readinizer.Frontend.ViewModels
             {
                 ShowTreeStructureResultView();
             }
+        }
+
+        private void OnShowMessage(SnackbarMessage message)
+        {
+            SnackbarMessageQueue.Enqueue(message.Message);
         }
     }
 }

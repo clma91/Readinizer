@@ -7,5 +7,7 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     {
         DbSet<ADDomain> ADDomains { get; set; }
         DbSet<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
+        DbSet<ADOuMember> ADOuMembers { get; set; }
+        DbSet<ADSite> ADSites { get; set; }
     }
 }

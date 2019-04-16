@@ -104,6 +104,7 @@
     <Compile Include="Interfaces\IStartUpViewModel.cs" />
     <Compile Include="Interfaces\ITreeStructureResultViewModel.cs" />
     <Compile Include="Messages\ChangeView.cs" />
+    <Compile Include="Messages\SnackbarMessage.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\StartUpViewModel.cs" />
     <Compile Include="ViewModels\TreeStructureResultViewModel.cs" />

@@ -10,7 +10,7 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface IADDomainService
     {
-        Task<List<ADDomain>> SearchAllDomains();
+        Task SearchAllDomains();
 
         bool IsDomainInForest(string fullyQualifiedDomainName);
     }

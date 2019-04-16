@@ -13,9 +13,9 @@ namespace Readinizer.Backend.DataAccess.Repositories
     {
         private readonly ReadinizerDbContext context;
 
-        public ADOuMemberRepository()
+        public ADOuMemberRepository(ReadinizerDbContext context)
         {
-            this.context = new ReadinizerDbContext();
+            this.context = context;
         }
 
         public void Add(ADOuMember member)

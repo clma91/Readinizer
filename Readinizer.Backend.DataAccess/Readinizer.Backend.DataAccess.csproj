@@ -60,6 +60,8 @@
     <Compile Include="Repositories\ADOrganisationalUnitRepository.cs" />
     <Compile Include="Repositories\ADOuMemberRepository.cs" />
     <Compile Include="Interfaces\IADOuMemberRepository.cs" />
+    <Compile Include="Repositories\ADSiteRepository.cs" />
+    <Compile Include="Interfaces\IADSiteRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -8,8 +8,11 @@ namespace Readinizer.Backend.Domain.Exceptions
 {
     public class InvalidAuthenticationException : Exception
     {
-        public InvalidAuthenticationException(string message) : base(message)
+        public string Details { get; set; } 
+
+        public InvalidAuthenticationException(string message, string details = null) : base(message)
         {
+            Details = details;
         }
     }
 }

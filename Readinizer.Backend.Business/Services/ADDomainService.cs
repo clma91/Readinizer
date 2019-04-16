@@ -21,15 +21,14 @@ namespace Readinizer.Backend.Business.Services
             this.adDomainRepository = adDomainRepository;
         }
 
-        public async Task<List<ADDomain>> SearchAllDomains()
+        public async Task SearchAllDomains()
         {
-            
             var domains = new List<AD.Domain>();
             var treeDomains = new List<AD.Domain>();
             var treeDomainsWithChildren = new List<AD.Domain>();
+
             try
             {
-                throw new UnauthorizedAccessException("Test");
                 var forestRootDomain = Forest.GetCurrentForest().RootDomain;
                 var domainTrusts = forestRootDomain.GetAllTrustRelationships();
 
@@ -48,11 +47,23 @@ namespace Readinizer.Backend.Business.Services
             }
             catch (UnauthorizedAccessException accessException)
             {
-                var message = "Invalid access rights for domain call.";
+                var message = "Invalid access rights for domain call";
                 logger.Error(accessException, message);
                 throw new InvalidAuthenticationException(message);
             }
-            
+            catch (ActiveDirectoryServerDownException severDownException)
+            {
+                var message = $"Server {severDownException.Name} is down";
+                logger.Error(severDownException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            catch (Exception e)
+            {
+                var message = "Unkown error occurred";
+                logger.Error(e, message);
+                throw new InvalidAuthenticationException(message);
+            }
+
             foreach (var treeDomain in treeDomains)
             {
                 AddAllChildDomains(treeDomain, treeDomainsWithChildren);
@@ -63,7 +74,6 @@ namespace Readinizer.Backend.Business.Services
             adDomainRepository.AddRange(models);
 
             await adDomainRepository.SaveChangesAsync();
-            return models;
         }
         
         private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
@@ -78,8 +88,8 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
-            var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomain = new List<ADDomain>() }).ToList();
-            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomain = new List<ADDomain>()}).ToList();
+            var models = domains.Select(x => new ADDomain { Name = x.Name, ADSubDomains = new List<ADDomain>() }).ToList();
+            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, ADSubDomains = new List<ADDomain>()}).ToList();
 
             AddSubDomains(domains, models);
             AddSubDomains(treeDomains, treeModels);
@@ -90,7 +100,7 @@ namespace Readinizer.Backend.Business.Services
             if (root != null)
             {
                 root.IsForestRoot = true;
-                root.SubADDomain.AddRange(treeModels);
+                root.ADSubDomains.AddRange(treeModels);
             }
 
             return allModels;
@@ -101,7 +111,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var adDomain in models)
             {
                 var children = domains.ToArray().Where(d => d.Parent?.Name == adDomain.Name).Select(x => x.Name);
-                adDomain.SubADDomain.AddRange(models.Where(m => children.Contains(m.Name)));
+                adDomain.ADSubDomains.AddRange(models.Where(m => children.Contains(m.Name)));
             }
         }
 

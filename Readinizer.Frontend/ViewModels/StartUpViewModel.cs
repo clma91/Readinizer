@@ -15,6 +15,7 @@ using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
+using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
 
 namespace Readinizer.Frontend.ViewModels
 {
@@ -23,8 +24,8 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IADDomainService adDomainService;
         private readonly IADOrganisationalUnitService adOrganisationalUnitService;
         private readonly IADOuMemberService adOuMemberService;
+        private readonly IADSiteService adSiteService;
 
-        public ISnackbarMessageQueue snackbarMessageQueue;
         public ADDomain Domain;
 
         private ICommand discoverCommand;
@@ -51,13 +52,12 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, ISnackbarMessageQueue snackbarMessageQueue)
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService)
+        public StartUpViewModel(IADDomainService adDomainService, IADSiteService adSiteService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService)
         {
             this.adDomainService = adDomainService;
+            this.adSiteService = adSiteService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;
             this.adOuMemberService = adOuMemberService;
-            this.snackbarMessageQueue = snackbarMessageQueue;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -66,13 +66,14 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
-                await adDomainService.SearchAllDomains();
+                await Task.Run(() => adDomainService.SearchAllDomains());
+                await Task.Run(() => adSiteService.SearchAllSites());
+                Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
             }
             catch (Exception e)
             {
-                snackbarMessageQueue.Enqueue(e.Message);
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
             }
-            
         }
 
         private async void Analyse()
