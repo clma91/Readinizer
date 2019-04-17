@@ -74,7 +74,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IComputerService.cs" />
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
-    <Compile Include="Interfaces\IADRSoPService.cs" />
+    <Compile Include="Interfaces\IRSoPService.cs" />
     <Compile Include="Interfaces\IADDomainService.cs" />
     <Compile Include="Interfaces\ISiteService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,7 +82,7 @@
     <Compile Include="Services\OrganisationalUnitService.cs" />
     <Compile Include="Services\ComputerService.cs" />
     <Compile Include="Services\SiteService.cs" />
-    <Compile Include="Services\ADRSoPService.cs" />
+    <Compile Include="Services\RSoPService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Readinizer.Backend.DataAccess\Readinizer.Backend.DataAccess.csproj">

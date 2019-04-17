@@ -7,9 +7,9 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     public interface IUnityOfWork
     {
         GenericRepository<Domain.Models.ADDomain> ADDomainRepository { get; }
-        GenericRepository<OrganisationalUnit> ADOrganisationalRepository { get; }
-        GenericRepository<Computer> ADOuMemberRepository { get; }
-        GenericRepository<Site> ADSiteRepository { get; }
+        GenericRepository<OrganisationalUnit> OrganisationalUnitRepository { get; }
+        GenericRepository<Computer> ComputerRepository { get; }
+        GenericRepository<Site> SiteRepository { get; }
         Task SaveChangesAsync();
         void Dispose(bool disposing);
         void Dispose();

@@ -12,12 +12,12 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
     public class UnityOfWork : IDisposable, IUnityOfWork
     {
         private ReadinizerDbContext context = new ReadinizerDbContext();
-        private GenericRepository<Domain.Models.ADDomain> adDomainRepository;
-        private GenericRepository<OrganisationalUnit> adOrganisationalUnitRepository;
-        private GenericRepository<Computer> adOuMemberRepository;
-        private GenericRepository<Site> adSiteRepository;
+        private GenericRepository<ADDomain> adDomainRepository;
+        private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
+        private GenericRepository<Computer> computerRepository;
+        private GenericRepository<Site> siteRepository;
 
-        public GenericRepository<Domain.Models.ADDomain> ADDomainRepository
+        public GenericRepository<ADDomain> ADDomainRepository
         {
             get
             {
@@ -30,42 +30,42 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
             }
         }
 
-        public GenericRepository<OrganisationalUnit> ADOrganisationalRepository
+        public GenericRepository<OrganisationalUnit> OrganisationalUnitRepository
         {
             get
             {
-                if (this.adOrganisationalUnitRepository == null)
+                if (this.organisationalUnitRepository == null)
                 {
-                    this.adOrganisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
+                    this.organisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
                 }
 
-                return adOrganisationalUnitRepository;
+                return organisationalUnitRepository;
             }
         }
 
-        public GenericRepository<Computer> ADOuMemberRepository
+        public GenericRepository<Computer> ComputerRepository
         {
             get
             {
-                if (this.adOuMemberRepository == null)
+                if (this.computerRepository == null)
                 {
-                    this.adOuMemberRepository = new GenericRepository<Computer>(context);
+                    this.computerRepository = new GenericRepository<Computer>(context);
                 }
 
-                return adOuMemberRepository;
+                return computerRepository;
             }
         }
 
-        public GenericRepository<Site> ADSiteRepository
+        public GenericRepository<Site> SiteRepository
         {
             get
             {
-                if (this.adSiteRepository == null)
+                if (this.siteRepository == null)
                 {
-                    this.adSiteRepository = new GenericRepository<Site>(context);
+                    this.siteRepository = new GenericRepository<Site>(context);
                 }
 
-                return adSiteRepository;
+                return siteRepository;
             }
         }
 

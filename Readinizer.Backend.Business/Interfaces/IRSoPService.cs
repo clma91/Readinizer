@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IADRSoPService
+    public interface IRSoPService
     {
-        void getRSoP(string user, string computer);
+
+        Task getRSoPOfReachableComputers();
     }
 }

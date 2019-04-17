@@ -19,7 +19,7 @@ namespace Readinizer.Backend.Business.Services
             this.unityOfWork = unityOfWork;
         }
 
-        public async Task getAllOrganisationalUnits()
+        public async Task GetAllOrganisationalUnits()
         {
             List<Domain.Models.ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
             
@@ -55,7 +55,7 @@ namespace Readinizer.Backend.Business.Services
                     foundOUs.Add(foundContainer);
                 }
 
-                unityOfWork.ADOrganisationalRepository.AddRange(foundOUs);
+                unityOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
             }
             await unityOfWork.SaveChangesAsync();
         }
@@ -79,7 +79,7 @@ namespace Readinizer.Backend.Business.Services
 
                 childOUs.Add(childOU);
 
-                unityOfWork.ADOrganisationalRepository.Add(childOU);
+                unityOfWork.OrganisationalUnitRepository.Add(childOU);
             }
 
             return childOUs;

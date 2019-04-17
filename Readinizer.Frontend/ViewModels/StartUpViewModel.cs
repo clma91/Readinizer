@@ -22,11 +22,10 @@ namespace Readinizer.Frontend.ViewModels
     public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IOrganisationalUnitService adOrganisationalUnitService;
-        private readonly IComputerService adOuMemberService;
-        private readonly ISiteService adSiteService;
-
-        public ADDomain Domain;
+        private readonly IOrganisationalUnitService organisationalUnitService;
+        private readonly IComputerService computerService;
+        private readonly ISiteService siteService;
+        private readonly IRSoPService rSoPService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -52,13 +51,14 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService adSiteService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService, IRSoPService rSoPService
+        )
         {
             this.adDomainService = adDomainService;
-            this.adSiteService = adSiteService;
-            this.adOrganisationalUnitService = adOrganisationalUnitService;
-            this.adOuMemberService = adOuMemberService;
-            this.adRSoPService = adRSopService;
+            this.siteService = siteService;
+            this.organisationalUnitService = organisationalUnitService;
+            this.computerService = computerService;
+            this.rSoPService = rSoPService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -68,7 +68,9 @@ namespace Readinizer.Frontend.ViewModels
             try
             {
                 await Task.Run(() => adDomainService.SearchAllDomains());
-                await Task.Run(() => adSiteService.SearchAllSites());
+                await Task.Run(() => siteService.SearchAllSites());
+                await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                await Task.Run(() => computerService.GetComputers());
                 Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
             }
             catch (Exception e)
@@ -79,10 +81,18 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            await Task.Run(() => adDomainService.SearchAllDomains());
-            await Task.Run(() => adOrganisationalUnitService.GetAllOrganisationalUnits());
-            await Task.Run(() => adOuMemberService.GetMembersOfOu());
-            ShowTreeStructureResult();
+            try
+            {
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                
+                Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
+                ShowTreeStructureResult();
+            }
+            catch (Exception e)
+            {
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
+            }
+            
         }
 
         private void ShowTreeStructureResult()

@@ -15,15 +15,15 @@ namespace Readinizer.Backend.DataAccess
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
-        public virtual DbSet<OrganisationalUnit> ADOrganisationalUnits { get; set; }
-        public virtual DbSet<Computer> ADOuMembers { get; set; }
-        public virtual DbSet<Site> ADSites { get; set; }
+        public virtual DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
+        public virtual DbSet<Computer> Computers { get; set; }
+        public virtual DbSet<Site> Sites { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ADDomain>().ToTable(nameof(ADDomain));
             modelBuilder.Entity<ADDomain>().HasKey(x => x.ADDomainId);
-            modelBuilder.Entity<ADDomain>().HasMany(x => x.ADSubDomains).WithOptional().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<ADDomain>().HasMany(x => x.SubADDomains).WithOptional().HasForeignKey(x => x.ParentId);
             modelBuilder.Entity<ADDomain>().Property(x => x.Name).IsRequired();
 
 
@@ -34,16 +34,16 @@ namespace Readinizer.Backend.DataAccess
 
             modelBuilder.Entity<Site>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
             {
-                x.MapLeftKey("ADSiteRefId");
+                x.MapLeftKey("SiteRefId");
                 x.MapRightKey("ADDomainRefId");
-                x.ToTable("ADSiteDomain");
+                x.ToTable("SiteADDomain");
             });
 
 
             modelBuilder.Entity<OrganisationalUnit>().ToTable(nameof(OrganisationalUnit));
             modelBuilder.Entity<OrganisationalUnit>().HasKey(x => x.OrganisationalUnitId);
             modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional().HasForeignKey(x => x.ParentId);
-            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.ADOrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
+            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
 
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));

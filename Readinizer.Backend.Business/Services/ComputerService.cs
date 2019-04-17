@@ -22,9 +22,9 @@ namespace Readinizer.Backend.Business.Services
             this.unityOfWork = unityOfWork;
         }
 
-        public async Task GetMembersOfOu()
+        public async Task GetComputers()
         {
-            List<OrganisationalUnit> allOUs = await unityOfWork.ADOrganisationalRepository.GetAllEntities();
+            List<OrganisationalUnit> allOUs = await unityOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
             List<string> DCnames = getDcNames();
 
@@ -43,7 +43,7 @@ namespace Readinizer.Backend.Business.Services
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
                     foundMember.OrganisationalUnits.Add(OU);
 
-                    unityOfWork.ADOuMemberRepository.Add(foundMember);
+                    unityOfWork.ComputerRepository.Add(foundMember);
                 }
             }
             await unityOfWork.SaveChangesAsync();
@@ -67,7 +67,7 @@ namespace Readinizer.Backend.Business.Services
 
         string getIP(Computer foundMember, OrganisationalUnit OU, List<Domain.Models.ADDomain> allDomains)
         {
-            foreach (Domain.Models.ADDomain domain in allDomains)
+            foreach (ADDomain domain in allDomains)
             {
                 if (domain.ADDomainId.Equals(OU.ADDomainRefId))
                 {

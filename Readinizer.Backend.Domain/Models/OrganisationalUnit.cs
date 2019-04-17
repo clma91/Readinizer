@@ -21,9 +21,9 @@ namespace Readinizer.Backend.Domain.Models
 
         public ADDomain ADDomain { get; set; }
 
-        public ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
+        public virtual ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
 
-        public ICollection<Computer> Computers { get; set; }
+        public virtual ICollection<Computer> Computers { get; set; }
 
         public bool HasReachableComputer { get; set; }
     }

@@ -14,5 +14,6 @@ namespace Readinizer.Backend.DataAccess.Interfaces
         void Update(TEntity entityToUpdate);
         void DeleteById(object id);
         void Delete(TEntity entityToDelete);
+        TEntity GetByID(object id);
     }
 }

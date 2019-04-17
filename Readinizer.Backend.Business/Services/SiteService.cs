@@ -38,7 +38,7 @@ namespace Readinizer.Backend.Business.Services
             }
 
             var models = MapToDomainModel(sites, allDomains);
-            unityOfWork.ADSiteRepository.AddRange(models);
+            unityOfWork.SiteRepository.AddRange(models);
 
             await unityOfWork.SaveChangesAsync();
         }
