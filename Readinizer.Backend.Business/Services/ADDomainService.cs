@@ -86,7 +86,7 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
+        private static List<Domain.Models.ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
             var models = domains.Select(x => new ADDomain { Name = x.Name, ADSubDomains = new List<ADDomain>() }).ToList();
             var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, ADSubDomains = new List<ADDomain>()}).ToList();
@@ -106,7 +106,7 @@ namespace Readinizer.Backend.Business.Services
             return allModels;
         }
 
-        private static void AddSubDomains(List<AD.Domain> domains, List<ADDomain> models)
+        private static void AddSubDomains(List<AD.Domain> domains, List<Domain.Models.ADDomain> models)
         {
             foreach (var adDomain in models)
             {

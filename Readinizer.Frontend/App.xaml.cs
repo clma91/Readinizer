@@ -36,22 +36,13 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
-            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
-
-            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
-
-            container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
+            container.RegisterType<IADSiteService, SiteService>();
+            container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
+            container.RegisterType<IComputerService, ComputerService>();
 
-            container.RegisterType<IADSiteRepository, ADSiteRepository>();
-            container.RegisterType<IADSiteService, ADSiteService>();
-
-            container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
-            container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
-
-            container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
-            container.RegisterType<IADOuMemberService, ADOuMemberService>();
-
+            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
+            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();

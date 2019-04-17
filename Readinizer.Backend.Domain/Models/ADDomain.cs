@@ -22,8 +22,8 @@ namespace Readinizer.Backend.Domain.Models
 
         public virtual List<ADDomain> ADSubDomains { get; set; }
 
-        public virtual List<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
+        public virtual List<OrganisationalUnit> ADOrganisationalUnits { get; set; }
 
-        public virtual ICollection<ADSite> Sites { get; set; }
+        public virtual ICollection<Site> Sites { get; set; }
     }
 }

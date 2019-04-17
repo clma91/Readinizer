@@ -15,9 +15,9 @@ namespace Readinizer.Backend.DataAccess
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
-        public virtual DbSet<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
-        public virtual DbSet<ADOuMember> ADOuMembers { get; set; }
-        public virtual DbSet<ADSite> ADSites { get; set; }
+        public virtual DbSet<OrganisationalUnit> ADOrganisationalUnits { get; set; }
+        public virtual DbSet<Computer> ADOuMembers { get; set; }
+        public virtual DbSet<Site> ADSites { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -27,12 +27,12 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<ADDomain>().Property(x => x.Name).IsRequired();
 
 
-            modelBuilder.Entity<ADSite>().ToTable(nameof(ADSite));
-            modelBuilder.Entity<ADSite>().HasKey(x => x.ADSiteId);
-            modelBuilder.Entity<ADSite>().Property(x => x.Name).IsRequired();
+            modelBuilder.Entity<Site>().ToTable(nameof(Site));
+            modelBuilder.Entity<Site>().HasKey(x => x.SiteId);
+            modelBuilder.Entity<Site>().Property(x => x.Name).IsRequired();
 
 
-            modelBuilder.Entity<ADSite>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
+            modelBuilder.Entity<Site>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
             {
                 x.MapLeftKey("ADSiteRefId");
                 x.MapRightKey("ADDomainRefId");
@@ -40,15 +40,22 @@ namespace Readinizer.Backend.DataAccess
             });
 
 
-            modelBuilder.Entity<ADOrganisationalUnit>().ToTable(nameof(ADOrganisationalUnit));
-            modelBuilder.Entity<ADOrganisationalUnit>().HasKey(x => x.ADOrganisationalUnitId);
-            modelBuilder.Entity<ADOrganisationalUnit>().HasMany(x => x.SubADOrganisationalUnits).WithOptional().HasForeignKey(x => x.ParentId);
-            modelBuilder.Entity<ADOrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.ADOrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
+            modelBuilder.Entity<OrganisationalUnit>().ToTable(nameof(OrganisationalUnit));
+            modelBuilder.Entity<OrganisationalUnit>().HasKey(x => x.OrganisationalUnitId);
+            modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.ADOrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
 
 
-            modelBuilder.Entity<ADOuMember>().ToTable(nameof(ADOuMember));
-            modelBuilder.Entity<ADOuMember>().HasKey(x => x.ADOuMemberId);
-            modelBuilder.Entity<ADOuMember>().HasRequired(x => x.ADOrganisationalUnit).WithMany(x => x.ADOuMembers).HasForeignKey(x => new { x.OURefId });
+            modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
+            modelBuilder.Entity<Computer>().HasKey(x => x.ComputerId);
+
+
+            modelBuilder.Entity<OrganisationalUnit>().HasMany<Computer>(x => x.Computers).WithMany(x => x.OrganisationalUnits).Map(x =>
+            {
+                x.MapLeftKey("OrganisationalUnitRefId");
+                x.MapRightKey("ComputerRefId");
+                x.ToTable("OrganisationalUnitComputer");
+            });
         }
     }
 }

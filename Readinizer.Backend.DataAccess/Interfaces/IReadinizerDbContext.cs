@@ -5,9 +5,9 @@ namespace Readinizer.Backend.DataAccess.Interfaces
 {
     public interface IReadinizerDbContext
     {
-        DbSet<ADDomain> ADDomains { get; set; }
-        DbSet<ADOrganisationalUnit> ADOrganisationalUnits { get; set; }
-        DbSet<ADOuMember> ADOuMembers { get; set; }
-        DbSet<ADSite> ADSites { get; set; }
+        DbSet<Domain.Models.ADDomain> ADDomains { get; set; }
+        DbSet<OrganisationalUnit> ADOrganisationalUnits { get; set; }
+        DbSet<Computer> ADOuMembers { get; set; }
+        DbSet<Site> ADSites { get; set; }
     }
 }

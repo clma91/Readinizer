@@ -12,57 +12,57 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
     public class UnityOfWork : IDisposable, IUnityOfWork
     {
         private ReadinizerDbContext context = new ReadinizerDbContext();
-        private GenericRepository<ADDomain> adDomainRepository;
-        private GenericRepository<ADOrganisationalUnit> adOrganisationalUnitRepository;
-        private GenericRepository<ADOuMember> adOuMemberRepository;
-        private GenericRepository<ADSite> adSiteRepository;
+        private GenericRepository<Domain.Models.ADDomain> adDomainRepository;
+        private GenericRepository<OrganisationalUnit> adOrganisationalUnitRepository;
+        private GenericRepository<Computer> adOuMemberRepository;
+        private GenericRepository<Site> adSiteRepository;
 
-        public GenericRepository<ADDomain> ADDomainRepository
+        public GenericRepository<Domain.Models.ADDomain> ADDomainRepository
         {
             get
             {
                 if (this.adDomainRepository == null)
                 {
-                    this.adDomainRepository = new GenericRepository<ADDomain>(context);
+                    this.adDomainRepository = new GenericRepository<Domain.Models.ADDomain>(context);
                 }
 
                 return adDomainRepository;
             }
         }
 
-        public GenericRepository<ADOrganisationalUnit> ADOrganisationalRepository
+        public GenericRepository<OrganisationalUnit> ADOrganisationalRepository
         {
             get
             {
                 if (this.adOrganisationalUnitRepository == null)
                 {
-                    this.adOrganisationalUnitRepository = new GenericRepository<ADOrganisationalUnit>(context);
+                    this.adOrganisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
                 }
 
                 return adOrganisationalUnitRepository;
             }
         }
 
-        public GenericRepository<ADOuMember> ADOuMemberRepository
+        public GenericRepository<Computer> ADOuMemberRepository
         {
             get
             {
                 if (this.adOuMemberRepository == null)
                 {
-                    this.adOuMemberRepository = new GenericRepository<ADOuMember>(context);
+                    this.adOuMemberRepository = new GenericRepository<Computer>(context);
                 }
 
                 return adOuMemberRepository;
             }
         }
 
-        public GenericRepository<ADSite> ADSiteRepository
+        public GenericRepository<Site> ADSiteRepository
         {
             get
             {
                 if (this.adSiteRepository == null)
                 {
-                    this.adSiteRepository = new GenericRepository<ADSite>(context);
+                    this.adSiteRepository = new GenericRepository<Site>(context);
                 }
 
                 return adSiteRepository;

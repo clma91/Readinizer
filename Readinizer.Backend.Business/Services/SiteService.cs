@@ -8,11 +8,11 @@ using AD = System.DirectoryServices.ActiveDirectory;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class ADSiteService : IADSiteService
+    public class SiteService : IADSiteService
     {
         private readonly IUnityOfWork unityOfWork;
 
-        public ADSiteService(IUnityOfWork unityOfWork)
+        public SiteService(IUnityOfWork unityOfWork)
         {
             this.unityOfWork = unityOfWork;
         }
@@ -43,9 +43,9 @@ namespace Readinizer.Backend.Business.Services
             await unityOfWork.SaveChangesAsync();
         }
 
-        private List<ADSite> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<ADDomain> allDomains)
+        private List<Site> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<Domain.Models.ADDomain> allDomains)
         {
-            var adSites = new List<ADSite>();
+            var adSites = new List<Site>();
 
             foreach (var site in sites)
             {
@@ -63,7 +63,7 @@ namespace Readinizer.Backend.Business.Services
                     subnets.Add(activeDirectorySubnet.Name);
                 }
 
-                var adSite = new ADSite { Name = site.Name, Subnets = subnets, Domains = siteADDomains};
+                var adSite = new Site { Name = site.Name, Subnets = subnets, Domains = siteADDomains};
                 adSites.Add(adSite);
             }
 

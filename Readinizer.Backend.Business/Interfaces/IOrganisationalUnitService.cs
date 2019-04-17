@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Readinizer.Backend.DataAccess.Interfaces
+namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IADOuMemberRepository
+    public interface IOrganisationalUnitService
     {
-        void Add(ADOuMember member);
-        Task SaveChangesAsync();
+        Task GetAllOrganisationalUnits();
     }
 }

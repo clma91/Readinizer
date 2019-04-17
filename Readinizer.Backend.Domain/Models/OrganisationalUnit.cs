@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class ADOrganisationalUnit
+    public class OrganisationalUnit
     {
-        public int ADOrganisationalUnitId { get; set; }
+        public int OrganisationalUnitId { get; set; }
 
         public string Name { get; set; }
 
@@ -21,9 +21,9 @@ namespace Readinizer.Backend.Domain.Models
 
         public ADDomain ADDomain { get; set; }
 
-        public List<ADOrganisationalUnit> SubADOrganisationalUnits { get; set; }
+        public ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
 
-        public List<ADOuMember> ADOuMembers { get; set; }
+        public ICollection<Computer> Computers { get; set; }
 
         public bool HasReachableComputer { get; set; }
     }

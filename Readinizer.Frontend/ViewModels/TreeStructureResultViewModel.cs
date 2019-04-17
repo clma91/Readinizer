@@ -16,8 +16,8 @@ namespace Readinizer.Frontend.ViewModels
     public class TreeStructureResultViewModel : ViewModelBase, ITreeStructureResultViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IADOrganisationalUnitService adOrganisationalUnitService;
-        private readonly IADOuMemberService adOuMemberService;
+        private readonly IOrganisationalUnitService adOrganisationalUnitService;
+        private readonly IComputerService adOuMemberService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
@@ -31,7 +31,7 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public TreeStructureResultViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService)
+        public TreeStructureResultViewModel(IADDomainService adDomainService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
         {
             this.adDomainService = adDomainService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;

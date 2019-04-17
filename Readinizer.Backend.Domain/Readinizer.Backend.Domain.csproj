@@ -44,9 +44,9 @@
   <ItemGroup>
     <Compile Include="Exceptions\InvalidAuthenticationException.cs" />
     <Compile Include="Models\ADDomain.cs" />
-    <Compile Include="Models\ADOrganisationalUnit.cs" />
-    <Compile Include="Models\ADOuMember.cs" />
-    <Compile Include="Models\ADSite.cs" />
+    <Compile Include="Models\OrganisationalUnit.cs" />
+    <Compile Include="Models\Computer.cs" />
+    <Compile Include="Models\Site.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
