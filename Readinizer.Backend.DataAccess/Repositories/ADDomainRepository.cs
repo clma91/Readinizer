@@ -50,5 +50,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
         {
             return context.SaveChangesAsync();
         }
+
+        public void Dispose()
+        {
+            context.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

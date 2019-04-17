@@ -32,12 +32,12 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<ADSite>().Property(x => x.Name).IsRequired();
 
 
-            //modelBuilder.Entity<ADSite>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
-            //{
-            //    x.MapLeftKey("ADSiteRefId");
-            //    x.MapRightKey("ADDomainRefId");
-            //    x.ToTable("ADSiteDomain");
-            //});
+            modelBuilder.Entity<ADSite>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
+            {
+                x.MapLeftKey("ADSiteRefId");
+                x.MapRightKey("ADDomainRefId");
+                x.ToTable("ADSiteDomain");
+            });
 
 
             modelBuilder.Entity<ADOrganisationalUnit>().ToTable(nameof(ADOrganisationalUnit));

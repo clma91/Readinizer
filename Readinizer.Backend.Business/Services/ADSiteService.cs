@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
-using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Backend.Domain.Models;
 using AD = System.DirectoryServices.ActiveDirectory;
 
@@ -13,19 +10,17 @@ namespace Readinizer.Backend.Business.Services
 {
     public class ADSiteService : IADSiteService
     {
-        private readonly IADSiteRepository adSiteRepository;
-        private readonly IADDomainRepository adDomainRepository;
+        private readonly IUnityOfWork unityOfWork;
 
-        public ADSiteService(IADSiteRepository adSiteRepository, IADDomainRepository adDomainRepository)
+        public ADSiteService(IUnityOfWork unityOfWork)
         {
-            this.adSiteRepository = adSiteRepository;
-            this.adDomainRepository = adDomainRepository;
+            this.unityOfWork = unityOfWork;
         }
 
         public async Task SearchAllSites()
         {
             var sites = new List<AD.ActiveDirectorySite>();
-            var allDomains = await adDomainRepository.GetAllDomains();
+            var allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
 
             try
             {
@@ -43,9 +38,9 @@ namespace Readinizer.Backend.Business.Services
             }
 
             var models = MapToDomainModel(sites, allDomains);
-            //adSiteRepository.AddRange(models);
+            unityOfWork.ADSiteRepository.AddRange(models);
 
-            await adSiteRepository.SaveChangesAsync();
+            await unityOfWork.SaveChangesAsync();
         }
 
         private List<ADSite> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<ADDomain> allDomains)
@@ -69,7 +64,6 @@ namespace Readinizer.Backend.Business.Services
                 }
 
                 var adSite = new ADSite { Name = site.Name, Subnets = subnets, Domains = siteADDomains};
-                adSiteRepository.Add(adSite);
                 adSites.Add(adSite);
             }
 

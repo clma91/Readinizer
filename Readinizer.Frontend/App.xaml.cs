@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using MaterialDesignThemes.Wpf;
+using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -35,7 +36,9 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
-            container.RegisterType<IReadinizerDbContext, ReadinizerDbContext>();
+            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
+
+            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
 
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();

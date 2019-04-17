@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.DataAccess.Interfaces
 {
-    public interface IADDomainRepository
+    public interface IADDomainRepository : IDisposable
     {
         void Add(ADDomain domain);
 
