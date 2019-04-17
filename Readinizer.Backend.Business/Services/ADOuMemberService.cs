@@ -46,7 +46,6 @@ namespace Readinizer.Backend.Business.Services
                     foundMember.OURefId = OU.ADOrganisationalUnitId;
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
-                    foundMember.IsReachable = foundMember.IpAddress != null && PingHost(foundMember.IpAddress);
 
                     adOuMemberRepository.Add(foundMember);
                 }
@@ -88,32 +87,6 @@ namespace Readinizer.Backend.Business.Services
             }
 
             return null;
-        }
-
-        static bool PingHost(string ipAddress)
-        {
-            bool pingable = false;
-            Ping pinger = null;
-
-            try
-            {
-                pinger = new Ping();
-                PingReply reply = pinger.Send(ipAddress);
-                pingable = reply.Status == IPStatus.Success;
-            }
-            catch (PingException)
-            {
-                // Discard PingExceptions and return false;
-            }
-            finally
-            {
-                if (pinger != null)
-                {
-                    pinger.Dispose();
-                }
-            }
-
-            return pingable;
         }
 
     }

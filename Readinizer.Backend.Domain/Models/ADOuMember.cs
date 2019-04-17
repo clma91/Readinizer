@@ -20,8 +20,6 @@ namespace Readinizer.Backend.Domain.Models
 
         public string IpAddress { get; set; }
 
-        public bool IsReachable { get; set; }
-
-
+        public bool PingSuccessfull { get; set; }
     }
 }

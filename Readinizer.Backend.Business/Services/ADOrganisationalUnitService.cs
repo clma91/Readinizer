@@ -42,6 +42,7 @@ namespace Readinizer.Backend.Business.Services
 
                     adOrganisationalUnitsRepository.Add(foundOU);
                 }
+
                 DirectorySearcher defaultContainerSearcher = new DirectorySearcher(entry);
                 defaultContainerSearcher.Filter = ("(objectCategory=Container)");
                 defaultContainerSearcher.Filter = ("(CN=Computers)"); 
@@ -53,7 +54,6 @@ namespace Readinizer.Backend.Business.Services
                     foundContainer.ADDomainRefId = domain.ADDomainId;
 
                     adOrganisationalUnitsRepository.Add(foundContainer);
-
                 }
 
             }
