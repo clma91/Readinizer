@@ -37,27 +37,27 @@
 
         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
 
-        <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10"  BorderThickness="0.5">
-            <StackPanel VerticalAlignment="Center">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
-                    <ToggleButton Grid.Column="1" HorizontalAlignment="Left"/>
-                </Grid>
+            <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+                <StackPanel VerticalAlignment="Center">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
+                        <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left"/>
+                    </Grid>
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Label Margin="25 10 0 10" Grid.Column="0">Include Subdomain/Trees</Label>
-                    <ToggleButton Grid.Column="1" HorizontalAlignment="Left"/>
-                </Grid>
-            </StackPanel>
-        </Border>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Label Margin="25 10 0 10" Grid.Column="0">Include Subdomain/Trees</Label>
+                        <ToggleButton Grid.Column="1" HorizontalAlignment="Left"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
 
         <Button x:Name="Discover" Grid.Row="2" Grid.Column="2" Width="100" Height="50" Command="{Binding DiscoverCommand}">Discover</Button>
         <Button x:Name="Analyse"  Grid.Row="2" Grid.Column="3" Width="100" Height="50" Command="{Binding AnalyseCommand}">

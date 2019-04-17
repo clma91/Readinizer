@@ -10,37 +10,36 @@ using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class ADOrganisationalUnitService : IADOrganisationalUnitService
+    public class OrganisationalUnitService : IOrganisationalUnitService
     {
-        private readonly IADOrganisationalUnitRepository adOrganisationalUnitsRepository;
-        private readonly IADDomainRepository adDomainRepository;
+        private readonly IUnityOfWork unityOfWork;
 
-        public ADOrganisationalUnitService(IADOrganisationalUnitRepository adOrganisationalUnitRepository, IADDomainRepository aDDomainRepository)
+        public OrganisationalUnitService(IUnityOfWork unityOfWork)
         {
-            this.adOrganisationalUnitsRepository = adOrganisationalUnitRepository;
-            this.adDomainRepository = aDDomainRepository;
+            this.unityOfWork = unityOfWork;
         }
 
         public async Task getAllOrganisationalUnits()
         {
-            List<ADDomain> allDomains = await adDomainRepository.GetAllDomains();
+            List<Domain.Models.ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
             
-            foreach (ADDomain domain in allDomains)
+            foreach (Domain.Models.ADDomain domain in allDomains)
             {
                 DirectoryEntry entry = new DirectoryEntry("LDAP://" + domain.Name);
                 DirectorySearcher searcher = new DirectorySearcher(entry);
                 searcher.Filter = ("(objectCategory=organizationalUnit)");
                 searcher.SearchScope = SearchScope.OneLevel;
+                var foundOUs = new List<OrganisationalUnit>();
 
                 foreach (SearchResult searchResult in searcher.FindAll())
                 {
-                    ADOrganisationalUnit foundOU = new ADOrganisationalUnit();
+                    OrganisationalUnit foundOU = new OrganisationalUnit();
                     foundOU.Name = searchResult.Properties["ou"][0].ToString();
                     foundOU.LdapPath = searchResult.Path;
                     foundOU.ADDomainRefId = domain.ADDomainId;
-                    foundOU.SubADOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
+                    foundOU.SubOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
 
-                    adOrganisationalUnitsRepository.Add(foundOU);
+                    foundOUs.Add(foundOU);
                 }
 
                 DirectorySearcher defaultContainerSearcher = new DirectorySearcher(entry);
@@ -48,21 +47,22 @@ namespace Readinizer.Backend.Business.Services
                 defaultContainerSearcher.Filter = ("(CN=Computers)"); 
                 foreach (SearchResult defaultContainers in defaultContainerSearcher.FindAll())
                 {
-                    ADOrganisationalUnit foundContainer = new ADOrganisationalUnit();
+                    OrganisationalUnit foundContainer = new OrganisationalUnit();
                     foundContainer.Name = defaultContainers.Properties["cn"][0].ToString();
                     foundContainer.LdapPath = defaultContainers.Path;
                     foundContainer.ADDomainRefId = domain.ADDomainId;
 
-                    adOrganisationalUnitsRepository.Add(foundContainer);
+                    foundOUs.Add(foundContainer);
                 }
 
+                unityOfWork.ADOrganisationalRepository.AddRange(foundOUs);
             }
-            await adOrganisationalUnitsRepository.SaveChangesAsync();
+            await unityOfWork.SaveChangesAsync();
         }
 
-        public List<ADOrganisationalUnit> GetChildOUs(string ldapPath, ADOrganisationalUnit parentOU)
+        public List<OrganisationalUnit> GetChildOUs(string ldapPath, OrganisationalUnit parentOU)
         {
-            List<ADOrganisationalUnit> childOUs = new List<ADOrganisationalUnit>();
+            List<OrganisationalUnit> childOUs = new List<OrganisationalUnit>();
 
             DirectoryEntry childEntry = new DirectoryEntry(ldapPath);
             DirectorySearcher childSearcher = new DirectorySearcher(childEntry);
@@ -71,15 +71,15 @@ namespace Readinizer.Backend.Business.Services
 
             foreach (SearchResult childResult in childSearcher.FindAll())
             {
-                ADOrganisationalUnit childOU = new ADOrganisationalUnit();
+                OrganisationalUnit childOU = new OrganisationalUnit();
                 childOU.Name = childResult.Properties["ou"][0].ToString();
                 childOU.LdapPath = childResult.Path;
                 childOU.ADDomainRefId = parentOU.ADDomainRefId;
-                childOU.SubADOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
+                childOU.SubOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
 
                 childOUs.Add(childOU);
 
-                adOrganisationalUnitsRepository.Add(childOU);
+                unityOfWork.ADOrganisationalRepository.Add(childOU);
             }
 
             return childOUs;

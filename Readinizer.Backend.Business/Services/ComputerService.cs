@@ -13,26 +13,22 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class ADOuMemberService : IADOuMemberService
+    public class ComputerService : IComputerService
     {
-        private readonly IADOuMemberRepository adOuMemberRepository;
-        private readonly IADOrganisationalUnitRepository adOrganisationalUnitsRepository;
-        private readonly IADDomainRepository adDomainRepository;
+        private readonly IUnityOfWork unityOfWork;
 
-        public ADOuMemberService(IADOuMemberRepository adOuMemberRepository, IADOrganisationalUnitRepository adOrganisationalUnitRepository, IADDomainRepository adDomainRepository)
+        public ComputerService(IUnityOfWork unityOfWork)
         {
-            this.adOuMemberRepository = adOuMemberRepository;
-            this.adOrganisationalUnitsRepository = adOrganisationalUnitRepository;
-            this.adDomainRepository = adDomainRepository;
+            this.unityOfWork = unityOfWork;
         }
 
         public async Task GetMembersOfOu()
         {
-            List<ADOrganisationalUnit> allOUs = await adOrganisationalUnitsRepository.getAllOUs();
-            List<ADDomain> allDomains = await adDomainRepository.GetAllDomains();
+            List<OrganisationalUnit> allOUs = await unityOfWork.ADOrganisationalRepository.GetAllEntities();
+            List<ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
             List<string> DCnames = getDcNames();
 
-            foreach (ADOrganisationalUnit OU in allOUs)
+            foreach (OrganisationalUnit OU in allOUs)
             {
                 DirectoryEntry entry = new DirectoryEntry(OU.LdapPath);
                 DirectorySearcher searcher = new DirectorySearcher(entry);
@@ -41,16 +37,16 @@ namespace Readinizer.Backend.Business.Services
 
                 foreach (SearchResult searchResult in searcher.FindAll())
                 {
-                    ADOuMember foundMember = new ADOuMember();
+                    Computer foundMember = new Computer{ OrganisationalUnits = new List<OrganisationalUnit>() };
                     foundMember.ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length);
-                    foundMember.OURefId = OU.ADOrganisationalUnitId;
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
+                    foundMember.OrganisationalUnits.Add(OU);
 
-                    adOuMemberRepository.Add(foundMember);
+                    unityOfWork.ADOuMemberRepository.Add(foundMember);
                 }
             }
-            await adOuMemberRepository.SaveChangesAsync();
+            await unityOfWork.SaveChangesAsync();
         }
 
         List<string> getDcNames()
@@ -69,9 +65,9 @@ namespace Readinizer.Backend.Business.Services
             return DCs;
         }
 
-        string getIP(ADOuMember foundMember, ADOrganisationalUnit OU, List<ADDomain> allDomains)
+        string getIP(Computer foundMember, OrganisationalUnit OU, List<Domain.Models.ADDomain> allDomains)
         {
-            foreach (ADDomain domain in allDomains)
+            foreach (Domain.Models.ADDomain domain in allDomains)
             {
                 if (domain.ADDomainId.Equals(OU.ADDomainRefId))
                 {

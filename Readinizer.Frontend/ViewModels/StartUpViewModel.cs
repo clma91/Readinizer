@@ -4,24 +4,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using MaterialDesignThemes.Wpf;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
+using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
 
 namespace Readinizer.Frontend.ViewModels
 {
     public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IADOrganisationalUnitService adOrganisationalUnitService;
-        private readonly IADOuMemberService adOuMemberService;
-        private readonly IADRSoPService adRSoPService;
+        private readonly IOrganisationalUnitService adOrganisationalUnitService;
+        private readonly IComputerService adOuMemberService;
+        private readonly IADSiteService adSiteService;
 
         public ADDomain Domain;
 
@@ -49,9 +52,10 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADOrganisationalUnitService adOrganisationalUnitService, IADOuMemberService adOuMemberService, IADRSoPService adRSopService)
+        public StartUpViewModel(IADDomainService adDomainService, IADSiteService adSiteService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
         {
             this.adDomainService = adDomainService;
+            this.adSiteService = adSiteService;
             this.adOrganisationalUnitService = adOrganisationalUnitService;
             this.adOuMemberService = adOuMemberService;
             this.adRSoPService = adRSopService;
@@ -61,7 +65,16 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Discover()
         {
-            await Task.Run(() => adRSoPService.getRSoP("readinizer.ch\\sysAdmWS02", "readinizer.ch\\domainadmin"));
+            try
+            {
+                await Task.Run(() => adDomainService.SearchAllDomains());
+                await Task.Run(() => adSiteService.SearchAllSites());
+                Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+            }
+            catch (Exception e)
+            {
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
+            }
         }
 
         private async void Analyse()

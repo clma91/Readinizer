@@ -14,6 +14,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
+using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -34,21 +36,30 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
-            container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
+            container.RegisterType<IADSiteService, SiteService>();
+            container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
+            container.RegisterType<IComputerService, ComputerService>();
 
-            container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
-            container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
-
-            container.RegisterType<IADOuMemberRepository, ADOuMemberRepository>();
-            container.RegisterType<IADOuMemberService, ADOuMemberService>();
-
-            container.RegisterType<IADRSoPService, ADRSoPService>();
-
+            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
+            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
+
+            container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string friendlyMsg = string.Format("Sorry something went wrong.  The error was: [{0}]", e.Exception.Message);
+            string caption = "Error";
+            MessageBox.Show(friendlyMsg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Signal that we handled things--prevents Application from exiting
+            e.Handled = true;
+        }
+
     }
 }
