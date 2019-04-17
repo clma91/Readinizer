@@ -15,9 +15,9 @@ namespace Readinizer.Backend.DataAccess
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
-        public virtual DbSet<OrganisationalUnit> ADOrganisationalUnits { get; set; }
-        public virtual DbSet<Computer> ADOuMembers { get; set; }
-        public virtual DbSet<Site> ADSites { get; set; }
+        public virtual DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
+        public virtual DbSet<Computer> Computers { get; set; }
+        public virtual DbSet<Site> Sites { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -34,9 +34,9 @@ namespace Readinizer.Backend.DataAccess
 
             modelBuilder.Entity<Site>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
             {
-                x.MapLeftKey("ADSiteRefId");
+                x.MapLeftKey("SiteRefId");
                 x.MapRightKey("ADDomainRefId");
-                x.ToTable("ADSiteDomain");
+                x.ToTable("SiteADDomain");
             });
 
 

@@ -22,12 +22,10 @@ namespace Readinizer.Frontend.ViewModels
     public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IOrganisationalUnitService adOrganisationalUnitService;
-        private readonly IComputerService adOuMemberService;
-        private readonly ISiteService adSiteService;
-
-        public ADDomain Domain;
-
+        private readonly IOrganisationalUnitService organisationalUnitService;
+        private readonly IComputerService computerService;
+        private readonly ISiteService siteService;
+        
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
@@ -52,12 +50,12 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService adSiteService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService)
         {
             this.adDomainService = adDomainService;
-            this.adSiteService = adSiteService;
-            this.adOrganisationalUnitService = adOrganisationalUnitService;
-            this.adOuMemberService = adOuMemberService;
+            this.siteService = siteService;
+            this.organisationalUnitService = organisationalUnitService;
+            this.computerService = computerService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -67,7 +65,7 @@ namespace Readinizer.Frontend.ViewModels
             try
             {
                 await Task.Run(() => adDomainService.SearchAllDomains());
-                await Task.Run(() => adSiteService.SearchAllSites());
+                await Task.Run(() => siteService.SearchAllSites());
                 Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
             }
             catch (Exception e)
@@ -78,8 +76,8 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            await Task.Run(() => adOrganisationalUnitService.GetAllOrganisationalUnits());
-            await Task.Run(() => adOuMemberService.GetMembersOfOu());
+            await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+            await Task.Run(() => computerService.GetComputers());
             ShowTreeStructureResult();
         }
 
