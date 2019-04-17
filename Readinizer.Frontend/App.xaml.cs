@@ -14,6 +14,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
+using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -34,8 +36,15 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
+            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
+
+            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
+
             container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
+
+            container.RegisterType<IADSiteRepository, ADSiteRepository>();
+            container.RegisterType<IADSiteService, ADSiteService>();
 
             container.RegisterType<IADOrganisationalUnitRepository, ADOrganisationalUnitRepository>();
             container.RegisterType<IADOrganisationalUnitService, ADOrganisationalUnitService>();
@@ -45,8 +54,21 @@ namespace Readinizer.Frontend
 
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
+            container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string friendlyMsg = string.Format("Sorry something went wrong.  The error was: [{0}]", e.Exception.Message);
+            string caption = "Error";
+            MessageBox.Show(friendlyMsg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Signal that we handled things--prevents Application from exiting
+            e.Handled = true;
+        }
+
     }
 }
