@@ -37,7 +37,7 @@ namespace Readinizer.Frontend
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
             container.RegisterType<IADDomainService, ADDomainService>();
-            container.RegisterType<IADSiteService, SiteService>();
+            container.RegisterType<ISiteService, SiteService>();
             container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
             container.RegisterType<IComputerService, ComputerService>();
 

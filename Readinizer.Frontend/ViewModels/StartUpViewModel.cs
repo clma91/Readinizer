@@ -24,7 +24,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IADDomainService adDomainService;
         private readonly IOrganisationalUnitService adOrganisationalUnitService;
         private readonly IComputerService adOuMemberService;
-        private readonly IADSiteService adSiteService;
+        private readonly ISiteService adSiteService;
 
         public ADDomain Domain;
 
@@ -52,7 +52,7 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, IADSiteService adSiteService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService adSiteService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
         {
             this.adDomainService = adDomainService;
             this.adSiteService = adSiteService;

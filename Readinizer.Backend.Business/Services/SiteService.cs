@@ -8,7 +8,7 @@ using AD = System.DirectoryServices.ActiveDirectory;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class SiteService : IADSiteService
+    public class SiteService : ISiteService
     {
         private readonly IUnityOfWork unityOfWork;
 

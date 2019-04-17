@@ -76,6 +76,7 @@
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IADRSoPService.cs" />
     <Compile Include="Interfaces\IADDomainService.cs" />
+    <Compile Include="Interfaces\ISiteService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ADDomainService.cs" />
     <Compile Include="Services\OrganisationalUnitService.cs" />
