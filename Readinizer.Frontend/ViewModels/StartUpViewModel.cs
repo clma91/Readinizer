@@ -61,7 +61,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Discover()
         {
-            await Task.Run(() => adRSoPService.getRSoP("readinizertree.ch\\TreeWS", "readinizer.ch\\domainadmin"));
+            await Task.Run(() => adRSoPService.getRSoP("readinizer.ch\\sysAdmWS02", "readinizer.ch\\domainadmin"));
         }
 
         private async void Analyse()

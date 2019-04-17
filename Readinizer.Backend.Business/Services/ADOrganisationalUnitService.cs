@@ -21,7 +21,7 @@ namespace Readinizer.Backend.Business.Services
             this.adDomainRepository = aDDomainRepository;
         }
 
-        public async Task GetAllOrganisationalUnits()
+        public async Task getAllOrganisationalUnits()
         {
             List<ADDomain> allDomains = await adDomainRepository.GetAllDomains();
             
@@ -59,7 +59,7 @@ namespace Readinizer.Backend.Business.Services
             {
                 ADOrganisationalUnit childOU = new ADOrganisationalUnit();
                 childOU.Name = childResult.Properties["ou"][0].ToString();
-                childOU.LdapPath = childResult.Path.ToString();
+                childOU.LdapPath = childResult.Path;
                 childOU.ADDomainRefId = parentOU.ADDomainRefId;
                 childOU.SubADOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
 

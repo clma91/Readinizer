@@ -9,6 +9,6 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface IADOrganisationalUnitService
     {
-        Task GetAllOrganisationalUnits();
+        Task getAllOrganisationalUnits();
     }
 }
