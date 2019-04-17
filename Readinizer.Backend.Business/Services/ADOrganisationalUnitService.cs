@@ -36,12 +36,26 @@ namespace Readinizer.Backend.Business.Services
                 {
                     ADOrganisationalUnit foundOU = new ADOrganisationalUnit();
                     foundOU.Name = searchResult.Properties["ou"][0].ToString();
-                    foundOU.LdapPath = searchResult.Path.ToString();
+                    foundOU.LdapPath = searchResult.Path;
                     foundOU.ADDomainRefId = domain.ADDomainId;
                     foundOU.SubADOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
 
                     adOrganisationalUnitsRepository.Add(foundOU);
                 }
+                DirectorySearcher defaultContainerSearcher = new DirectorySearcher(entry);
+                defaultContainerSearcher.Filter = ("(objectCategory=Container)");
+                defaultContainerSearcher.Filter = ("(CN=Computers)"); 
+                foreach (SearchResult defaultContainers in defaultContainerSearcher.FindAll())
+                {
+                    ADOrganisationalUnit foundContainer = new ADOrganisationalUnit();
+                    foundContainer.Name = defaultContainers.Properties["cn"][0].ToString();
+                    foundContainer.LdapPath = defaultContainers.Path;
+                    foundContainer.ADDomainRefId = domain.ADDomainId;
+
+                    adOrganisationalUnitsRepository.Add(foundContainer);
+
+                }
+
             }
             await adOrganisationalUnitsRepository.SaveChangesAsync();
         }
@@ -59,7 +73,7 @@ namespace Readinizer.Backend.Business.Services
             {
                 ADOrganisationalUnit childOU = new ADOrganisationalUnit();
                 childOU.Name = childResult.Properties["ou"][0].ToString();
-                childOU.LdapPath = childResult.Path.ToString();
+                childOU.LdapPath = childResult.Path;
                 childOU.ADDomainRefId = parentOU.ADDomainRefId;
                 childOU.SubADOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
 

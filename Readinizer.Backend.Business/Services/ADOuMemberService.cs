@@ -4,6 +4,7 @@ using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
@@ -45,6 +46,7 @@ namespace Readinizer.Backend.Business.Services
                     foundMember.OURefId = OU.ADOrganisationalUnitId;
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
+                    foundMember.IsReachable = foundMember.IpAddress != null && PingHost(foundMember.IpAddress);
 
                     adOuMemberRepository.Add(foundMember);
                 }
@@ -84,7 +86,34 @@ namespace Readinizer.Backend.Business.Services
                     }
                 }
             }
-            throw new Exception("No IP found");
+
+            return null;
+        }
+
+        static bool PingHost(string ipAddress)
+        {
+            bool pingable = false;
+            Ping pinger = null;
+
+            try
+            {
+                pinger = new Ping();
+                PingReply reply = pinger.Send(ipAddress);
+                pingable = reply.Status == IPStatus.Success;
+            }
+            catch (PingException)
+            {
+                // Discard PingExceptions and return false;
+            }
+            finally
+            {
+                if (pinger != null)
+                {
+                    pinger.Dispose();
+                }
+            }
+
+            return pingable;
         }
 
     }
