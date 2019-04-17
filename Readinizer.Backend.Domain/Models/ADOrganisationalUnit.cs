@@ -24,5 +24,7 @@ namespace Readinizer.Backend.Domain.Models
         public List<ADOrganisationalUnit> SubADOrganisationalUnits { get; set; }
 
         public List<ADOuMember> ADOuMembers { get; set; }
+
+        public bool HasReachableComputer { get; set; }
     }
 }

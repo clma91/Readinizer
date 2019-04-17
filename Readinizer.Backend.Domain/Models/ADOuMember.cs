@@ -17,5 +17,9 @@ namespace Readinizer.Backend.Domain.Models
         public int OURefId { get; set; }
 
         public ADOrganisationalUnit ADOrganisationalUnit { get; set; }
+
+        public string IpAddress { get; set; }
+
+        public bool PingSuccessfull { get; set; }
     }
 }
