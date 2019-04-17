@@ -88,8 +88,8 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<Domain.Models.ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
-            var models = domains.Select(x => new ADDomain { Name = x.Name, ADSubDomains = new List<ADDomain>() }).ToList();
-            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, ADSubDomains = new List<ADDomain>()}).ToList();
+            var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomains = new List<ADDomain>() }).ToList();
+            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomains = new List<ADDomain>()}).ToList();
 
             AddSubDomains(domains, models);
             AddSubDomains(treeDomains, treeModels);
@@ -100,7 +100,7 @@ namespace Readinizer.Backend.Business.Services
             if (root != null)
             {
                 root.IsForestRoot = true;
-                root.ADSubDomains.AddRange(treeModels);
+                root.SubADDomains.AddRange(treeModels);
             }
 
             return allModels;
@@ -111,7 +111,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var adDomain in models)
             {
                 var children = domains.ToArray().Where(d => d.Parent?.Name == adDomain.Name).Select(x => x.Name);
-                adDomain.ADSubDomains.AddRange(models.Where(m => children.Contains(m.Name)));
+                adDomain.SubADDomains.AddRange(models.Where(m => children.Contains(m.Name)));
             }
         }
 

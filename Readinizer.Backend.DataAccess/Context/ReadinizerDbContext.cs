@@ -23,7 +23,7 @@ namespace Readinizer.Backend.DataAccess
         {
             modelBuilder.Entity<ADDomain>().ToTable(nameof(ADDomain));
             modelBuilder.Entity<ADDomain>().HasKey(x => x.ADDomainId);
-            modelBuilder.Entity<ADDomain>().HasMany(x => x.ADSubDomains).WithOptional().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<ADDomain>().HasMany(x => x.SubADDomains).WithOptional().HasForeignKey(x => x.ParentId);
             modelBuilder.Entity<ADDomain>().Property(x => x.Name).IsRequired();
 
 
@@ -43,7 +43,7 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<OrganisationalUnit>().ToTable(nameof(OrganisationalUnit));
             modelBuilder.Entity<OrganisationalUnit>().HasKey(x => x.OrganisationalUnitId);
             modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional().HasForeignKey(x => x.ParentId);
-            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.ADOrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
+            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
 
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
