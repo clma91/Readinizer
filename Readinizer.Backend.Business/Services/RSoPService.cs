@@ -43,11 +43,13 @@ namespace Readinizer.Backend.Business.Services
                         OU.HasReachableComputer = true;
                         unityOfWork.OrganisationalUnitRepository.Update(OU);
 
-                        getRSoP(domainName + "\\" + reachableComputer.ComputerName,
+                        getRSoP(reachableComputer.ComputerName + "." + domainName,
                             reachableComputer.ComputerName,
                             System.Security.Principal.WindowsIdentity.GetCurrent().Name);
                     }
                 }
+
+                await unityOfWork.SaveChangesAsync();
             }
 
 
