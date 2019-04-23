@@ -67,7 +67,7 @@ namespace Readinizer.Backend.Business.Services
 
         string getIP(Computer foundMember, OrganisationalUnit OU, List<Domain.Models.ADDomain> allDomains)
         {
-            foreach (Domain.Models.ADDomain domain in allDomains)
+            foreach (ADDomain domain in allDomains)
             {
                 if (domain.ADDomainId.Equals(OU.ADDomainRefId))
                 {

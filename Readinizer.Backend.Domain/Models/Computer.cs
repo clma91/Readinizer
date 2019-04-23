@@ -14,7 +14,7 @@ namespace Readinizer.Backend.Domain.Models
 
         public bool IsDomainController { get; set; }
 
-        public ICollection<OrganisationalUnit> OrganisationalUnits { get; set; }
+        public virtual ICollection<OrganisationalUnit> OrganisationalUnits { get; set; }
 
         public string IpAddress { get; set; }
 

@@ -19,6 +19,11 @@ namespace Readinizer.Backend.DataAccess.Repositories
             this.dbSet = context.Set<TEntity>();
         }
 
+        public virtual TEntity GetByID(object id)
+        {
+            return dbSet.Find(id);
+        }
+
         public virtual Task<List<TEntity>> GetAllEntities()
         {
             return dbSet.ToListAsync<TEntity>();

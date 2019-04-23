@@ -25,7 +25,8 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IOrganisationalUnitService organisationalUnitService;
         private readonly IComputerService computerService;
         private readonly ISiteService siteService;
-        
+        private readonly IRSoPService rSoPService;
+
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
@@ -50,12 +51,14 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService, IRSoPService rSoPService
+        )
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
             this.organisationalUnitService = organisationalUnitService;
             this.computerService = computerService;
+            this.rSoPService = rSoPService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -66,6 +69,8 @@ namespace Readinizer.Frontend.ViewModels
             {
                 await Task.Run(() => adDomainService.SearchAllDomains());
                 await Task.Run(() => siteService.SearchAllSites());
+                await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                await Task.Run(() => computerService.GetComputers());
                 Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
             }
             catch (Exception e)
@@ -76,9 +81,18 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-            await Task.Run(() => computerService.GetComputers());
-            ShowTreeStructureResult();
+            try
+            {
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                
+                Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
+                ShowTreeStructureResult();
+            }
+            catch (Exception e)
+            {
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
+            }
+            
         }
 
         private void ShowTreeStructureResult()

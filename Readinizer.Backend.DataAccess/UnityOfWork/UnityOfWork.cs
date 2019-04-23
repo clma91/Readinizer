@@ -14,7 +14,7 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         private ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;
         private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
-        private GenericRepository<Computer> ouMemberRepository;
+        private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
 
         public GenericRepository<ADDomain> ADDomainRepository
@@ -47,12 +47,12 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         {
             get
             {
-                if (this.ouMemberRepository == null)
+                if (this.computerRepository == null)
                 {
-                    this.ouMemberRepository = new GenericRepository<Computer>(context);
+                    this.computerRepository = new GenericRepository<Computer>(context);
                 }
 
-                return ouMemberRepository;
+                return computerRepository;
             }
         }
 
