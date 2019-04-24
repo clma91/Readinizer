@@ -103,7 +103,7 @@ namespace Readinizer.Backend.Business.Services
             try
             {
                 pinger = new Ping();
-                PingReply reply = pinger.Send(ipAddress);
+                PingReply reply = pinger.Send(ipAddress, 200); //TODO set ping timeout
                 pingable = reply.Status == IPStatus.Success;
             }
             catch (PingException)
