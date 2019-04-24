@@ -24,6 +24,9 @@
         <DataTemplate DataType="{x:Type viewModels:TreeStructureResultViewModel}">
             <views:TreeStructureResultView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SpinnerViewModel}">
+            <views:SpinnerView/>
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel>

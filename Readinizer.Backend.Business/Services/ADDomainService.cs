@@ -59,7 +59,7 @@ namespace Readinizer.Backend.Business.Services
             }
             catch (Exception e)
             {
-                var message = "Unkown error occurred";
+                var message = e.Message;
                 logger.Error(e, message);
                 throw new InvalidAuthenticationException(message);
             }

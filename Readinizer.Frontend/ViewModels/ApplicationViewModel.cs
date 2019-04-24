@@ -25,9 +25,10 @@ namespace Readinizer.Frontend.ViewModels
 
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
+        private readonly SpinnerViewModel spinnerViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -35,10 +36,13 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue)
+        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
+                                    SpinnerViewModel spinnerViewModel)
+
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
+            this.spinnerViewModel = spinnerViewModel;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
@@ -57,6 +61,11 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = treeStructureResultViewModel;
         }
 
+        private void ShowSpinnerView()
+        {
+            CurrentViewModel = spinnerViewModel;
+        }
+
         private void ChangeView(ChangeView message)
         {
             if (message.ViewModelType == typeof(StartUpViewModel))
@@ -66,6 +75,9 @@ namespace Readinizer.Frontend.ViewModels
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
                 ShowTreeStructureResultView();
+            } else if (message.ViewModelType == typeof(SpinnerViewModel))
+            {
+                ShowSpinnerView();
             }
         }
 

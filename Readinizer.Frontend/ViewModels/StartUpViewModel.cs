@@ -71,18 +71,19 @@ namespace Readinizer.Frontend.ViewModels
                 await Task.Run(() => siteService.SearchAllSites());
                 await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
                 await Task.Run(() => computerService.GetComputers());
-                Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-            }
+            Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+        }
             catch (Exception e)
             {
                 Messenger.Default.Send(new SnackbarMessage(e.Message));
             }
-        }
+}
 
         private async void Analyse()
         {
             try
             {
+                ShowSpinnerView();
                 await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                 
                 Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
@@ -98,6 +99,11 @@ namespace Readinizer.Frontend.ViewModels
         private void ShowTreeStructureResult()
         {
             Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
+        }
+
+        private void ShowSpinnerView()
+        {
+            Messenger.Default.Send(new ChangeView(typeof(SpinnerViewModel)));
         }
     }
 }

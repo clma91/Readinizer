@@ -122,14 +122,19 @@
     </ApplicationDefinition>
     <Compile Include="Interfaces\IApplicationViewModel.cs" />
     <Compile Include="Interfaces\IStartUpViewModel.cs" />
+    <Compile Include="Interfaces\ISpinnerViewModel.cs" />
     <Compile Include="Interfaces\ITreeStructureResultViewModel.cs" />
     <Compile Include="Messages\ChangeView.cs" />
     <Compile Include="Messages\SnackbarMessage.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="ViewModels\StartUpViewModel.cs" />
+    <Compile Include="ViewModels\SpinnerViewModel.cs" />
     <Compile Include="ViewModels\TreeStructureResultViewModel.cs" />
     <Compile Include="Views\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SpinnerView.xaml.cs">
+      <DependentUpon>SpinnerView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\StartUpView.xaml.cs">
       <DependentUpon>StartUpView.xaml</DependentUpon>
@@ -144,6 +149,10 @@
     <Page Include="Views\ApplicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SpinnerView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\StartUpView.xaml">
       <SubType>Designer</SubType>
