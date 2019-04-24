@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,20 +10,20 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class ADDomain
     {
-        public ADDomain(string Name, bool isTreeRoot, bool isForestRoot)
-        {
-            this.Name = Name;
-            this.isTreeRoot = isTreeRoot;
-            this.isForstRoot = isForstRoot;
-        }
+        public int ADDomainId { get; set; }
 
-        public int Id { get; set; }
+        public int? ParentId { get; set; }
 
-        private string name;
         public string Name { get; set; }
 
-        public bool isTreeRoot { get; set; }
+        public bool IsTreeRoot { get; set; }
 
-        public bool isForstRoot { get; set; }
+        public bool IsForestRoot { get; set; }
+
+        public virtual List<ADDomain> SubADDomains { get; set; }
+
+        public virtual List<OrganisationalUnit> OrganisationalUnits { get; set; }
+
+        public virtual ICollection<Site> Sites { get; set; }
     }
 }

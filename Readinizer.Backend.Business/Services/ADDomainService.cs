@@ -1,97 +1,137 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.DataAccess.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Exceptions;
+using AD = System.DirectoryServices.ActiveDirectory;
 
 namespace Readinizer.Backend.Business.Services
 {
     public class ADDomainService : IADDomainService
     {
+        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private readonly IUnityOfWork unityOfWork;
 
-        private readonly IADDomainRepository adDomainRepository;
-
-        public ADDomainService(IADDomainRepository adDomainRepository)
+        public ADDomainService(IUnityOfWork unityOfWork)
         {
-            this.adDomainRepository = adDomainRepository;
+            this.unityOfWork = unityOfWork;
         }
 
-        public ADDomain SearchDomain(string fullyQualifiedDomainName)
+        public async Task SearchAllDomains()
         {
-            ADDomain searchedDomain = new ADDomain("", false, false);
-
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
-            {
-                if (domain.Name.Equals(fullyQualifiedDomainName))
-                {
-                    searchedDomain = new ADDomain(domain.Name, false, false);
-                }
-                else
-                {
-                    throw new Exception("This domain does not exist in this forest");
-                }
-            }
-
-            return searchedDomain;
-        }
-
-        public Task SearchAllDomains()
-        {
-            System.DirectoryServices.ActiveDirectory.Domain currentDomain = System.DirectoryServices.ActiveDirectory.Domain.GetCurrentDomain();
-            List<System.DirectoryServices.ActiveDirectory.Domain> childDomains = new List<System.DirectoryServices.ActiveDirectory.Domain>();
-
-            childDomains = GetChildDomains(currentDomain);
-
-            adDomainRepository.Add(new ADDomain(currentDomain.Name, false, false));
-            foreach (System.DirectoryServices.ActiveDirectory.Domain domain in childDomains)
-            {
-                adDomainRepository.Add(new ADDomain(domain.Name, false, false));
-            }
-
-            return adDomainRepository.SaveChangesAsync();
-        }
-
-        private List<System.DirectoryServices.ActiveDirectory.Domain> GetChildDomains(System.DirectoryServices.ActiveDirectory.Domain currentDomain)
-        {
-            List<System.DirectoryServices.ActiveDirectory.Domain> childDomains = new List<System.DirectoryServices.ActiveDirectory.Domain>();
-            
-            if (currentDomain.Children == null)
-            {
-                return null;
-            } else
-            {
-                foreach(System.DirectoryServices.ActiveDirectory.Domain childDomain in currentDomain.Children)
-                {
-                    childDomains.Add(childDomain);
-                }
-            }
-
-            return childDomains;
-        }
-
-        public bool isDomainInForest(string fullyQualifiedDomainName)
-        {
-            bool isInForest = false;
+            var domains = new List<AD.Domain>();
+            var treeDomains = new List<AD.Domain>();
+            var treeDomainsWithChildren = new List<AD.Domain>();
 
             try
             {
-                foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
+                var forestRootDomain = Forest.GetCurrentForest().RootDomain;
+                var domainTrusts = forestRootDomain.GetAllTrustRelationships();
+
+                foreach (TrustRelationshipInformation domainTrust in domainTrusts)
                 {
-                    if (domain.Name.Equals(fullyQualifiedDomainName))
+                    if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
                     {
-                        isInForest = true;
+                        var treeDomain =
+                            AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain,
+                                domainTrust.TargetName));
+                        treeDomains.Add(treeDomain);
                     }
                 }
-            } catch (ActiveDirectoryOperationException e)
-            {
-                // TODO: add logic to catch exception
+
+                AddAllChildDomains(forestRootDomain, domains);
             }
-            
+            catch (UnauthorizedAccessException accessException)
+            {
+                var message = "Invalid access rights for domain call";
+                logger.Error(accessException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            catch (ActiveDirectoryServerDownException severDownException)
+            {
+                var message = $"Server {severDownException.Name} is down";
+                logger.Error(severDownException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            catch (Exception e)
+            {
+                var message = "Unkown error occurred";
+                logger.Error(e, message);
+                throw new InvalidAuthenticationException(message);
+            }
+
+            foreach (var treeDomain in treeDomains)
+            {
+                AddAllChildDomains(treeDomain, treeDomainsWithChildren);
+            }
+
+            var models = MapToDomainModel(domains, treeDomainsWithChildren);
+
+            unityOfWork.ADDomainRepository.AddRange(models);
+
+            await unityOfWork.SaveChangesAsync();
+        }
+        
+        private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
+        {
+            domains.Add(root);
+
+            for (var i = 0; i < root.Children.Count; ++i)
+            {
+                AddAllChildDomains(root.Children[i], domains);
+            }
+        }
+
+        private static List<Domain.Models.ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
+        {
+            var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomains = new List<ADDomain>() }).ToList();
+            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomains = new List<ADDomain>()}).ToList();
+
+            AddSubDomains(domains, models);
+            AddSubDomains(treeDomains, treeModels);
+
+            var allModels = models.Union(treeModels).ToList();
+
+            var root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+            if (root != null)
+            {
+                root.IsForestRoot = true;
+                root.SubADDomains.AddRange(treeModels);
+            }
+
+            return allModels;
+        }
+
+        private static void AddSubDomains(List<AD.Domain> domains, List<Domain.Models.ADDomain> models)
+        {
+            foreach (var adDomain in models)
+            {
+                var children = domains.ToArray().Where(d => d.Parent?.Name == adDomain.Name).Select(x => x.Name);
+                adDomain.SubADDomains.AddRange(models.Where(m => children.Contains(m.Name)));
+            }
+        }
+
+        private static bool IsForestRoot(string domainName)
+        {
+            return Forest.GetCurrentForest().RootDomain.Name.Equals(domainName);
+        }
+
+        public bool IsDomainInForest(string fullyQualifiedDomainName)
+        {
+            var isInForest = false;
+
+            foreach (AD.Domain domain in Forest.GetCurrentForest().Domains)
+            {
+                if (domain.Name.Equals(fullyQualifiedDomainName))
+                {
+                    isInForest = true;
+                }
+            }
+
             return isInForest;
         }
     }

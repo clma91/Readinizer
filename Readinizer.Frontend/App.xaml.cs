@@ -1,5 +1,6 @@
 ﻿using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
+using Readinizer.Backend.DataAccess;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Frontend.Interfaces;
@@ -9,9 +10,12 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using MaterialDesignThemes.Wpf;
+using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
 
 namespace Readinizer.Frontend
@@ -23,15 +27,40 @@ namespace Readinizer.Frontend
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            base.OnStartup(e);
+
             IUnityContainer container = new UnityContainer();
 
+            container.RegisterType<IApplicationViewModel, ApplicationViewModel>();
+            container.RegisterType<ApplicationView>();
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
+            container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
 
-            container.RegisterType<IADDomainRepository, ADDomainRepository>();
             container.RegisterType<IADDomainService, ADDomainService>();
+            container.RegisterType<ISiteService, SiteService>();
+            container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
+            container.RegisterType<IComputerService, ComputerService>();
+            container.RegisterType<IRSoPService, RSoPService>();
 
-            StartUpView startUpView = container.Resolve<StartUpView>();
-            startUpView.Show();
+            container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
+            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
+
+            container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+            var applicationView = container.Resolve<ApplicationView>();
+            applicationView.Show();
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            string friendlyMsg = string.Format("Sorry something went wrong.  The error was: [{0}]", e.Exception.Message);
+            string caption = "Error";
+            MessageBox.Show(friendlyMsg, caption, MessageBoxButton.OK, MessageBoxImage.Error);
+
+            // Signal that we handled things--prevents Application from exiting
+            e.Handled = true;
+        }
+
     }
 }

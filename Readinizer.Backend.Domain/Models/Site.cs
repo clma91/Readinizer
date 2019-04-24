@@ -6,16 +6,14 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class ADOrganisationalUnit
+    public class Site
     {
-        public ADOrganisationalUnit(string Name)
-        {
-            this.Name = Name;
-        }
+        public int SiteId { get; set; }
 
-        public int Id { get; set; }
-
-        private string name;
         public string Name { get; set; }
+
+        public virtual ICollection<string> Subnets { get; set; }
+        
+        public virtual ICollection<ADDomain> Domains { get; set; }
     }
 }

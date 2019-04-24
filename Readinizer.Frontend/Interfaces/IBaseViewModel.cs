@@ -1,6 +1,6 @@
 ﻿namespace Readinizer.Frontend.Interfaces
 {
-    public interface IStartUpViewModel
+    public interface IBaseViewModel
     {
     }
 }

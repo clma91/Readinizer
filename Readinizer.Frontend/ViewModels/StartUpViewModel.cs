@@ -4,72 +4,100 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using System.Windows.Input;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using MaterialDesignThemes.Wpf;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Frontend.Commands;
 using Readinizer.Frontend.Interfaces;
+using Readinizer.Frontend.Messages;
+using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
 
 namespace Readinizer.Frontend.ViewModels
 {
-    class StartUpViewModel : IStartUpViewModel, INotifyPropertyChanged
+    public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly ADOrganisationalUnitService organisationalUnitService;
-        public ADDomain Domain;
+        private readonly IOrganisationalUnitService organisationalUnitService;
+        private readonly IComputerService computerService;
+        private readonly ISiteService siteService;
+        private readonly IRSoPService rSoPService;
+
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
         public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse(), () => this.CanAnalyse));
 
-
-        private bool canDiscover;
-        public bool CanDiscover
-        {
-            get { return canDiscover; }
-            private set { canDiscover = value; }
-        }
-        private bool canAnalyse;
-        public bool CanAnalyse
-        {
-            get { return canAnalyse; }
-            private set { canAnalyse = value; }
-        }
+        public bool CanDiscover { get; private set; }
+        public bool CanAnalyse { get; private set; }
 
         private string domainName;
         public string DomainName
         {
-            get { return domainName; }
-            set { domainName = value; OnPropertyChanged("DomainName"); }
+            get => domainName;
+            set { Set(ref domainName, value); }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService)
+        [Obsolete("Only for design data", true)]
+        public StartUpViewModel()
+        {
+            if (!this.IsInDesignMode)
+            {
+                throw new Exception("Use only for design mode");
+            }
+        }
+
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService, IRSoPService rSoPService
+        )
         {
             this.adDomainService = adDomainService;
+            this.siteService = siteService;
+            this.organisationalUnitService = organisationalUnitService;
+            this.computerService = computerService;
+            this.rSoPService = rSoPService;
             CanDiscover = true;
             CanAnalyse = true;
         }
 
         private async void Discover()
         {
-            await this.adDomainService.SearchAllDomains();
+            try
+            {
+                await Task.Run(() => adDomainService.SearchAllDomains());
+                await Task.Run(() => siteService.SearchAllSites());
+                await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                await Task.Run(() => computerService.GetComputers());
+                Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+            }
+            catch (Exception e)
+            {
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
+            }
         }
 
-        private void Analyse()
+        private async void Analyse()
         {
+            try
+            {
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                
+                Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
+                ShowTreeStructureResult();
+            }
+            catch (Exception e)
+            {
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
+            }
             
         }
 
-        #region INotifyPropertyChanged Members
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected void OnPropertyChanged(string propertyName)
+        private void ShowTreeStructureResult()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
         }
-
-        #endregion
     }
 }
