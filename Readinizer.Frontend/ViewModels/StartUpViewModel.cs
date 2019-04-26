@@ -51,8 +51,8 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService, IRSoPService rSoPService
-        )
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
+                                IComputerService computerService, IRSoPService rSoPService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
@@ -83,9 +83,9 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
-                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                 
-                Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
+                //Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
                 ShowTreeStructureResult();
             }
             catch (Exception e)

@@ -15,7 +15,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Readinizer" Height="550" Width="820">
+        Title="Readinizer" 
+        Width="Auto" Height="Auto" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:StartUpViewModel}">
@@ -43,6 +44,6 @@
             </MenuItem>
         </Menu>
         <materialDesign:Snackbar x:Name="Snackbar" DockPanel.Dock="Bottom" HorizontalAlignment="Center" MessageQueue="{Binding SnackbarMessageQueue}" />
-        <ContentControl Content="{Binding CurrentViewModel}" Height="450" Width="800" />
+        <ContentControl Content="{Binding CurrentViewModel}" Width="Auto" Height="Auto" />
     </DockPanel>
 </Window>

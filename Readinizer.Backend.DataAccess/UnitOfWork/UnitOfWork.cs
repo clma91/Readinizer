@@ -9,7 +9,7 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.DataAccess.UnityOfWork
 {
-    public class UnityOfWork : IDisposable, IUnityOfWork
+    public class UnitOfWork : IDisposable, IUnitOfWork
     {
         private ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;

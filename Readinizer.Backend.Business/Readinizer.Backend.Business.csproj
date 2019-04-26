@@ -49,12 +49,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.6.2\lib\net45\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.GroupPolicy.Management, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Windows\WinSxS\msil_microsoft.grouppolicy.management_31bf3856ad364e35_10.0.17132.1_none_247b413349d069ba\Microsoft.GroupPolicy.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.6.2\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -72,7 +72,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Factory\TreeNodesFactory.cs" />
     <Compile Include="Interfaces\IComputerService.cs" />
+    <Compile Include="Interfaces\ITreeNodesFactory.cs" />
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IRSoPService.cs" />
     <Compile Include="Interfaces\IADDomainService.cs" />

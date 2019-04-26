@@ -15,17 +15,17 @@ namespace Readinizer.Backend.Business.Services
 {
     public class ComputerService : IComputerService
     {
-        private readonly IUnityOfWork unityOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ComputerService(IUnityOfWork unityOfWork)
+        public ComputerService(IUnitOfWork unitOfWork)
         {
-            this.unityOfWork = unityOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task GetComputers()
         {
-            List<OrganisationalUnit> allOUs = await unityOfWork.OrganisationalUnitRepository.GetAllEntities();
-            List<ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
+            List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<string> DCnames = getDcNames();
 
             foreach (OrganisationalUnit OU in allOUs)
@@ -43,10 +43,10 @@ namespace Readinizer.Backend.Business.Services
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
                     foundMember.OrganisationalUnits.Add(OU);
 
-                    unityOfWork.ComputerRepository.Add(foundMember);
+                    unitOfWork.ComputerRepository.Add(foundMember);
                 }
             }
-            await unityOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
         }
 
         List<string> getDcNames()

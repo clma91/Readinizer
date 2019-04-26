@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using MaterialDesignThemes.Wpf;
+using Readinizer.Backend.Business.Factory;
 using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
 
@@ -42,8 +43,10 @@ namespace Readinizer.Frontend
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
 
+            container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
+
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
-            container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
+            container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();

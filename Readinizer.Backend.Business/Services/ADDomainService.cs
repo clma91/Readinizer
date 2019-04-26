@@ -14,11 +14,11 @@ namespace Readinizer.Backend.Business.Services
     public class ADDomainService : IADDomainService
     {
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
-        private readonly IUnityOfWork unityOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ADDomainService(IUnityOfWork unityOfWork)
+        public ADDomainService(IUnitOfWork unitOfWork)
         {
-            this.unityOfWork = unityOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task SearchAllDomains()
@@ -71,9 +71,9 @@ namespace Readinizer.Backend.Business.Services
 
             var models = MapToDomainModel(domains, treeDomainsWithChildren);
 
-            unityOfWork.ADDomainRepository.AddRange(models);
+            unitOfWork.ADDomainRepository.AddRange(models);
 
-            await unityOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
         }
         
         private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)

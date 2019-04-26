@@ -54,6 +54,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private void ShowTreeStructureResultView()
         {
+            treeStructureResultViewModel.BuildTree();
             CurrentViewModel = treeStructureResultViewModel;
         }
 

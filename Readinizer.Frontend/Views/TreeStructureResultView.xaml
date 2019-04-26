@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:Readinizer.Frontend.Views"
              xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:Domain="clr-namespace:Readinizer.Backend.Domain.Models;assembly=Readinizer.Backend.Domain"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -13,10 +14,44 @@
              TextOptions.TextRenderingMode="Auto"        
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
-             mc:Ignorable="d" Height="450" Width="800"
+             mc:Ignorable="d" 
+             MinHeight="450" MinWidth="800"
+             Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:TreeStructureResultViewModel, IsDesignTimeCreatable=True}">
     <Grid>
-        <materialDesign:PackIcon Kind="SmileyExcited" VerticalAlignment="Center" HorizontalAlignment="Center" Width="200" Height="200"/>
-        <Button x:Name="Discover" Width="100" Height="50" Command="{Binding DiscoverCommand}" Margin="639,369,61,31">Go Back</Button>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="8*"/>
+            <RowDefinition Height="2*"/>
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10 0 0 0">
+            <TextBlock TextDecorations="Underline">Forest Structure</TextBlock>
+        </Label>
+
+        <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="5" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+
+            <TreeView x:Name="TreeView" Grid.Row="1" Grid.ColumnSpan="4" Margin="10 0 10 10" ItemsSource="{Binding TreeNodes}">
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type Domain:TreeNode}" ItemsSource="{Binding ChildNodes}">
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="{Binding Type}"></Label>
+                            <Label Content="{Binding Name}"></Label>
+                        </StackPanel>
+                        <!--<TreeViewItem Header="{Binding Path=Name}"></TreeViewItem>-->
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
+            </TreeView>
+
+        </Border>
+
+        <Button x:Name="Discover" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Row="2" Grid.Column="3">Save</Button>
+
     </Grid>
 </UserControl>

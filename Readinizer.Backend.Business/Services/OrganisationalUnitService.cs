@@ -12,16 +12,16 @@ namespace Readinizer.Backend.Business.Services
 {
     public class OrganisationalUnitService : IOrganisationalUnitService
     {
-        private readonly IUnityOfWork unityOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
-        public OrganisationalUnitService(IUnityOfWork unityOfWork)
+        public OrganisationalUnitService(IUnitOfWork unitOfWork)
         {
-            this.unityOfWork = unityOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task GetAllOrganisationalUnits()
         {
-            List<Domain.Models.ADDomain> allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
+            List<Domain.Models.ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             
             foreach (Domain.Models.ADDomain domain in allDomains)
             {
@@ -55,9 +55,9 @@ namespace Readinizer.Backend.Business.Services
                     foundOUs.Add(foundContainer);
                 }
 
-                unityOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
+                unitOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
             }
-            await unityOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
         }
 
         public List<OrganisationalUnit> GetChildOUs(string ldapPath, OrganisationalUnit parentOU)
@@ -79,7 +79,7 @@ namespace Readinizer.Backend.Business.Services
 
                 childOUs.Add(childOU);
 
-                unityOfWork.OrganisationalUnitRepository.Add(childOU);
+                unitOfWork.OrganisationalUnitRepository.Add(childOU);
             }
 
             return childOUs;
