@@ -34,10 +34,10 @@
         </Grid.RowDefinitions>
 
         <Viewbox Grid.Row="2" Grid.Column="2">
-        <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}"
-                         Value="0"
-                         IsIndeterminate="True"
-        />
+            <ProgressBar  Style="{StaticResource MaterialDesignCircularProgressBar}"
+                          Value="0"
+                          IsIndeterminate="True"     
+            />
         </Viewbox>
     </Grid>
 

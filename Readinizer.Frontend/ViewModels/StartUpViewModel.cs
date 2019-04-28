@@ -67,12 +67,16 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
+                var emptyVm = new EmptyViewModel();
+                DialogHost.Show(emptyVm);
                 await Task.Run(() => adDomainService.SearchAllDomains());
                 await Task.Run(() => siteService.SearchAllSites());
                 await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
                 await Task.Run(() => computerService.GetComputers());
-            Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-        }
+                DialogHost.CloseDialogCommand.Execute(null, null);
+
+                Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+            }
             catch (Exception e)
             {
                 Messenger.Default.Send(new SnackbarMessage(e.Message));
