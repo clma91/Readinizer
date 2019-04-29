@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,8 @@ namespace Readinizer.Frontend.ViewModels
     {
         private ICommand closeCommand;
         public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => this.OnClose(), () => true));
+        private ICommand githubCommand;
+        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => this.OnGithub(), () => true));
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -84,6 +87,11 @@ namespace Readinizer.Frontend.ViewModels
         private void OnClose()
         {
             Application.Current.Shutdown();
+        }
+
+        private void OnGithub()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/wiki");
         }
     }
 }
