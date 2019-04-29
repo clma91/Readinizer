@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IAnalysisService.cs" />
     <Compile Include="Interfaces\IComputerService.cs" />
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IRSoPService.cs" />
@@ -99,11 +100,15 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Configuration\RecommendedAuditSettings.json" />
-    <None Include="Configuration\RecommendedPolicies.json" />
-    <None Include="Configuration\RecommendedRegistrySettings.json" />
-    <None Include="Configuration\RecommendedSecurityOptions.json" />
+    <None Include="RecommendedSettings\RecommendedAuditSettings.json" />
+    <None Include="RecommendedSettings\RecommendedPolicies.json" />
+    <None Include="RecommendedSettings\RecommendedRegistrySettings.json" />
+    <None Include="RecommendedSettings\RecommendedSecurityOptions.json" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ReceivedRSoP\readinizerDC.xml" />
+    <Content Include="ReceivedRSoP\SysAdmWS02.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

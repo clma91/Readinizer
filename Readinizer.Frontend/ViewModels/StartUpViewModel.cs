@@ -26,6 +26,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IComputerService computerService;
         private readonly ISiteService siteService;
         private readonly IRSoPService rSoPService;
+        private readonly IAnalysisService analysisService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -51,14 +52,15 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IComputerService computerService, IRSoPService rSoPService
-        )
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
+                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
             this.organisationalUnitService = organisationalUnitService;
             this.computerService = computerService;
             this.rSoPService = rSoPService;
+            this.analysisService = analysisService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -83,7 +85,8 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
-                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                await Task.Run(() => analysisService.Analyse());
                 
                 Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
                 ShowTreeStructureResult();

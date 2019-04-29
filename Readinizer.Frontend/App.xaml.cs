@@ -41,6 +41,7 @@ namespace Readinizer.Frontend
             container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
+            container.RegisterType<IAnalysisService, AnalysisService>();
 
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
             container.RegisterSingleton<IUnityOfWork, UnityOfWork>();
