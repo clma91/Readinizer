@@ -20,23 +20,23 @@ namespace Readinizer.Backend.Business.Factory
 
         public async Task<List<TreeNode>> CreateTree()
         {
-            List<ADDomain> domains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            var domains = await unitOfWork.ADDomainRepository.GetAllEntities();
             var tree = new List<TreeNode>();
             var root = new TreeNode();
 
-            foreach (var domain in domains)
-            {
-                if (domain.IsForestRoot)
-                {
-                    root.Type = "Forest Root Domain: ";
-                    root.Name = domain.Name;
-                    BuildTree(root, domain.SubADDomains);
-                }
+            var rootDomain = domains.Find(x => x.IsForestRoot);
 
-                foreach (var organisationalUnit in domain.OrganisationalUnits)
-                {
-                    root.ChildNodes.Add(new TreeNode {Type = "RSoP-Pot: ", Name = organisationalUnit.Name});
-                }
+            root.Type = "Forest Root Domain: ";
+            root.Name = rootDomain.Name;
+            BuildTree(root, rootDomain.SubADDomains);
+
+            foreach (var organisationalUnit in rootDomain.OrganisationalUnits)
+            {
+                root.ChildNodes.Add(new TreeNode { Type = "OU: ", Name = organisationalUnit.Name });
+            }
+            foreach (var domainSite in rootDomain.Sites)
+            {
+                root.ChildNodes.Add(new TreeNode { Type = "Site: ", Name = domainSite.Name });
             }
 
             tree.Add(root);
@@ -52,8 +52,17 @@ namespace Readinizer.Backend.Business.Factory
                 {
                     if (organisationalUnit.ADDomain.Name.Equals(domain.Name))
                     {
-                        var childOu = new TreeNode {Type = "RSoP-Pot: ", Name = organisationalUnit.Name};
+                        var childOu = new TreeNode {Type = "OU: ", Name = organisationalUnit.Name};
                         child.ChildNodes.Add(childOu);
+                    }
+                }
+
+                foreach (var domainSite in domain.Sites)
+                {
+                    if (domainSite.Domains.Contains(domain))
+                    {
+                        var childSite = new TreeNode {Type = "Site: ", Name = domainSite.Name};
+                        child.ChildNodes.Add(childSite);
                     }
                 }
                 root.ChildNodes.Add(child);

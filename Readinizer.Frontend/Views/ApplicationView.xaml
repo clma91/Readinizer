@@ -30,7 +30,7 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Close"/>
+                <MenuItem Header="_Close" Command="{Binding CloseCommand}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Settings"/>

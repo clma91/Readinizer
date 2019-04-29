@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Input;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MaterialDesignThemes.Wpf;
 using Readinizer.Frontend.Interfaces;
@@ -14,6 +17,9 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class ApplicationViewModel : ViewModelBase, IApplicationViewModel
     {
+        private ICommand closeCommand;
+        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => this.OnClose(), () => true));
+
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
         {
@@ -73,6 +79,11 @@ namespace Readinizer.Frontend.ViewModels
         private void OnShowMessage(SnackbarMessage message)
         {
             SnackbarMessageQueue.Enqueue(message.Message);
+        }
+
+        private void OnClose()
+        {
+            Application.Current.Shutdown();
         }
     }
 }
