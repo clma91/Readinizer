@@ -15,7 +15,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Readinizer" Height="550" Width="820">
+        Title="Readinizer" 
+        Width="Auto" Height="Auto" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:StartUpViewModel}">
@@ -32,13 +33,13 @@
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Close"/>
+                <MenuItem Header="_Close" Command="{Binding CloseCommand}"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Header="_Settings"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_User Manual"/>
+                <MenuItem Header="_User Manual" Command="{Binding GithubCommand}"/>
                 <MenuItem Header="_Central Logging"/>
                 <MenuItem Header="_Sysmon"/>
                 <MenuItem Header="_Optimised GPO"/>
@@ -46,6 +47,6 @@
             </MenuItem>
         </Menu>
         <materialDesign:Snackbar x:Name="Snackbar" DockPanel.Dock="Bottom" HorizontalAlignment="Center" MessageQueue="{Binding SnackbarMessageQueue}" />
-        <ContentControl Content="{Binding CurrentViewModel}" Height="450" Width="800" />
+        <ContentControl Content="{Binding CurrentViewModel}" Width="Auto" Height="Auto" />
     </DockPanel>
 </Window>

@@ -16,21 +16,21 @@ namespace Readinizer.Backend.Business.Services
 {
     public class RSoPService : IRSoPService
     {
-        private readonly IUnityOfWork unityOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
-        public RSoPService(IUnityOfWork unityOfWork)
+        public RSoPService(IUnitOfWork unitOfWork)
         {
-            this.unityOfWork = unityOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
 
         public async Task getRSoPOfReachableComputers()
         {
-            List<OrganisationalUnit> allOUs = await unityOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
 
             foreach (OrganisationalUnit OU in allOUs)
             {
-                string domainName = unityOfWork.ADDomainRepository.GetByID(OU.ADDomainRefId).Name;
+                string domainName = unitOfWork.ADDomainRepository.GetByID(OU.ADDomainRefId).Name;
                 if (OU.Computers != null)
                 {
                     Computer reachableComputer = GetReachableComputer(OU);
@@ -38,10 +38,10 @@ namespace Readinizer.Backend.Business.Services
 
                     if (reachableComputer != null)
                     {
-                        unityOfWork.ComputerRepository.Update(reachableComputer);
+                        unitOfWork.ComputerRepository.Update(reachableComputer);
 
                         OU.HasReachableComputer = true;
-                        unityOfWork.OrganisationalUnitRepository.Update(OU);
+                        unitOfWork.OrganisationalUnitRepository.Update(OU);
 
                         getRSoP(reachableComputer.ComputerName + "." + domainName,
                             reachableComputer.ComputerName,
@@ -49,7 +49,7 @@ namespace Readinizer.Backend.Business.Services
                     }
                 }
 
-                await unityOfWork.SaveChangesAsync();
+                await unitOfWork.SaveChangesAsync();
             }
 
 

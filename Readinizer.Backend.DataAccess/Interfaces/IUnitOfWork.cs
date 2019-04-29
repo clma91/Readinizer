@@ -4,7 +4,7 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.DataAccess.Interfaces
 {
-    public interface IUnityOfWork
+    public interface IUnitOfWork
     {
         GenericRepository<Domain.Models.ADDomain> ADDomainRepository { get; }
         GenericRepository<OrganisationalUnit> OrganisationalUnitRepository { get; }

@@ -10,17 +10,17 @@ namespace Readinizer.Backend.Business.Services
 {
     public class SiteService : ISiteService
     {
-        private readonly IUnityOfWork unityOfWork;
+        private readonly IUnitOfWork unitOfWork;
 
-        public SiteService(IUnityOfWork unityOfWork)
+        public SiteService(IUnitOfWork unitOfWork)
         {
-            this.unityOfWork = unityOfWork;
+            this.unitOfWork = unitOfWork;
         }
 
         public async Task SearchAllSites()
         {
             var sites = new List<AD.ActiveDirectorySite>();
-            var allDomains = await unityOfWork.ADDomainRepository.GetAllEntities();
+            var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
 
             try
             {
@@ -38,9 +38,9 @@ namespace Readinizer.Backend.Business.Services
             }
 
             var models = MapToDomainModel(sites, allDomains);
-            unityOfWork.SiteRepository.AddRange(models);
+            unitOfWork.SiteRepository.AddRange(models);
 
-            await unityOfWork.SaveChangesAsync();
+            await unitOfWork.SaveChangesAsync();
         }
 
         private List<Site> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<Domain.Models.ADDomain> allDomains)

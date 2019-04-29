@@ -8,6 +8,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 
@@ -15,9 +17,32 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class TreeStructureResultViewModel : ViewModelBase, ITreeStructureResultViewModel
     {
-        private readonly IADDomainService adDomainService;
-        private readonly IOrganisationalUnitService adOrganisationalUnitService;
-        private readonly IComputerService adOuMemberService;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly ITreeNodesFactory treeNodesFactory;
+
+        private ADDomain rootDomain;
+        public ADDomain RootDomain
+        {
+            get => rootDomain;
+            set => Set(ref rootDomain, value);
+        }
+
+        private List<TreeNode> treeNodes;
+        public List<TreeNode> TreeNodes
+        {
+            get => treeNodes;
+            set => Set(ref treeNodes, value);
+        }
+
+
+
+        private List<ADDomain> subDomins;
+
+        public List<ADDomain> SubDomains
+        {
+            get => subDomins;
+            set => Set(ref subDomins, value);
+        }
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
@@ -31,11 +56,15 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public TreeStructureResultViewModel(IADDomainService adDomainService, IOrganisationalUnitService adOrganisationalUnitService, IComputerService adOuMemberService)
+        public TreeStructureResultViewModel(ITreeNodesFactory treeNodesFactory, IUnitOfWork unitOfWork)
         {
-            this.adDomainService = adDomainService;
-            this.adOrganisationalUnitService = adOrganisationalUnitService;
-            this.adOuMemberService = adOuMemberService;
+            this.treeNodesFactory = treeNodesFactory;
+            this.unitOfWork = unitOfWork;
+        }
+
+        public async void BuildTree()
+        {
+            TreeNodes = await treeNodesFactory.CreateTree();
         }
 
         private async void Discover()
