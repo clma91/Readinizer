@@ -1,0 +1,144 @@
+[
+    {
+        "q2:SubCategoryName": "Audit Kerberos Authentication Service",
+        "q2:PolicyTarget": "Account Logon",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Kerberos Service Ticket Operations",
+        "q2:PolicyTarget": "Account Logon",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Computer Account Management",
+        "q2:PolicyTarget": "Account Management",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Other Account Management Events",
+        "q2:PolicyTarget": "Account Management",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Security Group Management",
+        "q2:PolicyTarget": "Account Management",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit User Account Management",
+        "q2:PolicyTarget": "Account Management",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Process Creation",
+        "q2:PolicyTarget": "Detailed Tracking",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Process Termination",
+        "q2:PolicyTarget": "Detailed Tracking",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Account Lockout",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "q2:SettingValue": "Failure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Group Membership",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Logoff",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Logon",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Other Logon/Logoff Events",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Special Logon",
+        "q2:PolicyTarget": "Logon/Logoff",
+        "Path": "Advanced Audit Policy Configuration\\Logon/Logoff",
+        "Priority": "",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit File Share",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit File System",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Filtering Platform Connection",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Handle Manipulation",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Kernel Object",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Other Object Access Events",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Registry",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit SAM",
+        "q2:PolicyTarget": "Object Access",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Audit Policy Change",
+        "q2:PolicyTarget": "Policy Change",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit MPSSVC Rule-Level Policy Change",
+        "q2:PolicyTarget": "Policy Change",
+        "q2:SettingValue": "Success"
+    },
+    {
+        "q2:SubCategoryName": "Audit Non Sensitive Privilege Use",
+        "q2:PolicyTarget": "Privilege Use",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Sensitive Privilege Use",
+        "q2:PolicyTarget": "Privilege Use",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit Security System Extension",
+        "q2:PolicyTarget": "System",
+        "q2:SettingValue": "SuccessAndFailure"
+    },
+    {
+        "q2:SubCategoryName": "Audit System Integrity",
+        "q2:PolicyTarget": "System",
+        "q2:SettingValue": "SuccessAndFailure"
+    }
+]
