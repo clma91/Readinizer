@@ -9,20 +9,20 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Gpo
     {
-        [JsonProperty("Name")]
-        public string Name { get; set; }
+        //[JsonProperty("Name")]
+        //public string Name { get; set; }
 
         [JsonProperty("Identifier")]
         public Identifier GpoIdentifier { get; set; }
 
-        [JsonProperty("Path")]
-        public Path GpoPath { get; set; }
+        //[JsonProperty("Path")]
+        //public Path GpoPath { get; set; }
 
-        [JsonProperty("Enabled")]
-        public string Enabled { get; set; }
+        //[JsonProperty("Enabled")]
+        //public string Enabled { get; set; }
 
-        [JsonProperty("Link")]
-        public Link Link { get; set; }
+        //[JsonProperty("Link")]
+        //public Link Link { get; set; }
     }
 
     public class Identifier

@@ -12,22 +12,22 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 
-        [JsonProperty("q3:KeyName")]
+        [JsonProperty("KeyName")]
         public string KeyName { get; set; }
 
-        [JsonProperty("q3:SettingNumber")]
+        [JsonProperty("SettingNumber")]
         public string CurrentSettingNumber { get; set; }
 
-        [JsonProperty("q3:Display")]
+        [JsonProperty("Display")]
         public Display CurrentDisplay { get; set; }
     }
 
     public class Display
     {
-        [JsonProperty("q3:Name")]
+        [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("q3:DisplayBoolean")]
+        [JsonProperty("DisplayBoolean")]
         public string DisplayBoolean { get; set; }
     }
 }

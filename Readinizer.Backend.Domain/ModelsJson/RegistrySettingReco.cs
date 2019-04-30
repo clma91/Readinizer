@@ -15,10 +15,10 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("Path")]
         public string Path { get; set; }
 
-        [JsonProperty("q7:KeyPath")]
+        [JsonProperty("KeyPath")]
         public string KeyPath { get; set; }
 
-        [JsonProperty("q7:Value")]
+        [JsonProperty("Value")]
         public Value TargetValue { get; set; }
 
         public bool IsPresent { get; set; }

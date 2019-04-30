@@ -4,6 +4,7 @@ using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using Newtonsoft.Json;
@@ -15,7 +16,6 @@ namespace Readinizer.Backend.Business.Services
 {
     public class AnalysisService : IAnalysisService
     {
-
         public AnalysisService() { }
 
         public void Analyse()
@@ -24,7 +24,6 @@ namespace Readinizer.Backend.Business.Services
             DirectoryInfo directoryInfo = new DirectoryInfo(receivedRsopPath);
             FileInfo[] rsopXml = directoryInfo.GetFiles("*.xml");
             
-            // TODO: XML structure is not always the same:( -> could be fixed with namespace-removal
             foreach (var xml in rsopXml)
             {
                 var doc = new XmlDocument();
@@ -40,7 +39,9 @@ namespace Readinizer.Backend.Business.Services
         private static JObject XmlToJson(XmlDocument doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
-            var rsop = JObject.Parse(jsonText);
+            Regex namespaceRegex = new Regex("q[0-9]:");
+            string jsonNonNamespaceText = namespaceRegex.Replace(jsonText, "");
+            var rsop = JObject.Parse(jsonNonNamespaceText);
             return rsop;
         }
 
@@ -57,8 +58,8 @@ namespace Readinizer.Backend.Business.Services
             var faultyPolicies = new List<PolicyReco>();
             var recommendedPolicies = new List<PolicyReco>();
             recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
-
-            var jsonPolicies = rsop["Rsop"]["ComputerResults"]["ExtensionData"][6]["Extension"]["q7:Policy"].Children().ToList();
+            
+            var jsonPolicies = rsop.SelectToken("$..Policy").Children().ToList();
             var policies = new List<Policy>();
             GetSettings(jsonPolicies, policies);
 
@@ -85,8 +86,8 @@ namespace Readinizer.Backend.Business.Services
             var faultySecurityOptions = new List<SecurityOptionReco>();
             var recommendedSecurityOptions = new List<SecurityOptionReco>();
             recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], recommendedSecurityOptions);
-
-            var jsonSecurityOptions = rsop["Rsop"]["ComputerResults"]["ExtensionData"][2]["Extension"]["q3:SecurityOptions"].Children().ToList();
+            
+            var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions").Children().ToList();
             var securityOptions = new List<SecurityOption>();
             GetSettings(jsonSecurityOptions, securityOptions);
 
@@ -123,7 +124,7 @@ namespace Readinizer.Backend.Business.Services
             var recommendedRegistrySettings = new List<RegistrySettingReco>();
             recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], recommendedRegistrySettings);
 
-            var jsonRegistrySettings = rsop["Rsop"]["ComputerResults"]["ExtensionData"][6]["Extension"]["q7:RegistrySetting"].Children().ToList();
+            var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting").Children().ToList();
             var registrySettings = new List<RegistrySetting>();
             GetSettings(jsonRegistrySettings, registrySettings);
 
@@ -151,8 +152,8 @@ namespace Readinizer.Backend.Business.Services
             var faultyAuditSettings = new List<AuditSettingReco>();
             var recommendedAuditSettings = new List<AuditSettingReco>();
             recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
-
-            var jsonAuditSettings = rsop["Rsop"]["ComputerResults"]["ExtensionData"][1]["Extension"]["q2:AuditSetting"].Children().ToList();
+            
+            var jsonAuditSettings = rsop.SelectToken("$..AuditSetting").Children().ToList();
             var auditSettings = new List<AuditSetting>();
             GetSettings(jsonAuditSettings, auditSettings);
 
@@ -188,6 +189,5 @@ namespace Readinizer.Backend.Business.Services
                 settings.Add(setting);
             }
         }
-
     }
 }

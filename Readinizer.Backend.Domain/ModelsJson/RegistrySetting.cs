@@ -12,10 +12,10 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 
-        [JsonProperty("q7:KeyPath")]
+        [JsonProperty("KeyPath")]
         public string KeyPath { get; set; }
 
-        [JsonProperty("q7:Value")]
+        [JsonProperty("Value")]
         public Value CurrentValue { get; set; }
     }
 }

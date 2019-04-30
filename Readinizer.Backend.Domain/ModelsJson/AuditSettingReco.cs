@@ -9,13 +9,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class AuditSettingReco
     {
-        [JsonProperty("q2:SubCategoryName")]
+        [JsonProperty("SubCategoryName")]
         public string SubcategoryName { get; set; }
 
-        [JsonProperty("q2:PolicyTarget")]
+        [JsonProperty("PolicyTarget")]
         public string PolicyTarget { get; set; }
 
-        [JsonProperty("q2:SettingValue")]
+        [JsonProperty("SettingValue")]
         public AuditSettingValue TargetSettingValue { get; set; }
 
         public AuditSettingValue CurrentSettingValue { get; set; }

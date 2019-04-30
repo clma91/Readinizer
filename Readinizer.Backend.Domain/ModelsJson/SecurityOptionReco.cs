@@ -21,7 +21,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("SettingNumber")]
         public string TargetSettingNumber { get; set; }
 
-        [JsonProperty("q3:Display")]
+        [JsonProperty("Display")]
         public Display TargetDisplay { get; set; }
 
         public bool IsPresent { get; set; }

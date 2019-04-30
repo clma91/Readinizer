@@ -12,25 +12,25 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 
-        [JsonProperty("q7:Name")]
+        [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("q7:State")]
+        [JsonProperty("State")]
         public string CurrentState { get; set; }
 
-        [JsonProperty("q7:Category")]
+        [JsonProperty("Category")]
         public string Category { get; set; }
 
-        [JsonProperty("q7:Listbox")]
+        [JsonProperty("Listbox")]
         public ListBox ModuleNames { get; set; }
     }
 
     public class ListBox
     {
-        [JsonProperty("q7:Value")]
+        [JsonProperty("Value")]
         public Value Value { get; set; }
 
-        [JsonProperty("q7:State")]
+        [JsonProperty("State")]
         public string State { get; set; }
     }
 }
