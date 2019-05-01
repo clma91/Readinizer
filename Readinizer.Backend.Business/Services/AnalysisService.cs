@@ -10,6 +10,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Business.Services
@@ -21,45 +22,56 @@ namespace Readinizer.Backend.Business.Services
         public void Analyse()
         {
             var receivedRsopPath = ConfigurationManager.AppSettings["ReceivedRSoP"];
-            DirectoryInfo directoryInfo = new DirectoryInfo(receivedRsopPath);
-            FileInfo[] rsopXml = directoryInfo.GetFiles("*.xml");
-            
+            var directoryInfo = new DirectoryInfo(receivedRsopPath);
+            var rsopXml = directoryInfo.GetFiles("*.xml");
+            var rsops = new List<Rsop>();
+
             foreach (var xml in rsopXml)
             {
                 var doc = new XmlDocument();
                 doc.Load(xml.FullName);
-                var rsop = XmlToJson(doc);
-                var faultyPolicies = AnalysePolicies(rsop);
-                var faultyAuditSettings = AnalyseAuditSettings(rsop);
-                var faultyRegistrySettings = AnalyseRegistrySetting(rsop);
-                var faultySecurityOptions = AnalyseSecurityOptions(rsop);
+                var rsopJson = XmlToJson(doc);
+
+                var policies = AnalysePolicies(rsopJson);
+                var auditSettings = AnalyseAuditSettings(rsopJson);
+                var registrySettings = AnalyseRegistrySetting(rsopJson);
+                var securityOptions = AnalyseSecurityOptions(rsopJson);
+                var allRsopGpos = GetAllRsopGpos(rsopJson);
+                var rsop = new Rsop
+                {
+                    AuditSettings = auditSettings,
+                    Policies = policies,
+                    RegistrySettings = registrySettings,
+                    SecurityOptions = securityOptions,
+                    Gpos = allRsopGpos
+                };
+                rsops.Add(rsop);
             }
         }
 
         private static JObject XmlToJson(XmlDocument doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
-            Regex namespaceRegex = new Regex("q[0-9]:");
-            string jsonNonNamespaceText = namespaceRegex.Replace(jsonText, "");
+            var namespaceRegex = new Regex("q[0-9]:");
+            var jsonNonNamespaceText = namespaceRegex.Replace(jsonText, "");
             var rsop = JObject.Parse(jsonNonNamespaceText);
             return rsop;
         }
 
         private static List<Gpo> GetAllRsopGpos(JObject rsop)
         {
-            var jsonGpos = rsop["Rsop"]["ComputerResults"]["GPO"].Children().ToList();
+            var jsonGpos = rsop["Rsop"]["ComputerResults"]["GPO"];
             var gpos = new List<Gpo>();
             GetSettings(jsonGpos, gpos);
             return gpos;
         }
 
-        private static List<PolicyReco> AnalysePolicies(JObject rsop)
+        private static List<PolicyReco> AnalysePolicies(JToken rsop)
         {
-            var faultyPolicies = new List<PolicyReco>();
             var recommendedPolicies = new List<PolicyReco>();
             recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
-            
-            var jsonPolicies = rsop.SelectToken("$..Policy").Children().ToList();
+
+            var jsonPolicies = rsop.SelectToken("$..Policy");
             var policies = new List<Policy>();
             GetSettings(jsonPolicies, policies);
 
@@ -68,7 +80,7 @@ namespace Readinizer.Backend.Business.Services
                 policy => policy.Name,
                 (policy, x) => policy).ToList();
 
-            faultyPolicies = recommendedPolicies.Select(x =>
+            return recommendedPolicies.Select(x =>
             {
                 x.IsPresent = presentPolicy.Contains(x);
                 x.CurrentState = policies.Where(y => y.CurrentState.Equals(x.CurrentState))
@@ -77,17 +89,14 @@ namespace Readinizer.Backend.Business.Services
                     .FirstOrDefault();
                 return x;
             }).ToList();
-
-            return faultyPolicies;
         }
 
-        private static List<SecurityOptionReco> AnalyseSecurityOptions(JObject rsop)
+        private static List<SecurityOptionReco> AnalyseSecurityOptions(JToken rsop)
         {
-            var faultySecurityOptions = new List<SecurityOptionReco>();
             var recommendedSecurityOptions = new List<SecurityOptionReco>();
             recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], recommendedSecurityOptions);
-            
-            var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions").Children().ToList();
+
+            var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions");
             var securityOptions = new List<SecurityOption>();
             GetSettings(jsonSecurityOptions, securityOptions);
 
@@ -96,7 +105,7 @@ namespace Readinizer.Backend.Business.Services
                 securityOption => securityOption.KeyName,
                 (securityOption, x) => securityOption).ToList();
 
-            faultySecurityOptions = recommendedSecurityOptions.Select(x =>
+            return recommendedSecurityOptions.Select(x =>
             {
                 x.IsPresent = presentSecurityOptions.Exists(y => x.KeyName.Equals(x.KeyName));
                 x.CurrentSettingNumber = securityOptions.Where(y => y.CurrentSettingNumber.Equals(x.CurrentSettingNumber))
@@ -114,17 +123,14 @@ namespace Readinizer.Backend.Business.Services
 
                 return x;
             }).ToList();
-
-            return faultySecurityOptions;
         }
 
-        private static List<RegistrySettingReco> AnalyseRegistrySetting(JObject rsop)
+        private static List<RegistrySettingReco> AnalyseRegistrySetting(JToken rsop)
         {
-            var faultyRegistrySettings = new List<RegistrySettingReco>();
             var recommendedRegistrySettings = new List<RegistrySettingReco>();
             recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], recommendedRegistrySettings);
 
-            var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting").Children().ToList();
+            var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting");
             var registrySettings = new List<RegistrySetting>();
             GetSettings(jsonRegistrySettings, registrySettings);
 
@@ -133,27 +139,24 @@ namespace Readinizer.Backend.Business.Services
                 registrySetting => registrySetting.KeyPath,
                 (recommendedRegistrySetting, x) => recommendedRegistrySetting).ToList();
 
-            faultyRegistrySettings = recommendedRegistrySettings.Select(w =>
+            return recommendedRegistrySettings.Select(w =>
             {
                 w.IsPresent = presentRegistrySettings.Exists(x => x.Name.Equals(w.Name));
                 w.CurrentValue = registrySettings.Where(x => x.CurrentValue != null)
-                    // TODO: Check Name
+                    .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
                     .Select(z => z.CurrentValue)
                     .DefaultIfEmpty(null)
                     .FirstOrDefault();
                 return w;
             }).ToList();
-
-            return faultyRegistrySettings;
         }
 
-        private static List<AuditSettingReco> AnalyseAuditSettings(JObject rsop)
+        private static List<AuditSettingReco> AnalyseAuditSettings(JToken rsop)
         {
-            var faultyAuditSettings = new List<AuditSettingReco>();
             var recommendedAuditSettings = new List<AuditSettingReco>();
             recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
             
-            var jsonAuditSettings = rsop.SelectToken("$..AuditSetting").Children().ToList();
+            var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
             var auditSettings = new List<AuditSetting>();
             GetSettings(jsonAuditSettings, auditSettings);
 
@@ -162,7 +165,7 @@ namespace Readinizer.Backend.Business.Services
                 auditSetting => auditSetting.SubcategoryName,
                 (recommendedAuditSetting, x) => recommendedAuditSetting).ToList();
 
-            faultyAuditSettings = recommendedAuditSettings.Select(x =>
+            return recommendedAuditSettings.Select(x =>
             {
                 x.IsPresent = presentAuditSettings.Contains(x);
                 x.CurrentSettingValue = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
@@ -171,8 +174,6 @@ namespace Readinizer.Backend.Business.Services
                     .FirstOrDefault();
                 return x;
             }).ToList();
-
-            return faultyAuditSettings;
         }
 
         private static List<T> GetRecommendedSettings<T>(string path, List<T> recommendedSettings)
@@ -181,12 +182,25 @@ namespace Readinizer.Backend.Business.Services
             return recommendedSettings;
         }
 
-        private static void GetSettings<T>(List<JToken> jsonSettings, List<T> settings)
+        private static void GetSettings<T>(JToken jsonSettings, List<T> settings)
         {
-            foreach (var jsonSetting in jsonSettings)
+            // TODO: What happens if jsonSetting is Null?
+            if (!(jsonSettings is null))
             {
-                T setting = jsonSetting.ToObject<T>();
-                settings.Add(setting);
+                if (jsonSettings.Type is JTokenType.Array)
+                {
+                    var jsonSettingsList = jsonSettings.Children().ToList();
+                    foreach (var jsonSetting in jsonSettingsList)
+                    {
+                        T setting = jsonSetting.ToObject<T>();
+                        settings.Add(setting);
+                    }
+                }
+                else
+                {
+                    T setting = jsonSettings.ToObject<T>();
+                    settings.Add(setting);
+                }
             }
         }
     }

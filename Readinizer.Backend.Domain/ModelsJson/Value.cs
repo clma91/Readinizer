@@ -9,19 +9,19 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Value
     {
-        [JsonProperty("q7:Element")]
+        [JsonProperty("Element")]
         public Element Element { get; set; }
 
-        [JsonProperty("q7:Name")]
+        [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("q7:Number")]
+        [JsonProperty("Number")]
         public string Number { get; set; }
     }
 
     public class Element
     {
-        [JsonProperty("q7:Data")]
+        [JsonProperty("Data")]
         public string Modules { get; set; }
     }
 }

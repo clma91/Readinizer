@@ -18,11 +18,11 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("KeyPath")]
         public string KeyPath { get; set; }
 
-        [JsonProperty("Value")]
+        [JsonProperty("TargetValue")]
         public Value TargetValue { get; set; }
 
         public bool IsPresent { get; set; }
 
-        public Value CurrentValue { get; set; } = new Value();
+        public Value CurrentValue { get; set; }// = new Value();
     }
 }
