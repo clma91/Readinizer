@@ -9,6 +9,10 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class Rsop
     {
+        public int RsopId { get; set; }
+
+        public string OrganisationalUnitName { get; set; }
+
         public List<AuditSettingReco> AuditSettings { get; set; }
 
         public List<PolicyReco> Policies { get; set; }

@@ -8,6 +8,6 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface IAnalysisService
     {
-        void Analyse();
+        Task Analyse();
     }
 }

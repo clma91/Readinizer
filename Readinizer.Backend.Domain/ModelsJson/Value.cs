@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Value
     {
+        //public int ValueId { get; set; }
+
         [JsonProperty("Element")]
         public Element Element { get; set; }
 

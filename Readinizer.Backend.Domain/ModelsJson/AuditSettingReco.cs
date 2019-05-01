@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class AuditSettingReco
     {
+        public int AuditSettingId { get; set; }
+
         [JsonProperty("SubCategoryName")]
         public string SubcategoryName { get; set; }
 

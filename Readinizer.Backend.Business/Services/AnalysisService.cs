@@ -10,6 +10,8 @@ using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.DataAccess.UnityOfWork;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 
@@ -17,9 +19,14 @@ namespace Readinizer.Backend.Business.Services
 {
     public class AnalysisService : IAnalysisService
     {
-        public AnalysisService() { }
+        private readonly IUnitOfWork unitOfWork;
 
-        public void Analyse()
+        public AnalysisService(IUnitOfWork unitOfWork)
+        {
+            this.unitOfWork = unitOfWork;
+        }
+
+        public async Task Analyse()
         {
             var receivedRsopPath = ConfigurationManager.AppSettings["ReceivedRSoP"];
             var directoryInfo = new DirectoryInfo(receivedRsopPath);
@@ -39,6 +46,7 @@ namespace Readinizer.Backend.Business.Services
                 var allRsopGpos = GetAllRsopGpos(rsopJson);
                 var rsop = new Rsop
                 {
+                    OrganisationalUnitName = xml.Name,
                     AuditSettings = auditSettings,
                     Policies = policies,
                     RegistrySettings = registrySettings,
@@ -47,9 +55,11 @@ namespace Readinizer.Backend.Business.Services
                 };
                 rsops.Add(rsop);
             }
+            unitOfWork.RsopRepository.AddRange(rsops);
+            await unitOfWork.SaveChangesAsync();
         }
 
-        private static JObject XmlToJson(XmlDocument doc)
+        private static JObject XmlToJson(XmlNode doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
             var namespaceRegex = new Regex("q[0-9]:");
@@ -184,7 +194,6 @@ namespace Readinizer.Backend.Business.Services
 
         private static void GetSettings<T>(JToken jsonSettings, List<T> settings)
         {
-            // TODO: What happens if jsonSetting is Null?
             if (!(jsonSettings is null))
             {
                 if (jsonSettings.Type is JTokenType.Array)

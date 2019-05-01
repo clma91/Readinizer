@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Gpo
     {
+        public int GpoId { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 
@@ -33,6 +35,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
     public class Path
     {
+        //public int PathId { get; set; }
+
         [JsonProperty("Identifier")]
         public Identifier GpoIdentifier { get; set; }
     }

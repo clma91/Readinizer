@@ -1,4 +1,5 @@
 using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.DataAccess
 {
@@ -18,6 +19,15 @@ namespace Readinizer.Backend.DataAccess
         public virtual DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
         public virtual DbSet<Computer> Computers { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
+        public virtual DbSet<Rsop> Rsops { get; set; }
+
+        public virtual DbSet<AuditSettingReco> AuditSettings { get; set; }
+        public virtual DbSet<PolicyReco> Policies { get; set; }
+        public virtual DbSet<RegistrySettingReco> RegistrySettings { get; set; }
+        public virtual DbSet<SecurityOptionReco> SecurityOptions { get; set; }
+        //public virtual DbSet<Value> Values { get; set; }
+        //public virtual DbSet<Path> Paths { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -56,6 +66,26 @@ namespace Readinizer.Backend.DataAccess
                 x.MapRightKey("ComputerRefId");
                 x.ToTable("OrganisationalUnitComputer");
             });
+
+
+            modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));
+            modelBuilder.Entity<Rsop>().HasKey(x => x.RsopId);
+            modelBuilder.Entity<AuditSettingReco>().ToTable(nameof(AuditSettingReco));
+            modelBuilder.Entity<AuditSettingReco>().HasKey(x => x.AuditSettingId);
+            modelBuilder.Entity<PolicyReco>().ToTable(nameof(PolicyReco));
+            modelBuilder.Entity<PolicyReco>().HasKey(x => x.PolicyId);
+            modelBuilder.Entity<RegistrySettingReco>().ToTable(nameof(RegistrySettingReco));
+            modelBuilder.Entity<RegistrySettingReco>().HasKey(x => x.RegistrySettingId);
+            modelBuilder.Entity<SecurityOptionReco>().ToTable(nameof(SecurityOptionReco));
+            modelBuilder.Entity<SecurityOptionReco>().HasKey(x => x.SecurityOptionRecoId);
+            //modelBuilder.Entity<Value>().ToTable(nameof(Value));
+            //modelBuilder.Entity<Value>().HasKey(x => x.ValueId);
+            //modelBuilder.Entity<Path>().ToTable(nameof(Path));
+            //modelBuilder.Entity<Path>().HasKey(x => x.PathId);
+
+            modelBuilder.ComplexType<Path>();
+            modelBuilder.ComplexType<Value>();
+            modelBuilder.ComplexType<Identifier>();
         }
     }
 }

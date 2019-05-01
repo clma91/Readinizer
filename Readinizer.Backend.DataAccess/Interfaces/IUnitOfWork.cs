@@ -10,6 +10,7 @@ namespace Readinizer.Backend.DataAccess.Interfaces
         GenericRepository<OrganisationalUnit> OrganisationalUnitRepository { get; }
         GenericRepository<Computer> ComputerRepository { get; }
         GenericRepository<Site> SiteRepository { get; }
+        GenericRepository<Rsop> RsopRepository { get; }
         Task SaveChangesAsync();
         void Dispose(bool disposing);
         void Dispose();

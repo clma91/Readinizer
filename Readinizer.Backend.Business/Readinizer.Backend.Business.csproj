@@ -109,6 +109,7 @@
     <Compile Include="Services\AnalysisService.cs" />
     <Compile Include="Services\OrganisationalUnitService.cs" />
     <Compile Include="Services\ComputerService.cs" />
+    <Compile Include="Services\RSoPPotService.cs" />
     <Compile Include="Services\SiteService.cs" />
     <Compile Include="Services\RSoPService.cs" />
   </ItemGroup>

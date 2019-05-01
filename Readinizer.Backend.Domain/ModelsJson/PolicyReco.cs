@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class PolicyReco
     {
+        public int PolicyId { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 

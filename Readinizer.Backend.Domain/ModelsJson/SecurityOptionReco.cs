@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class SecurityOptionReco
     {
+        public int SecurityOptionRecoId { get; set; }
+
         [JsonProperty("Description")]
         public string Description { get; set; }
 

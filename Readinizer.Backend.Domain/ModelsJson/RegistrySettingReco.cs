@@ -9,6 +9,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class RegistrySettingReco
     {
+        public int RegistrySettingId { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 
@@ -23,6 +25,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public bool IsPresent { get; set; }
 
-        public Value CurrentValue { get; set; }// = new Value();
+        public Value CurrentValue { get; set; }
     }
 }
