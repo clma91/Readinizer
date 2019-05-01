@@ -49,6 +49,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -61,12 +64,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\InvalidAuthenticationException.cs" />
+    <Compile Include="ModelsJson\AuditSetting.cs" />
+    <Compile Include="ModelsJson\AuditSettingReco.cs" />
+    <Compile Include="ModelsJson\Gpo.cs" />
+    <Compile Include="ModelsJson\Policy.cs" />
+    <Compile Include="ModelsJson\PolicyReco.cs" />
+    <Compile Include="ModelsJson\RegistrySetting.cs" />
+    <Compile Include="ModelsJson\RegistrySettingReco.cs" />
+    <Compile Include="ModelsJson\SecurityOption.cs" />
+    <Compile Include="ModelsJson\SecurityOptionReco.cs" />
+    <Compile Include="ModelsJson\Value.cs" />
     <Compile Include="Models\ADDomain.cs" />
     <Compile Include="Models\OrganisationalUnit.cs" />
     <Compile Include="Models\Computer.cs" />
+    <Compile Include="Models\Rsop.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\TreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

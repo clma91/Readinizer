@@ -43,6 +43,7 @@ namespace Readinizer.Frontend
             container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
+            container.RegisterType<IAnalysisService, AnalysisService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 
