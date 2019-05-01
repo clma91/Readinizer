@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using NetTools;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
@@ -26,6 +27,8 @@ namespace Readinizer.Backend.Business.Services
         {
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            List<Site> sites = await unitOfWork.SiteRepository.GetAllEntities();
+
             List<string> DCnames = getDcNames();
 
             foreach (OrganisationalUnit OU in allOUs)
@@ -42,6 +45,7 @@ namespace Readinizer.Backend.Business.Services
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
                     foundMember.OrganisationalUnits.Add(OU);
+                    foundMember.SiteRefId = getSite(foundMember, sites);
 
                     unitOfWork.ComputerRepository.Add(foundMember);
                 }
@@ -76,13 +80,36 @@ namespace Readinizer.Backend.Business.Services
                     {
                         if (!address.IsIPv6LinkLocal)
                         {
-                           return foundMember.IpAddress = address.ToString();
+                            return foundMember.IpAddress = address.ToString();
                         }
                     }
                 }
             }
 
             return null;
+        }
+
+        int getSite(Computer foundMember, List<Site> sites)
+        {
+            foreach (Site site in sites)
+            {
+                foreach (string subnet in site.Subnets)
+                {
+                    if (IsInRange(foundMember.IpAddress, subnet))
+                    {
+                        return site.SiteId;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public bool IsInRange(string address, string subnet)
+        {
+            var range = IPAddressRange.Parse(subnet);
+
+            return range.Contains(IPAddress.Parse(address));
+
         }
 
     }

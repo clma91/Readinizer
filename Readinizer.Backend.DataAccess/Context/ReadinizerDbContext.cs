@@ -48,6 +48,7 @@ namespace Readinizer.Backend.DataAccess
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
             modelBuilder.Entity<Computer>().HasKey(x => x.ComputerId);
+            modelBuilder.Entity<Computer>().HasRequired(x => x.Site).WithMany(x => x.Computers).HasForeignKey(x => new {x.SiteRefId});
 
 
             modelBuilder.Entity<OrganisationalUnit>().HasMany<Computer>(x => x.Computers).WithMany(x => x.OrganisationalUnits).Map(x =>

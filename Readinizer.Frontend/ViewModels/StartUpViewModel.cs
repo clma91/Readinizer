@@ -79,6 +79,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             catch (Exception e)
             {
+                DialogHost.CloseDialogCommand.Execute(null, null);
                 Messenger.Default.Send(new SnackbarMessage(e.Message));
             }
 }

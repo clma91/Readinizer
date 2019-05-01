@@ -27,51 +27,36 @@ namespace Readinizer.Backend.Business.Services
         public async Task getRSoPOfReachableComputers()
         {
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-
+            List<int> collectedSiteIds = new List<int>();
             foreach (OrganisationalUnit OU in allOUs)
             {
+                collectedSiteIds.Clear();
+
                 string domainName = unitOfWork.ADDomainRepository.GetByID(OU.ADDomainRefId).Name;
-                if (OU.Computers != null)
-                {
-                    Computer reachableComputer = GetReachableComputer(OU);
-                    
 
-                    if (reachableComputer != null)
+                    foreach (var computer in OU.Computers)
                     {
-                        unitOfWork.ComputerRepository.Update(reachableComputer);
 
-                        OU.HasReachableComputer = true;
-                        unitOfWork.OrganisationalUnitRepository.Update(OU);
+                        if (!collectedSiteIds.Contains(computer.SiteRefId) && PingHost(computer.IpAddress))
+                        {
+                            computer.PingSuccessfull = true;
+                            unitOfWork.ComputerRepository.Update(computer);
 
-                        getRSoP(reachableComputer.ComputerName + "." + domainName,
-                            reachableComputer.ComputerName,
-                            System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                            OU.HasReachableComputer = true;
+                            unitOfWork.OrganisationalUnitRepository.Update(OU);
+
+                            collectedSiteIds.Add(computer.SiteRefId);
+
+                            getRSoP(computer.ComputerName + "." + domainName,
+                                computer.ComputerName,
+                                System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                        }
                     }
-                }
-
+                
                 await unitOfWork.SaveChangesAsync();
             }
-
-
-
         }
 
-        private static Computer GetReachableComputer(OrganisationalUnit OU)
-        {
-            foreach (Computer computer in OU.Computers)
-            {
-                
-                    if (PingHost(computer.IpAddress))
-                    {
-                        computer.PingSuccessfull = true;
-
-                        return computer;
-                    }
-                
-            }
-
-            return null;
-        }
 
 
         public void getRSoP(string computerpath, string computername, string user)
