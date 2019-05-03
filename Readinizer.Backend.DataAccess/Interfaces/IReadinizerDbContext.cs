@@ -11,9 +11,9 @@ namespace Readinizer.Backend.DataAccess.Interfaces
         DbSet<Computer> Computers { get; set; }
         DbSet<Site> Sites { get; set; }
         DbSet<Rsop> Rsops { get; set; }
-        DbSet<AuditSettingReco> AuditSettings { get; set; }
-        DbSet<PolicyReco> Policies { get; set; }
-        DbSet<RegistrySettingReco> RegistrySettings { get; set; }
-        DbSet<SecurityOptionReco> SecurityOptions { get; set; }
+        DbSet<AuditSetting> AuditSettings { get; set; }
+        DbSet<Policy> Policies { get; set; }
+        DbSet<RegistrySetting> RegistrySettings { get; set; }
+        DbSet<SecurityOption> SecurityOptions { get; set; }
     }
 }

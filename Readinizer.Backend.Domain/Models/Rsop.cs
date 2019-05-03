@@ -12,15 +12,15 @@ namespace Readinizer.Backend.Domain.Models
         public int RsopId { get; set; }
 
         public string OrganisationalUnitName { get; set; }
+        
+        public virtual ICollection<AuditSetting> AuditSettings { get; set; }
 
-        public List<AuditSettingReco> AuditSettings { get; set; }
+        public virtual ICollection<Policy> Policies { get; set; }
 
-        public List<PolicyReco> Policies { get; set; }
+        public virtual ICollection<RegistrySetting> RegistrySettings { get; set; }
 
-        public List<RegistrySettingReco> RegistrySettings { get; set; }
+        public virtual ICollection<SecurityOption> SecurityOptions { get; set; }
 
-        public List<SecurityOptionReco> SecurityOptions { get; set; }
-
-        public List<Gpo> Gpos { get; set; }
+        public virtual ICollection<Gpo> Gpos { get; set; }
     }
 }

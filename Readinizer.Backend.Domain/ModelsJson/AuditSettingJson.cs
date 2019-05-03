@@ -7,9 +7,10 @@ using Newtonsoft.Json;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
-    public class AuditSettingReco
+    public class AuditSettingJson
     {
-        public int AuditSettingId { get; set; }
+        [JsonProperty("GPO")]
+        public Gpo Gpo { get; set; }
 
         [JsonProperty("SubCategoryName")]
         public string SubcategoryName { get; set; }
@@ -18,10 +19,14 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public string PolicyTarget { get; set; }
 
         [JsonProperty("SettingValue")]
-        public AuditSettingValue TargetSettingValue { get; set; }
-
         public AuditSettingValue CurrentSettingValue { get; set; }
+    }
 
-        public bool IsPresent { get; set; }
+    public enum AuditSettingValue
+    {
+        NoAuditing,
+        Success,
+        Failure,
+        SuccessAndFailure
     }
 }

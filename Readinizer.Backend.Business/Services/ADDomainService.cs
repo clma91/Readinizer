@@ -57,6 +57,11 @@ namespace Readinizer.Backend.Business.Services
                 logger.Error(severDownException, message);
                 throw new InvalidAuthenticationException(message);
             }
+            //// TODO: catch specified domain could not be contacted
+            //catch (ActiveDirectoryObjectNotFoundException adObjectioFoundException)
+            //{
+            //    var message = adObjectioFoundException.Message;
+            //}
             catch (Exception e)
             {
                 var message = e.Message;

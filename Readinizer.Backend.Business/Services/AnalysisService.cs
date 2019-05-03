@@ -14,6 +14,7 @@ using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.UnityOfWork;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
+using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -76,13 +77,13 @@ namespace Readinizer.Backend.Business.Services
             return gpos;
         }
 
-        private static List<PolicyReco> AnalysePolicies(JToken rsop)
+        private static List<Policy> AnalysePolicies(JToken rsop)
         {
-            var recommendedPolicies = new List<PolicyReco>();
+            var recommendedPolicies = new List<Policy>();
             recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
 
             var jsonPolicies = rsop.SelectToken("$..Policy");
-            var policies = new List<Policy>();
+            var policies = new List<PolicyJson>();
             GetSettings(jsonPolicies, policies);
 
             var presentPolicy = recommendedPolicies.Join(policies,
@@ -101,13 +102,13 @@ namespace Readinizer.Backend.Business.Services
             }).ToList();
         }
 
-        private static List<SecurityOptionReco> AnalyseSecurityOptions(JToken rsop)
+        private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
-            var recommendedSecurityOptions = new List<SecurityOptionReco>();
+            var recommendedSecurityOptions = new List<SecurityOption>();
             recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], recommendedSecurityOptions);
 
             var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions");
-            var securityOptions = new List<SecurityOption>();
+            var securityOptions = new List<SecurityOptionJson>();
             GetSettings(jsonSecurityOptions, securityOptions);
 
             var presentSecurityOptions = recommendedSecurityOptions.Join(securityOptions,
@@ -129,19 +130,24 @@ namespace Readinizer.Backend.Business.Services
                         .Select(z => z.CurrentDisplay.DisplayBoolean)
                         .DefaultIfEmpty("NotDefined")
                         .FirstOrDefault();
+                    x.CurrentDisplay.Name = x.TargetDisplay.Name;
+                }
+                else
+                {
+                    x.CurrentDisplay = new Display{ Name = x.TargetDisplay.Name, DisplayBoolean = "NotDefined" };
                 }
 
                 return x;
             }).ToList();
         }
 
-        private static List<RegistrySettingReco> AnalyseRegistrySetting(JToken rsop)
+        private static List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
         {
-            var recommendedRegistrySettings = new List<RegistrySettingReco>();
+            var recommendedRegistrySettings = new List<RegistrySetting>();
             recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], recommendedRegistrySettings);
 
             var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting");
-            var registrySettings = new List<RegistrySetting>();
+            var registrySettings = new List<RegistrySettingJson>();
             GetSettings(jsonRegistrySettings, registrySettings);
 
             var presentRegistrySettings = recommendedRegistrySettings.Join(registrySettings,
@@ -155,19 +161,19 @@ namespace Readinizer.Backend.Business.Services
                 w.CurrentValue = registrySettings.Where(x => x.CurrentValue != null)
                     .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
                     .Select(z => z.CurrentValue)
-                    .DefaultIfEmpty(null)
+                    .DefaultIfEmpty(new Value())
                     .FirstOrDefault();
                 return w;
             }).ToList();
         }
 
-        private static List<AuditSettingReco> AnalyseAuditSettings(JToken rsop)
+        private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
-            var recommendedAuditSettings = new List<AuditSettingReco>();
+            var recommendedAuditSettings = new List<AuditSetting>();
             recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
             
             var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
-            var auditSettings = new List<AuditSetting>();
+            var auditSettings = new List<AuditSettingJson>();
             GetSettings(jsonAuditSettings, auditSettings);
 
             var presentAuditSettings = recommendedAuditSettings.Join(auditSettings,
