@@ -24,5 +24,7 @@ namespace Readinizer.Backend.Domain.Models
         public int SiteRefId { get; set; }
 
         public Site Site { get; set; }
+
+        public bool? isSysmonRunning { get; set; }
     }
 }
