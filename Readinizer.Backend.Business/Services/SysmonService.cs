@@ -56,11 +56,10 @@ namespace Readinizer.Backend.Business.Services
             scope.Connect();
             ManagementPath path = new ManagementPath("Win32_Service");
             ManagementClass services = new ManagementClass(scope, path, null);
-          
 
             foreach (var service in services.GetInstances())
-            {
-                if (service.GetPropertyValue("State").ToString().ToLower().Equals("running") && service.GetPropertyValue("Name").ToString().Equals("Sysmon"))
+            { 
+                if (service.GetPropertyValue("Name").ToString().Equals("Sysmon") || (service.GetPropertyValue("Description") != null && service.GetPropertyValue("Description").ToString().Equals("System Monitor service")) && service.GetPropertyValue("State").ToString().ToLower().Equals("running"))
                 { 
                     return true;
                 }

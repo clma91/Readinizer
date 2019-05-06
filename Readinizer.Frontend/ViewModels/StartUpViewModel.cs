@@ -92,11 +92,10 @@ namespace Readinizer.Frontend.ViewModels
             {
                 ShowSpinnerView();
                 //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-                // await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon());
-                await sysmonService.sysmonCheck();
-                
-                
-               ShowTreeStructureResult();
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon());
+                //await sysmonService.sysmonCheck();
+
+                ShowTreeStructureResult();
             }
             catch (Exception e)
             {
