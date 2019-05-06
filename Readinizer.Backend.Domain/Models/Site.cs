@@ -15,5 +15,7 @@ namespace Readinizer.Backend.Domain.Models
         public virtual ICollection<string> Subnets { get; set; }
         
         public virtual ICollection<ADDomain> Domains { get; set; }
+
+        public virtual ICollection<Computer> Computers { get; set; }
     }
 }
