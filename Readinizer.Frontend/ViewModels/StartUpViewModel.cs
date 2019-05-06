@@ -53,8 +53,7 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
-                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IAnalysisService analysisService,
                                 IComputerService computerService, IRSoPService rSoPService, ISysmonService sysmonService)
         {
             this.adDomainService = adDomainService;
