@@ -53,7 +53,7 @@ namespace Readinizer.Backend.Business.Services
                         collectedSiteIds.Add(computer.SiteRefId);
 
                         getRSoP(computer.ComputerName + "." + domain.Name,
-                            computer.ComputerName,
+                            OU.OrganisationalUnitId, computer.SiteRefId,
                             System.Security.Principal.WindowsIdentity.GetCurrent().Name);
                     }
 
@@ -91,7 +91,7 @@ namespace Readinizer.Backend.Business.Services
                             collectedSiteIds.Add(computer.SiteRefId);
 
                             getRSoP(computer.ComputerName + "." + domainName,
-                                computer.ComputerName,
+                                OU.OrganisationalUnitId, computer.SiteRefId,
                                 user);
                         }
 
@@ -104,7 +104,7 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        public void getRSoP(string computerpath, string computername, string user)
+        public void getRSoP(string computerpath, int ouId, int siteId, string user)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace Readinizer.Backend.Business.Services
                 test.LoggingUser = user;
                 test.CreateQueryResults();
                 test.GenerateReportToFile(ReportType.Xml,
-                    (AppDomain.CurrentDomain.BaseDirectory + "\\RSOP\\" + computername + ".xml"));
+                    (AppDomain.CurrentDomain.BaseDirectory + "\\RSOP\\" + "Ou_" + ouId + "-Site_" + siteId + ".xml"));
             }
             catch (Exception e)
             {
