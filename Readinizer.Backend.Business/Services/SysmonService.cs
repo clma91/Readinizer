@@ -23,7 +23,7 @@ namespace Readinizer.Backend.Business.Services
             this.pingService = pingService;
         }
 
-        public async Task sysmonCheck()
+        public async Task sysmonCheck(string serviceName)
         {
         List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
         List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
@@ -39,7 +39,7 @@ namespace Readinizer.Backend.Business.Services
                     {
                         computer.PingSuccessfull = true;
                         computer.isSysmonRunning =  isSysmonRunning(
-                            System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(),
+                            serviceName, System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(),
                             computer.ComputerName, domain.Name);
                     }
                 }
@@ -49,7 +49,7 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        public bool isSysmonRunning(string user, string computerName, string domain)
+        public bool isSysmonRunning(string serviceName, string user, string computerName, string domain)
         {
             ConnectionOptions op = new ConnectionOptions();
             ManagementScope scope = new ManagementScope(@"\\" + computerName +"."+ domain + "\\root\\cimv2", op);
@@ -59,7 +59,7 @@ namespace Readinizer.Backend.Business.Services
 
             foreach (var service in services.GetInstances())
             { 
-                if (service.GetPropertyValue("Name").ToString().Equals("Sysmon") || (service.GetPropertyValue("Description") != null && service.GetPropertyValue("Description").ToString().Equals("System Monitor service")) && service.GetPropertyValue("State").ToString().ToLower().Equals("running"))
+                if (service.GetPropertyValue("Name").ToString().Equals(serviceName) && service.GetPropertyValue("State").ToString().ToLower().Equals("running"))
                 { 
                     return true;
                 }

@@ -9,9 +9,7 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface ISysmonService
     {
-        bool isSysmonRunning(string user, string computername, string domain);
-
-        Task sysmonCheck();
+        bool isSysmonRunning(string serviceName, string user, string computername, string domain);
 
     }
 }

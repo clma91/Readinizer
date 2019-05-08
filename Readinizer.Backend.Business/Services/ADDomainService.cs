@@ -21,7 +21,7 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task SearchAllDomains()
+        public async Task SearchAllDomains(string domainname)
         {
             var domains = new List<AD.Domain>();
             var treeDomains = new List<AD.Domain>();
@@ -29,8 +29,8 @@ namespace Readinizer.Backend.Business.Services
 
             try
             {
-                var forestRootDomain = Forest.GetCurrentForest().RootDomain;
-                var domainTrusts = forestRootDomain.GetAllTrustRelationships();
+                var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));         // Forest.GetCurrentForest().RootDomain;
+                var domainTrusts = startDomain.GetAllTrustRelationships();
 
                 foreach (TrustRelationshipInformation domainTrust in domainTrusts)
                 {
@@ -43,7 +43,7 @@ namespace Readinizer.Backend.Business.Services
                     }
                 }
 
-                AddAllChildDomains(forestRootDomain, domains);
+                AddAllChildDomains(startDomain, domains);
             }
             catch (UnauthorizedAccessException accessException)
             {
@@ -75,7 +75,17 @@ namespace Readinizer.Backend.Business.Services
 
             await unitOfWork.SaveChangesAsync();
         }
-        
+
+        public async Task AddThisDomain(string domainname)
+        {
+            var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));
+            ADDomain domain = new ADDomain();
+            domain.Name = startDomain.Name;
+            domain.IsForestRoot = true;
+            unitOfWork.ADDomainRepository.Add(domain);
+            await unitOfWork.SaveChangesAsync();
+        }
+
         private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
         {
             domains.Add(root);

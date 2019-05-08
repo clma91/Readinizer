@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -30,7 +31,15 @@ namespace Readinizer.Frontend.ViewModels
         private List<TreeNode> treeNodes;
         public List<TreeNode> TreeNodes
         {
-            get => treeNodes;
+            get
+            {
+                if (treeNodes == null)
+                {
+                    treeNodes = new List<TreeNode>();
+                }
+
+                return treeNodes;
+            }
             set => Set(ref treeNodes, value);
         }
 
@@ -60,11 +69,13 @@ namespace Readinizer.Frontend.ViewModels
         {
             this.treeNodesFactory = treeNodesFactory;
             this.unitOfWork = unitOfWork;
+            TreeNodes = new List<TreeNode>();
         }
 
         public async void BuildTree()
         {
-            TreeNodes = await treeNodesFactory.CreateTree();
+            Task<List<TreeNode>> task = treeNodesFactory.CreateTree();
+            TreeNodes = await task;
         }
 
         private async void Discover()

@@ -40,30 +40,32 @@ namespace Readinizer.Backend.Business.Services
 
                 var domain = allDomains.Find(x => x.ADDomainId == OU.ADDomainRefId);
 
-                foreach (var computer in OU.Computers)
+                if(OU.Computers != null)
                 {
-                    if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
+                    foreach (var computer in OU.Computers)
                     {
-                        computer.PingSuccessfull = true;
-                        unitOfWork.ComputerRepository.Update(computer);
+                        if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
+                        {
+                            computer.PingSuccessfull = true;
+                            unitOfWork.ComputerRepository.Update(computer);
 
-                        OU.HasReachableComputer = true;
-                        unitOfWork.OrganisationalUnitRepository.Update(OU);
+                            OU.HasReachableComputer = true;
+                            unitOfWork.OrganisationalUnitRepository.Update(OU);
 
-                        collectedSiteIds.Add(computer.SiteRefId);
+                            collectedSiteIds.Add(computer.SiteRefId);
 
-                        getRSoP(computer.ComputerName + "." + domain.Name,
-                            OU.OrganisationalUnitId, computer.SiteRefId,
-                            System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                            getRSoP(computer.ComputerName + "." + domain.Name,
+                                OU.OrganisationalUnitId, computer.SiteRefId,
+                                System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                        }
+
                     }
-
                 }
-
                 await unitOfWork.SaveChangesAsync();
             }
         }
 
-        public async Task getRSoPOfReachableComputersAndCheckSysmon()
+        public async Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName)
         {
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
@@ -76,29 +78,34 @@ namespace Readinizer.Backend.Business.Services
                 ADDomain domain = allDomains.Find(x => x.ADDomainId == OU.ADDomainRefId);
                 string domainName = domain.Name;
 
-                foreach (var computer in OU.Computers)
+                if (OU.Computers != null)
                 {
-                    if (pingService.isPingable(computer.IpAddress))
+                    foreach (var computer in OU.Computers)
                     {
-                        if (!collectedSiteIds.Contains(computer.SiteRefId))
+                        if (pingService.isPingable(computer.IpAddress))
                         {
-                            computer.PingSuccessfull = true;
-                            unitOfWork.ComputerRepository.Update(computer);
+                            if (!collectedSiteIds.Contains(computer.SiteRefId))
+                            {
+                                computer.PingSuccessfull = true;
+                                unitOfWork.ComputerRepository.Update(computer);
 
-                            OU.HasReachableComputer = true;
-                            unitOfWork.OrganisationalUnitRepository.Update(OU);
+                                OU.HasReachableComputer = true;
+                                unitOfWork.OrganisationalUnitRepository.Update(OU);
 
-                            collectedSiteIds.Add(computer.SiteRefId);
+                                collectedSiteIds.Add(computer.SiteRefId);
 
-                            getRSoP(computer.ComputerName + "." + domainName,
-                                OU.OrganisationalUnitId, computer.SiteRefId,
-                                user);
+                                getRSoP(computer.ComputerName + "." + domainName,
+                                    OU.OrganisationalUnitId, computer.SiteRefId,
+                                    user);
+                            }
+
+                            computer.isSysmonRunning = sysmonService.isSysmonRunning(serviceName, user,
+                                computer.ComputerName,
+                                domainName);
                         }
-
-                        computer.isSysmonRunning = sysmonService.isSysmonRunning(user, computer.ComputerName,
-                            domainName);
                     }
                 }
+
                 await unitOfWork.SaveChangesAsync();
             }
         }
