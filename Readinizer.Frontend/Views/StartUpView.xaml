@@ -46,7 +46,9 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
-                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left" IsChecked="True"/>
+                    
+                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left" IsChecked="True" IsHitTestVisible="False" Opacity="0.5"/>
+                    
                 </Grid>
 
                 <Grid>
@@ -63,7 +65,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Label Margin="25 10 0 10" Grid.Column="0">Check Sysmon</Label>
-                    <ToggleButton x:Name="SysmonToggleButton" Grid.Column="1" HorizontalAlignment="Left"  IsChecked="{Binding SysmonChecked}"/>
+                    <ToggleButton x:Name="SysmonToggleButton" Grid.Column="1" HorizontalAlignment="Left"  IsChecked="{Binding SysmonChecked}" />
                 </Grid>
                 <Grid>
                     <Grid.ColumnDefinitions>
