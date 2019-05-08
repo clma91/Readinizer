@@ -9,13 +9,15 @@ using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
-    public class Policy
+    public class Policy 
     {
         public int PolicyId { get; set; }
 
         public int RsopRefId { get; set; }
 
         public Rsop Rsop { get; set; }
+
+        public string GpoId { get; set; }
 
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -32,5 +34,32 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public ModuleNames ModuleNames { get; set; } = new ModuleNames();
 
         public bool IsPresent { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (CurrentState != null && GpoId != null)
+            {
+                var otherPolicy = obj as Policy;
+
+                if (otherPolicy == null)
+                {
+                    return false;
+                }
+
+                if (ModuleNames.ValueElementData != null)
+                {
+                    return CurrentState == otherPolicy.CurrentState && ModuleNames.ValueElementData == otherPolicy.ModuleNames.ValueElementData;
+                }
+
+                return CurrentState.Equals(otherPolicy.CurrentState);
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() * 17;
+        }
     }
 }

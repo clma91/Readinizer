@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -11,11 +12,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class SecurityOption
     {
-        public int SecurityOptionRecoId { get; set; }
+        public int SecurityOptionId { get; set; }
 
         public int RsopRefId { get; set; }
 
         public Rsop Rsop { get; set; }
+
+        public string GpoId { get; set; }
 
         [JsonProperty("Description")]
         public string Description { get; set; }
@@ -34,8 +37,30 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public bool IsPresent { get; set; }
 
-        public Display CurrentDisplay { get; set; }
+        public Display CurrentDisplay { get; set; } = new Display();
 
         public string CurrentSettingNumber { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (CurrentDisplay.Name != null && CurrentDisplay.DisplayBoolean != null)
+            {
+                var securityOption = obj as SecurityOption;
+
+                if (securityOption == null)
+                {
+                    return false;
+                }
+
+                return CurrentDisplay.Name == securityOption.CurrentDisplay.Name &&
+                       CurrentDisplay.DisplayBoolean == securityOption.CurrentDisplay.DisplayBoolean;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Description.GetHashCode() * 17;
+        }
     }
 }

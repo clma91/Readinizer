@@ -74,6 +74,7 @@
     <Compile Include="ModelsJson\HelperClasses\ListBox.cs" />
     <Compile Include="ModelsJson\HelperClasses\ModuleNames.cs" />
     <Compile Include="ModelsJson\HelperClasses\Path.cs" />
+    <Compile Include="ModelsJson\HelperClasses\RandomName.cs" />
     <Compile Include="ModelsJson\PolicyJson.cs" />
     <Compile Include="ModelsJson\Policy.cs" />
     <Compile Include="ModelsJson\RegistrySettingJson.cs" />

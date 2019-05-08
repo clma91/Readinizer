@@ -1,4 +1,5 @@
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Runtime.CompilerServices;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
@@ -21,7 +22,8 @@ namespace Readinizer.Backend.DataAccess
         public virtual DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
         public virtual DbSet<Computer> Computers { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
-        public virtual DbSet<Rsop> Rsops { get; set; }
+        public virtual DbSet<Rsop> RSoPs { get; set; }
+        public virtual DbSet<RsopPot> RSoPPots { get; set; }
 
         public virtual DbSet<AuditSetting> AuditSettings { get; set; }
         public virtual DbSet<Policy> Policies { get; set; }
@@ -70,8 +72,16 @@ namespace Readinizer.Backend.DataAccess
             });
 
 
+            modelBuilder.Entity<RsopPot>().ToTable(nameof(RsopPot));
+            modelBuilder.Entity<RsopPot>().HasKey(x => x.RsopPotId);
+            modelBuilder.Entity<RsopPot>().HasMany(x => x.Rsops).WithOptional().HasForeignKey(x => x.RsopPotRefId);
+
+
             modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));
             modelBuilder.Entity<Rsop>().HasKey(x => x.RsopId);
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithOptionalPrincipal(ou => ou.Rsop);
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithOptionalPrincipal(site => site.Rsop);
+
 
             modelBuilder.Entity<AuditSetting>().ToTable(nameof(AuditSetting));
             modelBuilder.Entity<AuditSetting>().HasKey(x => x.AuditSettingId);
@@ -90,8 +100,9 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<RegistrySetting>().HasRequired(x => x.Rsop).WithMany(x => x.RegistrySettings)
                 .HasForeignKey(x => new { x.RsopRefId });
 
+
             modelBuilder.Entity<SecurityOption>().ToTable(nameof(SecurityOption));
-            modelBuilder.Entity<SecurityOption>().HasKey(x => x.SecurityOptionRecoId);
+            modelBuilder.Entity<SecurityOption>().HasKey(x => x.SecurityOptionId);
             modelBuilder.Entity<SecurityOption>().HasRequired(x => x.Rsop).WithMany(x => x.SecurityOptions)
                 .HasForeignKey(x => new { x.RsopRefId });
 

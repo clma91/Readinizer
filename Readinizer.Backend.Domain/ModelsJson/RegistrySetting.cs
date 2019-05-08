@@ -17,6 +17,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public Rsop Rsop { get; set; }
 
+        public string GpoId { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 
@@ -32,5 +34,27 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public bool IsPresent { get; set; }
 
         public Value CurrentValue { get; set; } = new Value();
+
+        public override bool Equals(object obj)
+        {
+            // TODO: Maybe also or just CurrentValue.Name/Number
+            if (GpoId != null)
+            {
+                var registrySetting = obj as RegistrySetting;
+
+                if (registrySetting == null)
+                {
+                    return false;
+                }
+
+                return CurrentValue.Name == registrySetting.CurrentValue.Name && CurrentValue.Number == registrySetting.CurrentValue.Number;
+            }
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode() * 17;
+        }
     }
 }

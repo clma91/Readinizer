@@ -16,6 +16,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public Rsop Rsop { get; set; }
 
+        public string GpoId { get; set; }
+
         [JsonProperty("SubCategoryName")]
         public string SubcategoryName { get; set; }
 
@@ -28,5 +30,28 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public AuditSettingValue CurrentSettingValue { get; set; }
 
         public bool IsPresent { get; set; }
+
+        // TODO: Probably not necessary!
+        public override bool Equals(object obj)
+        {
+            if (GpoId != null)
+            {
+                var auditSetting = obj as AuditSetting;
+
+                if (auditSetting == null)
+                {
+                    return false;
+                }
+
+                return CurrentSettingValue.Equals(auditSetting.CurrentSettingValue);
+            }
+
+            return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
     }
 }

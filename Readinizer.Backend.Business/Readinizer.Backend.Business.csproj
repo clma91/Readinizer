@@ -99,6 +99,7 @@
     <Compile Include="Interfaces\IAnalysisService.cs" />
     <Compile Include="Factory\TreeNodesFactory.cs" />
     <Compile Include="Interfaces\IComputerService.cs" />
+    <Compile Include="Interfaces\IRSoPPotService.cs" />
     <Compile Include="Interfaces\ITreeNodesFactory.cs" />
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IRSoPService.cs" />
@@ -124,6 +125,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Config\adjectives.json" />
+    <None Include="Config\animalNames.json" />
     <None Include="RecommendedSettings\RecommendedAuditSettings.json" />
     <None Include="RecommendedSettings\RecommendedPolicies.json" />
     <None Include="RecommendedSettings\RecommendedRegistrySettings.json" />
@@ -131,9 +134,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReceivedRSoP\luki.xml" />
-    <Content Include="ReceivedRSoP\readinizerDC.xml" />
-    <Content Include="ReceivedRSoP\SysAdmWS02.xml" />
+    <Content Include="ReceivedRSoP\Ou_1-Site_1.xml" />
+    <Content Include="ReceivedRSoP\Ou_6-Site_2.xml" />
+    <Content Include="ReceivedRSoP\Ou_8-Site_1.xml" />
+    <Content Include="ReceivedRSoP\Ou_6-Site_1.xml" />
+    <Content Include="ReceivedRSoP\Ou_8-Site_2.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

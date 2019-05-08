@@ -27,6 +27,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISiteService siteService;
         private readonly IRSoPService rSoPService;
         private readonly IAnalysisService analysisService;
+        private readonly IRSoPPotService rSoPPotService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -53,7 +54,8 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
-                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService)
+                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService,
+                                IRSoPPotService rSoPPotService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
@@ -61,6 +63,7 @@ namespace Readinizer.Frontend.ViewModels
             this.computerService = computerService;
             this.rSoPService = rSoPService;
             this.analysisService = analysisService;
+            this.rSoPPotService = rSoPPotService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -91,9 +94,10 @@ namespace Readinizer.Frontend.ViewModels
             {
                 //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                 await Task.Run(() => analysisService.Analyse());
-                
-                //Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
-                ShowTreeStructureResult();
+                await Task.Run(() => rSoPPotService.GenerateRsopPots());
+
+                Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));
+                //ShowTreeStructureResult();
             }
             catch (Exception e)
             {

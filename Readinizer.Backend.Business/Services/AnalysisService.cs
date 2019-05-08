@@ -33,32 +33,42 @@ namespace Readinizer.Backend.Business.Services
             var directoryInfo = new DirectoryInfo(receivedRsopPath);
             var rsopXml = directoryInfo.GetFiles("*.xml");
             var rsops = new List<Rsop>();
-
+            
             foreach (var xml in rsopXml)
             {
                 var doc = new XmlDocument();
                 doc.Load(xml.FullName);
                 var rsopJson = XmlToJson(doc);
+                
+                var organisationalUnitRefId = 0;
+                var fileName = xml.Name.Replace(".xml", "");
+                Int32.TryParse(fileName.Substring(0, fileName.IndexOf("-")).Replace("Ou_", ""), out organisationalUnitRefId);
+                var siteRefId = 0;
+                Int32.TryParse(fileName.Substring(fileName.IndexOf("-") + 1).Replace("Site_", ""), out siteRefId);
 
-                var policies = AnalysePolicies(rsopJson);
                 var auditSettings = AnalyseAuditSettings(rsopJson);
-                var registrySettings = AnalyseRegistrySetting(rsopJson);
                 var securityOptions = AnalyseSecurityOptions(rsopJson);
+                var policies = AnalysePolicies(rsopJson);
+                var registrySettings = AnalyseRegistrySetting(rsopJson);
                 var allRsopGpos = GetAllRsopGpos(rsopJson);
+                
                 var rsop = new Rsop
                 {
-                    OrganisationalUnitName = xml.Name,
-                    AuditSettings = auditSettings,
-                    Policies = policies,
-                    RegistrySettings = registrySettings,
-                    SecurityOptions = securityOptions,
+                    OrganisationalUnit = unitOfWork.OrganisationalUnitRepository.GetByID(organisationalUnitRefId),
+                    Site = unitOfWork.SiteRepository.GetByID(siteRefId),
+                    AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
+                    Policies = policies.OrderBy(x => x.Name).ToList(),
+                    RegistrySettings = registrySettings.OrderBy(x => x.Name).ToList(),
+                    SecurityOptions = securityOptions.OrderBy(x => x.Description).ToList(),
                     Gpos = allRsopGpos
                 };
+
                 rsops.Add(rsop);
             }
-            unitOfWork.RsopRepository.AddRange(rsops);
+            unitOfWork.RSoPRepository.AddRange(rsops);
             await unitOfWork.SaveChangesAsync();
         }
+        
 
         private static JObject XmlToJson(XmlNode doc)
         {
@@ -77,30 +87,35 @@ namespace Readinizer.Backend.Business.Services
             return gpos;
         }
 
-        private static List<Policy> AnalysePolicies(JToken rsop)
+        private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
-            var recommendedPolicies = new List<Policy>();
-            recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
+            var recommendedAuditSettings = new List<AuditSetting>();
+            recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
 
-            var jsonPolicies = rsop.SelectToken("$..Policy");
-            var policies = new List<PolicyJson>();
-            GetSettings(jsonPolicies, policies);
+            var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
+            var auditSettings = new List<AuditSettingJson>();
+            GetSettings(jsonAuditSettings, auditSettings);
 
-            var presentPolicy = recommendedPolicies.Join(policies,
-                recommendedPolicy => recommendedPolicy.Name,
-                policy => policy.Name,
-                (policy, x) => policy).ToList();
+            var presentAuditSettings = recommendedAuditSettings.Join(auditSettings,
+                recommendedAuditSetting => recommendedAuditSetting.SubcategoryName,
+                auditSetting => auditSetting.SubcategoryName,
+                (recommendedAuditSetting, x) => recommendedAuditSetting).ToList();
 
-            return recommendedPolicies.Select(x =>
+            return recommendedAuditSettings.Select(x =>
             {
-                x.IsPresent = presentPolicy.Contains(x);
-                x.CurrentState = policies.Where(y => y.CurrentState.Equals(x.CurrentState))
-                    .Select(z => z.CurrentState)
-                    .DefaultIfEmpty("Disabled")
+                x.IsPresent = presentAuditSettings.Contains(x);
+                x.CurrentSettingValue = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
+                    .Select(z => z.CurrentSettingValue)
+                    .DefaultIfEmpty(AuditSettingValue.NoAuditing)
+                    .FirstOrDefault();
+                x.GpoId = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
+                    .Select(z => z.Gpo.GpoIdentifier.Id)
+                    .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();
                 return x;
             }).ToList();
         }
+
 
         private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
@@ -114,28 +129,27 @@ namespace Readinizer.Backend.Business.Services
             var presentSecurityOptions = recommendedSecurityOptions.Join(securityOptions,
                 recommendedSecurityOption => recommendedSecurityOption.KeyName,
                 securityOption => securityOption.KeyName,
-                (securityOption, x) => securityOption).ToList();
+                (recommendedSecurityOption, x) => recommendedSecurityOption).ToList();
 
             return recommendedSecurityOptions.Select(x =>
             {
-                x.IsPresent = presentSecurityOptions.Exists(y => x.KeyName.Equals(x.KeyName));
-                x.CurrentSettingNumber = securityOptions.Where(y => y.CurrentSettingNumber.Equals(x.CurrentSettingNumber))
+                x.IsPresent = presentSecurityOptions.Contains(x);
+                x.CurrentSettingNumber = securityOptions.Where(y => y.CurrentSettingNumber == x.TargetSettingNumber)
                     .Select(z => z.CurrentSettingNumber)
                     .DefaultIfEmpty("NotDefined")
                     .FirstOrDefault();
-                if (x.CurrentDisplay != null)
-                {
-                    x.CurrentDisplay.DisplayBoolean = securityOptions
-                        .Where(y => y.CurrentDisplay.DisplayBoolean.Equals(x.CurrentDisplay.DisplayBoolean))
-                        .Select(z => z.CurrentDisplay.DisplayBoolean)
-                        .DefaultIfEmpty("NotDefined")
-                        .FirstOrDefault();
-                    x.CurrentDisplay.Name = x.TargetDisplay.Name;
-                }
-                else
-                {
-                    x.CurrentDisplay = new Display{ Name = x.TargetDisplay.Name, DisplayBoolean = "NotDefined" };
-                }
+
+                x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay != null && y.CurrentDisplay.DisplayBoolean != null &&
+                                                                             y.KeyName.Equals(x.KeyName))
+                    .Select(z => z.CurrentDisplay.DisplayBoolean)
+                    .DefaultIfEmpty("NotDefined")
+                    .FirstOrDefault();
+                x.CurrentDisplay.Name = x.TargetDisplay.Name;
+
+                x.GpoId = securityOptions.Where(y => y.CurrentSettingNumber.Equals(x.CurrentSettingNumber))
+                .Select(z => z.Gpo.GpoIdentifier.Id)
+                .DefaultIfEmpty("NoGpoId")
+                .FirstOrDefault();
 
                 return x;
             }).ToList();
@@ -157,41 +171,51 @@ namespace Readinizer.Backend.Business.Services
 
             return recommendedRegistrySettings.Select(w =>
             {
-                w.IsPresent = presentRegistrySettings.Exists(x => x.Name.Equals(w.Name));
+                w.IsPresent = presentRegistrySettings.Contains(w);
                 w.CurrentValue = registrySettings.Where(x => x.CurrentValue != null)
                     .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
                     .Select(z => z.CurrentValue)
                     .DefaultIfEmpty(new Value())
                     .FirstOrDefault();
+                w.GpoId = registrySettings.Where(x => x.CurrentValue != null)
+                    .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
+                    .Select(z => z.Gpo.GpoIdentifier.Id)
+                    .DefaultIfEmpty("NoGpoId")
+                    .FirstOrDefault();
                 return w;
             }).ToList();
         }
 
-        private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
+        private static List<Policy> AnalysePolicies(JToken rsop)
         {
-            var recommendedAuditSettings = new List<AuditSetting>();
-            recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
-            
-            var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
-            var auditSettings = new List<AuditSettingJson>();
-            GetSettings(jsonAuditSettings, auditSettings);
+            var recommendedPolicies = new List<Policy>();
+            recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
 
-            var presentAuditSettings = recommendedAuditSettings.Join(auditSettings,
-                recommendedAuditSetting => recommendedAuditSetting.SubcategoryName,
-                auditSetting => auditSetting.SubcategoryName,
-                (recommendedAuditSetting, x) => recommendedAuditSetting).ToList();
+            var jsonPolicies = rsop.SelectToken("$..Policy");
+            var policies = new List<PolicyJson>();
+            GetSettings(jsonPolicies, policies);
 
-            return recommendedAuditSettings.Select(x =>
+            var presentPolicies = recommendedPolicies.Join(policies,
+                recommendedPolicy => recommendedPolicy.Name,
+                policy => policy.Name,
+                (recommendedPolicy, x) => recommendedPolicy).ToList();
+
+            return recommendedPolicies.Select(x =>
             {
-                x.IsPresent = presentAuditSettings.Contains(x);
-                x.CurrentSettingValue = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
-                    .Select(z => z.CurrentSettingValue)
-                    .DefaultIfEmpty(AuditSettingValue.NoAuditing)
+                x.IsPresent = presentPolicies.Contains(x);
+                x.CurrentState = policies.Where(y => y.CurrentState.Equals(x.TargetState))
+                    .Select(z => z.CurrentState)
+                    .DefaultIfEmpty("Disabled")
+                    .FirstOrDefault();
+                // TODO: Get Module Names
+                x.GpoId = policies.Where(y => y.CurrentState.Equals(x.TargetState))
+                    .Select(z => z.Gpo.GpoIdentifier.Id)
+                    .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();
                 return x;
             }).ToList();
         }
-
+        
         private static List<T> GetRecommendedSettings<T>(string path, List<T> recommendedSettings)
         {
             recommendedSettings = JsonConvert.DeserializeObject<List<T>>(File.ReadAllText(path));

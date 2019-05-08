@@ -44,6 +44,7 @@ namespace Readinizer.Frontend
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
+            container.RegisterType<IRSoPPotService, RSoPPotService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 

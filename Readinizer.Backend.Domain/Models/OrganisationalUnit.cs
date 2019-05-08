@@ -21,6 +21,8 @@ namespace Readinizer.Backend.Domain.Models
 
         public ADDomain ADDomain { get; set; }
 
+        public Rsop Rsop { get; set; }
+
         public virtual ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
 
         public virtual ICollection<Computer> Computers { get; set; }

@@ -8,10 +8,14 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class RsopPot
     {
+        public int RsopPotId { get; set; }
+
         public string Name { get; set; }
 
-        public OrganisationalUnit OrganisationalUnit { get; set; }
+        //public List<OrganisationalUnit> OrganisationalUnits { get; set; }
 
-        public List<Rsop> Rsops { get; set; }
+        //public Site Site { get; set; }
+
+        public virtual ICollection<Rsop> Rsops { get; set; }
     }
 }
