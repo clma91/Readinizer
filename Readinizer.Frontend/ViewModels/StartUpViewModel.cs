@@ -141,7 +141,7 @@ namespace Readinizer.Frontend.ViewModels
                         await Task.Run(() => computerService.GetComputers());
                         DialogHost.CloseDialogCommand.Execute(null, null);
 
-                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+                        Messenger.Default.Send(new SnackbarMessage("Collected domain"));
 
                         CanAnalyse = true;
                     }
