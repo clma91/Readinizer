@@ -7,6 +7,8 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
+using GalaSoft.MvvmLight.Messaging;
+using MaterialDesignThemes.Wpf;
 using NetTools;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
@@ -18,10 +20,12 @@ namespace Readinizer.Backend.Business.Services
     {
         private readonly IUnitOfWork unitOfWork;
 
+
         public ComputerService(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
+
 
         public async Task GetComputers()
         {
@@ -56,12 +60,21 @@ namespace Readinizer.Backend.Business.Services
         List<string> getDcNames()
         {
             List<string> DCs = new List<string>();
+            
             foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
             {
-                foreach (DomainController dc in domain.DomainControllers)
+                try
                 {
-                    string dcname = dc.Name.Remove((dc.Name.Length - (dc.Domain.Name.Length + 1)), dc.Domain.Name.Length + 1);
-                    DCs.Add(dcname);
+                    foreach (DomainController dc in domain.DomainControllers)
+                    {
+                        string dcname = dc.Name.Remove((dc.Name.Length - (dc.Domain.Name.Length + 1)),
+                            dc.Domain.Name.Length + 1);
+                        DCs.Add(dcname);
+                    }
+                }
+                catch (Exception)
+                {
+                    return DCs;
                 }
 
             }
