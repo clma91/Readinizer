@@ -27,6 +27,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISiteService siteService;
         private readonly IRSoPService rSoPService;
         private readonly IAnalysisService analysisService;
+        private readonly ISysmonService sysmonService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -52,14 +53,15 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
-                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IAnalysisService analysisService,
+                                IComputerService computerService, IRSoPService rSoPService, ISysmonService sysmonService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
             this.organisationalUnitService = organisationalUnitService;
             this.computerService = computerService;
             this.rSoPService = rSoPService;
+            this.sysmonService = sysmonService;
             this.analysisService = analysisService;
             CanDiscover = true;
             CanAnalyse = true;
@@ -81,6 +83,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             catch (Exception e)
             {
+                DialogHost.CloseDialogCommand.Execute(null, null);
                 Messenger.Default.Send(new SnackbarMessage(e.Message));
             }
 }
@@ -89,7 +92,11 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
+                ShowSpinnerView();
                 //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon());
+                //await sysmonService.sysmonCheck();
+
                 await Task.Run(() => analysisService.Analyse());
                 
                 //Messenger.Default.Send(new SnackbarMessage("Collected all RSoPs"));

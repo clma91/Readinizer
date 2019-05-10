@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IRSoPService
+    public interface ISysmonService
     {
+        bool isSysmonRunning(string user, string computername, string domain);
 
-        Task getRSoPOfReachableComputers();
+        Task sysmonCheck();
 
-        Task getRSoPOfReachableComputersAndCheckSysmon();
     }
 }
