@@ -35,9 +35,10 @@ namespace Readinizer.Frontend.ViewModels
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
         private readonly SpinnerViewModel spinnerViewModel;
+        private readonly DomainResultViewModel domainResultView;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -46,12 +47,13 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel)
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel)
 
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
             this.spinnerViewModel = spinnerViewModel;
+            this.domainResultView = domainResultViewModel;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
@@ -76,6 +78,11 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = spinnerViewModel;
         }
 
+        private void ShowDomainResultView()
+        {
+            CurrentViewModel = domainResultView;
+        }
+
         private void ChangeView(ChangeView message)
         {
             if (message.ViewModelType == typeof(StartUpViewModel))
@@ -88,6 +95,10 @@ namespace Readinizer.Frontend.ViewModels
             } else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
                 ShowSpinnerView();
+            }
+            else if(message.ViewModelType == typeof(DomainResultViewModel))
+            {
+                ShowDomainResultView();
             }
         }
 

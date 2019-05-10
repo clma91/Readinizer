@@ -28,6 +28,9 @@
         <DataTemplate DataType="{x:Type viewModels:SpinnerViewModel}">
             <views:SpinnerView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DomainResultViewModel}">
+            <views:DomainResultView></views:DomainResultView>
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel>
