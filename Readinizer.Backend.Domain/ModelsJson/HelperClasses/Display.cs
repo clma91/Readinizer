@@ -9,6 +9,12 @@ namespace Readinizer.Backend.Domain.ModelsJson.HelperClasses
 {
     public class Display
     {
+        public Display()
+        {
+            Name = "Undefined";
+            DisplayBoolean = "Undefined";
+        }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 

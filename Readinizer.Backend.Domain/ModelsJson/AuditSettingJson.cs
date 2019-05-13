@@ -9,6 +9,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class AuditSettingJson
     {
+        public AuditSettingJson()
+        {
+            SubcategoryName = "Undefined";
+            PolicyTarget = "Undefined";
+            CurrentSettingValue = 0;
+        }
+
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 

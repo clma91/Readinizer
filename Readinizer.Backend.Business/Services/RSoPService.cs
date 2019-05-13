@@ -1,6 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Configuration;
 using System.DirectoryServices;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -78,13 +79,12 @@ namespace Readinizer.Backend.Business.Services
         {
             try
             {
-                GPRsop test = new GPRsop(RsopMode.Logging, "");
-                test.LoggingMode = LoggingMode.Computer;
-                test.LoggingComputer = computerpath;
-                test.LoggingUser = user;
-                test.CreateQueryResults();
-                test.GenerateReportToFile(ReportType.Xml, (AppDomain.CurrentDomain.BaseDirectory + "\\RSOP\\"+computername+".xml"));
-
+                GPRsop gpRsop = new GPRsop(RsopMode.Logging, "");
+                gpRsop.LoggingMode = LoggingMode.Computer;
+                gpRsop.LoggingComputer = computerpath;
+                gpRsop.LoggingUser = user;
+                gpRsop.CreateQueryResults();
+                gpRsop.GenerateReportToFile(ReportType.Xml, ConfigurationManager.AppSettings["ReceivedRSoP"] + "\\" + computername + ".xml");
             }
             catch (Exception e)
             {
@@ -97,14 +97,14 @@ namespace Readinizer.Backend.Business.Services
 
         static bool PingHost(string ipAddress)
         {
-            bool pingable = false;
+            bool isPingable = false;
             Ping pinger = null;
 
             try
             {
                 pinger = new Ping();
                 PingReply reply = pinger.Send(ipAddress, 200); //TODO set ping timeout
-                pingable = reply.Status == IPStatus.Success;
+                isPingable = reply.Status == IPStatus.Success;
             }
             catch (PingException)
             {
@@ -119,7 +119,7 @@ namespace Readinizer.Backend.Business.Services
                 }
             }
 
-            return pingable;
+            return isPingable;
         }
 
     }

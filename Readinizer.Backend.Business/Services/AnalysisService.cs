@@ -39,18 +39,18 @@ namespace Readinizer.Backend.Business.Services
                 var doc = new XmlDocument();
                 doc.Load(xml.FullName);
                 var rsopJson = XmlToJson(doc);
-                
-                var organisationalUnitRefId = 0;
-                var fileName = xml.Name.Replace(".xml", "");
-                Int32.TryParse(fileName.Substring(0, fileName.IndexOf("-")).Replace("Ou_", ""), out organisationalUnitRefId);
-                var siteRefId = 0;
-                Int32.TryParse(fileName.Substring(fileName.IndexOf("-") + 1).Replace("Site_", ""), out siteRefId);
 
+                var fileName = xml.Name.Replace(".xml", "");
+                var organisationalUnitRefId = 0;
+                var siteRefId = 0;
+                int.TryParse(fileName.Substring(0, fileName.IndexOf("-")).Replace("Ou_", ""), out organisationalUnitRefId);
+                int.TryParse(fileName.Substring(fileName.IndexOf("-") + 1).Replace("Site_", ""), out siteRefId);
+
+                var allRsopGpos = GetAllRsopGpos(rsopJson);
                 var auditSettings = AnalyseAuditSettings(rsopJson);
                 var securityOptions = AnalyseSecurityOptions(rsopJson);
                 var policies = AnalysePolicies(rsopJson);
                 var registrySettings = AnalyseRegistrySetting(rsopJson);
-                var allRsopGpos = GetAllRsopGpos(rsopJson);
                 
                 var rsop = new Rsop
                 {
@@ -68,8 +68,28 @@ namespace Readinizer.Backend.Business.Services
             unitOfWork.RSoPRepository.AddRange(rsops);
             await unitOfWork.SaveChangesAsync();
         }
-        
 
+        /// <summary>
+        /// This method is used to convert the RSoP from XML to JSON for easier handling.
+        /// But more important, the namespaces (q1:, q2:, ..., qn:) of the XML are removed with the Regex-Pattern "q[0-9]:".
+        /// 
+        /// --------- Before: ---------
+        /// <q2:AuditSetting>
+        ///     ...
+        ///     <q2:SubcategoryName>Audit File System</q2:SubcategoryName>
+        ///     <q2:SettingValue>0</q2:SettingValue>
+        /// </q2:AuditSetting>
+        ///
+        /// --------- After: ---------
+        /// <AuditSetting>
+        ///     ...
+        ///     <SubcategoryName>Audit File System</SubcategoryName>
+        ///     <SettingValue>0</SettingValue>
+        /// </AuditSetting>
+        /// 
+        /// </summary>
+        /// <param name="doc"></param>
+        /// <returns></returns>
         private static JObject XmlToJson(XmlNode doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
@@ -79,18 +99,9 @@ namespace Readinizer.Backend.Business.Services
             return rsop;
         }
 
-        private static List<Gpo> GetAllRsopGpos(JObject rsop)
-        {
-            var jsonGpos = rsop["Rsop"]["ComputerResults"]["GPO"];
-            var gpos = new List<Gpo>();
-            GetSettings(jsonGpos, gpos);
-            return gpos;
-        }
-
         private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
-            var recommendedAuditSettings = new List<AuditSetting>();
-            recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], recommendedAuditSettings);
+            var recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], new List<AuditSetting>());
 
             var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
             var auditSettings = new List<AuditSettingJson>();
@@ -119,8 +130,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
-            var recommendedSecurityOptions = new List<SecurityOption>();
-            recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], recommendedSecurityOptions);
+            var recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], new List<SecurityOption>());
 
             var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions");
             var securityOptions = new List<SecurityOptionJson>();
@@ -157,8 +167,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
         {
-            var recommendedRegistrySettings = new List<RegistrySetting>();
-            recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], recommendedRegistrySettings);
+            var recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], new List<RegistrySetting>());
 
             var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting");
             var registrySettings = new List<RegistrySettingJson>();
@@ -188,8 +197,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<Policy> AnalysePolicies(JToken rsop)
         {
-            var recommendedPolicies = new List<Policy>();
-            recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], recommendedPolicies);
+            var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
 
             var jsonPolicies = rsop.SelectToken("$..Policy");
             var policies = new List<PolicyJson>();
@@ -207,7 +215,7 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentState)
                     .DefaultIfEmpty("Disabled")
                     .FirstOrDefault();
-                // TODO: Get Module Names
+                // TODO: Further Process -> Get Module Names
                 x.GpoId = policies.Where(y => y.CurrentState.Equals(x.TargetState))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
@@ -222,7 +230,7 @@ namespace Readinizer.Backend.Business.Services
             return recommendedSettings;
         }
 
-        private static void GetSettings<T>(JToken jsonSettings, List<T> settings)
+        private static void GetSettings<T>(JToken jsonSettings, List<T> settings) where T : new()
         {
             if (!(jsonSettings is null))
             {
@@ -231,16 +239,53 @@ namespace Readinizer.Backend.Business.Services
                     var jsonSettingsList = jsonSettings.Children().ToList();
                     foreach (var jsonSetting in jsonSettingsList)
                     {
-                        T setting = jsonSetting.ToObject<T>();
-                        settings.Add(setting);
+                        try
+                        {
+                            var test = new T();
+                            var setting = jsonSetting.ToObject<T>();
+                            settings.Add(setting);
+                        }
+                        catch (Exception e)
+                        {
+                            var setting = new T();
+                            settings.Add(setting);
+                        }
                     }
                 }
                 else
                 {
-                    T setting = jsonSettings.ToObject<T>();
-                    settings.Add(setting);
+                    try
+                    {
+                        var setting = jsonSettings.ToObject<T>();
+                        settings.Add(setting);
+                    }
+                    catch (Exception e)
+                    {
+                        var setting = new T();
+                        settings.Add(setting);
+                    }
                 }
             }
+        }
+
+        private static List<Gpo> GetAllRsopGpos(JObject rsop)
+        {
+            var jsonGpos = rsop["Rsop"]["ComputerResults"]["GPO"];
+            var gpos = new List<Gpo>();
+
+            var serializerSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
+            try
+            {
+                gpos = JsonConvert.DeserializeObject<List<Gpo>>(jsonGpos.ToString(), serializerSettings);
+            }
+            catch (Exception e)
+            {
+                var setting = new Gpo();
+                var undefinedGpo = setting.NotIdentified();
+                gpos.Add(undefinedGpo);
+            }
+
+            return gpos;
         }
     }
 }

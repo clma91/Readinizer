@@ -66,6 +66,7 @@
     <Compile Include="Exceptions\InvalidAuthenticationException.cs" />
     <Compile Include="ModelsJson\AuditSettingJson.cs" />
     <Compile Include="ModelsJson\AuditSetting.cs" />
+    <Compile Include="ModelsJson\Converter\SingleValueArrayConverter.cs" />
     <Compile Include="ModelsJson\HelperClasses\Display.cs" />
     <Compile Include="ModelsJson\Gpo.cs" />
     <Compile Include="ModelsJson\HelperClasses\Element.cs" />

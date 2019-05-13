@@ -77,7 +77,7 @@ namespace Readinizer.Frontend.ViewModels
                 await Task.Run(() => adDomainService.SearchAllDomains());
                 await Task.Run(() => siteService.SearchAllSites());
                 await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                //await Task.Run(() => computerService.GetComputers());
+                await Task.Run(() => computerService.GetComputers());
                 DialogHost.CloseDialogCommand.Execute(null, null);
 
                 Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
@@ -92,7 +92,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             try
             {
-                //await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                 await Task.Run(() => analysisService.Analyse());
                 await Task.Run(() => rSoPPotService.GenerateRsopPots());
 

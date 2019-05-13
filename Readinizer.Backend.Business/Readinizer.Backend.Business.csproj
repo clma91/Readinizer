@@ -134,11 +134,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ReceivedRSoP\Ou_1-Site_1.xml" />
-    <Content Include="ReceivedRSoP\Ou_6-Site_2.xml" />
-    <Content Include="ReceivedRSoP\Ou_8-Site_1.xml" />
-    <Content Include="ReceivedRSoP\Ou_6-Site_1.xml" />
-    <Content Include="ReceivedRSoP\Ou_8-Site_2.xml" />
+    <Folder Include="ReceivedRSoP\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,6 +10,14 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class PolicyJson
     {
+        public PolicyJson()
+        {
+            Name = "Undefined";
+            CurrentState = "Undefined";
+            Category = "Undefined";
+            ModuleNames = new ListBox();
+        }
+
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 

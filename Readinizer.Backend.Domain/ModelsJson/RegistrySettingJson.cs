@@ -10,6 +10,12 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class RegistrySettingJson
     {
+        public RegistrySettingJson()
+        {
+            KeyPath = "Undefined";
+            CurrentValue = new Value();
+        }
+
         [JsonProperty("GPO")]
         public Gpo Gpo { get; set; }
 

@@ -9,7 +9,12 @@ namespace Readinizer.Backend.Domain.ModelsJson.HelperClasses
 {
     public class Value
     {
-        //public int ValueId { get; set; }
+        public Value()
+        {
+            Element = new Element();
+            Name = "Undefined";
+            Number = "Undefined";
+        }
 
         [JsonProperty("Element")]
         public Element Element { get; set; } = new Element();
