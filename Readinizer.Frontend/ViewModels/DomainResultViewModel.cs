@@ -12,8 +12,6 @@ namespace Readinizer.Frontend.ViewModels
     public class DomainResultViewModel : ViewModelBase, IDomainResultViewModel
     {
         private readonly IADDomainService adDomainService;
-        
-
 
         [Obsolete("Only for design data", true)]
         public DomainResultViewModel()
@@ -47,7 +45,6 @@ namespace Readinizer.Frontend.ViewModels
                 valueList.Add(new KeyValuePair<string, int>("Bad", 25));
                 valueList.Add(new KeyValuePair<string, int>("Not Configured", 25));
 
-
                 return valueList;
         }
 
@@ -55,6 +52,50 @@ namespace Readinizer.Frontend.ViewModels
         {
             get => _LoadPieChartData();
             
+        }
+
+        private List<string> _LoadGoodList()
+        {
+            List<string> goodList = new List<string>();
+            goodList.Add("RsopPot-A");
+            goodList.Add("RsopPot-D");
+            goodList.Add("RsopPot-F");
+
+            return goodList;
+        }
+
+        private List<string> _LoadPartiallyList()
+        {
+            List<string> partiallyList = new List<string>();
+            partiallyList.Add("RsopPot-B");
+            
+
+            return partiallyList;
+        }
+
+        private List<string> _LoadBadList()
+        {
+            List<string> badList = new List<string>();
+            badList.Add("RsopPot-C");
+            badList.Add("RsopPot-H");
+
+
+            return badList;
+        }
+
+        public List<string> GoodList
+        {
+            get => _LoadGoodList();
+        }
+
+        public List<string> PartiallyList
+        {
+            get => _LoadPartiallyList();
+        }
+
+        public List<string> BadList
+        {
+            get => _LoadBadList();
         }
     }
 }
