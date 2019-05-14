@@ -168,5 +168,8 @@
     <Content Include="ReceivedRSoP\readinizerDC.xml" />
     <Content Include="ReceivedRSoP\SysAdmWS02.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
