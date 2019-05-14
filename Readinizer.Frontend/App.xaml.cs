@@ -55,14 +55,14 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
-            
-        //    var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-        //    if (ctx.Database.Exists())
-        //    {
-        //        ctx.Database.Delete();
-        //    }
 
-        //    ctx.Database.Create();
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            if (ctx.Database.Exists())
+            {
+                ctx.Database.Delete();
+            }
+
+            ctx.Database.Create();
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();

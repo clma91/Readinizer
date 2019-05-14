@@ -23,7 +23,7 @@
 <StackPanel>
     <StackPanel Height="50" Width="800">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                <TextBlock TextDecorations="Underline" Text="{Binding Path=Text}" FontSize="24"></TextBlock>
+                <TextBlock TextDecorations="Underline" Text="{Binding Path=Domainname}" FontSize="24"></TextBlock>
             </Label>
     </StackPanel>
     <StackPanel Height="250" Width="800" HorizontalAlignment="Center">
@@ -103,7 +103,7 @@
             </Grid.RowDefinitions>
             <StackPanel Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Center">
                 <Label>
-                    <TextBlock Text="Resultant Set of Policy Pots:" TextDecorations="Underline" Margin="0,10,0,20"></TextBlock>
+                    <TextBlock Text="Group of Identical Secuirty Settings:" TextDecorations="Underline" Margin="0,10,0,20"></TextBlock>
                 </Label>
             </StackPanel>
             <StackPanel  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center">

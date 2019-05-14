@@ -39,14 +39,9 @@ namespace Readinizer.Frontend.ViewModels
             CanRSoPPotView = true;
         }
 
-        private string text = "Domainname";
+        public string Domainname { get; set; }
 
-
-        public string Text
-        {
-            get => text;
-            set { Text = text; }
-        }
+        public List<object> Objects { get; set; }
 
         private string _rsopPot = null;
         public string RsopPot
@@ -80,9 +75,10 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> _LoadGoodList()
         {
             List<string> goodList = new List<string>();
-            goodList.Add("RsopPot-A");
-            goodList.Add("RsopPot-D");
-            goodList.Add("RsopPot-F");
+            foreach (string o in Objects)
+            {
+                goodList.Add(o);
+            }
 
             return goodList;
         }
@@ -90,7 +86,10 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> _LoadPartiallyList()
         {
             List<string> partiallyList = new List<string>();
-            partiallyList.Add("RsopPot-B");
+            foreach (string o in Objects)
+            {
+                partiallyList.Add(o);
+            }
 
 
             return partiallyList;
@@ -99,8 +98,10 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> _LoadBadList()
         {
             List<string> badList = new List<string>();
-            badList.Add("RsopPot-C");
-            badList.Add("RsopPot-H");
+            foreach (string o in Objects)
+            {
+                badList.Add(o);
+            }
 
 
             return badList;

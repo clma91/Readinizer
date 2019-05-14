@@ -78,9 +78,12 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = spinnerViewModel;
         }
 
-        private void ShowDomainResultView()
+        private void ShowDomainResultView(string key, List<object> values)
         {
             CurrentViewModel = domainResultView;
+            domainResultView.Domainname = key;
+            domainResultView.Objects = values;
+
         }
 
         private void ChangeView(ChangeView message)
@@ -98,7 +101,8 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if(message.ViewModelType == typeof(DomainResultViewModel))
             {
-                ShowDomainResultView();
+                ShowDomainResultView(message.Key, message.Values);
+               
             }
         }
 

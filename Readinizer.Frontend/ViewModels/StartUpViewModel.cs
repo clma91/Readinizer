@@ -162,8 +162,11 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-
-            ShowDomainResultView();
+            List<object> objects = new List<object>();
+            objects.Add("Test1");
+            objects.Add("Test2");
+            objects.Add("Test3");
+            ShowDomainResultView("readinizer.ch", objects);
 
             //if (sysmonChecked)
             //{
@@ -222,9 +225,9 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
 
-        private void ShowDomainResultView()
+        private void ShowDomainResultView(string key, List<object> values)
         {
-            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel)));
+            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), key, values));
         }
 
     }
