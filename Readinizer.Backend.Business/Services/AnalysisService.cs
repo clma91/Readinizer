@@ -246,7 +246,7 @@ namespace Readinizer.Backend.Business.Services
                             var setting = jsonSetting.ToObject<T>();
                             settings.Add(setting);
                         }
-                        catch (Exception e)
+                        catch
                         {
                             var setting = new T();
                             settings.Add(setting);
@@ -260,7 +260,7 @@ namespace Readinizer.Backend.Business.Services
                         var setting = jsonSettings.ToObject<T>();
                         settings.Add(setting);
                     }
-                    catch (Exception e)
+                    catch
                     {
                         var setting = new T();
                         settings.Add(setting);
@@ -279,7 +279,7 @@ namespace Readinizer.Backend.Business.Services
             {
                 gpos = JsonConvert.DeserializeObject<List<Gpo>>(jsonGpos.ToString(), serializerSettings);
             }
-            catch (Exception e)
+            catch
             {
                 var setting = new Gpo();
                 var undefinedGpo = setting.NotIdentified();
