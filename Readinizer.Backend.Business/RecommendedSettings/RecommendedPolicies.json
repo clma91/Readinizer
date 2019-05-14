@@ -1,24 +1,24 @@
 [
-    {
-        "Name": "Include command line in process creation events",
-        "Path": "Computer Configuration\\Policies\\Administrative Templates\\System\\Audit Process Creation",
-        "State": "Enabled",
-        "Category": "System/Audit Process Creation"
-    },
-    {
-        "Name": "Turn on Module Logging",
-        "Path": "Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell",
-        "State": "Enabled",
-        "Category": "Windows Components/Windows PowerShell",
-        "ModuleNames": {
-            "State": "Enabled",
-            "ValueElementData": "*"
-        }
-    },
-    {
-        "Name": "Turn on PowerShell Script Block Logging",
-        "Path": "Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell",
-        "State": "Enabled",
-        "Category": "Windows Components/Windows PowerShell"
+  {
+    "Name": "Include command line in process creation events",
+    "Path": "Computer Configuration\\Policies\\Administrative Templates\\System\\Audit Process Creation",
+    "State": "Enabled",
+    "Category": "System/Audit Process Creation"
+  },
+  {
+    "Name": "Turn on Module Logging",
+    "Path": "Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell",
+    "State": "Enabled",
+    "Category": "Windows Components/Windows PowerShell",
+    "ModuleNames": {
+      "State": "Enabled",
+      "ValueElementData": "*"
     }
+  },
+  {
+    "Name": "Turn on PowerShell Script Block Logging",
+    "Path": "Computer Configuration\\Policies\\Administrative Templates\\Windows Components\\Windows PowerShell",
+    "State": "Enabled",
+    "Category": "Windows Components/Windows PowerShell"
+  }
 ]

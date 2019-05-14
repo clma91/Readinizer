@@ -47,6 +47,7 @@ namespace Readinizer.Frontend
             container.RegisterType<ISysmonService, SysmonService>();
             container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
+            container.RegisterType<IRSoPPotService, RSoPPotService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 

@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class TreeNode
+    public class RsopPot
     {
-        public string Type { get; set; }
+        public int RsopPotId { get; set; }
 
         public string Name { get; set; }
 
-        public double RsopPotPercentage { get; set; }
-
-        public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+        public virtual ICollection<Rsop> Rsops { get; set; }
     }
 }

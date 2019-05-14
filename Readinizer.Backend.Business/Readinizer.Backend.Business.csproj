@@ -126,6 +126,7 @@
     <Compile Include="Interfaces\IComputerService.cs" />
     <Compile Include="Interfaces\IPingService.cs" />
     <Compile Include="Interfaces\ISysmonService.cs" />
+    <Compile Include="Interfaces\IRSoPPotService.cs" />
     <Compile Include="Interfaces\ITreeNodesFactory.cs" />
     <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
     <Compile Include="Interfaces\IRSoPService.cs" />
@@ -138,6 +139,7 @@
     <Compile Include="Services\AnalysisService.cs" />
     <Compile Include="Services\OrganisationalUnitService.cs" />
     <Compile Include="Services\ComputerService.cs" />
+    <Compile Include="Services\RSoPPotService.cs" />
     <Compile Include="Services\SiteService.cs" />
     <Compile Include="Services\RSoPService.cs" />
   </ItemGroup>
@@ -152,6 +154,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Config\adjectives.json" />
+    <None Include="Config\animalNames.json" />
     <None Include="RecommendedSettings\RecommendedAuditSettings.json" />
     <None Include="RecommendedSettings\RecommendedPolicies.json" />
     <None Include="RecommendedSettings\RecommendedRegistrySettings.json" />
@@ -159,7 +163,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DependendAssemblies\Microsoft.GroupPolicy.Management.dll" />
+    <Content Include="DependentAssemblies\Microsoft.GroupPolicy.Management.dll" />
     <Content Include="ReceivedRSoP\luki.xml" />
     <Content Include="ReceivedRSoP\readinizerDC.xml" />
     <Content Include="ReceivedRSoP\SysAdmWS02.xml" />

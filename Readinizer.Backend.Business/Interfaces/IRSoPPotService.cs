@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IAnalysisService
+    public interface IRSoPPotService
     {
-        Task Analyse();
+        Task GenerateRsopPots();
     }
 }

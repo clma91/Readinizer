@@ -16,6 +16,8 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
         private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
+        private GenericRepository<Rsop> rSoPRepository;
+        private GenericRepository<RsopPot> rSoPPotRepository;
 
         public GenericRepository<ADDomain> ADDomainRepository
         {
@@ -66,6 +68,32 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
                 }
 
                 return siteRepository;
+            }
+        }
+
+        public GenericRepository<Rsop> RSoPRepository
+        {
+            get
+            {
+                if (this.rSoPRepository == null)
+                {
+                    this.rSoPRepository = new GenericRepository<Rsop>(context);
+                }
+
+                return rSoPRepository;
+            }
+        }
+
+        public GenericRepository<RsopPot> RSoPPotRepository
+        {
+            get
+            {
+                if (this.rSoPPotRepository == null)
+                {
+                    this.rSoPPotRepository = new GenericRepository<RsopPot>(context);
+                }
+
+                return rSoPPotRepository;
             }
         }
 

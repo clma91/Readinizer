@@ -4,34 +4,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
-    public class PolicyReco
+    public class PolicyJson
     {
+        public PolicyJson()
+        {
+            Name = "Undefined";
+            CurrentState = "Undefined";
+            Category = "Undefined";
+            ModuleNames = new ListBox();
+        }
+
+        [JsonProperty("GPO")]
+        public Gpo Gpo { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 
         [JsonProperty("State")]
-        public string TargetState { get; set; }
-
         public string CurrentState { get; set; }
 
         [JsonProperty("Category")]
         public string Category { get; set; }
 
-        [JsonProperty("ModuleNames")]
-        public ModuleNames ModuleNames { get; set; }
-
-        public bool IsPresent { get; set; }
-    }
-
-    public class ModuleNames
-    {
-        [JsonProperty("State")]
-        public string State { get; set; }
-
-        [JsonProperty("ValueElementData")]
-        public string ValueElementData { get; set; }
+        [JsonProperty("Listbox")]
+        public ListBox ModuleNames { get; set; }
     }
 }

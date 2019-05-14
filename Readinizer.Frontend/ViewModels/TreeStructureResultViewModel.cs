@@ -74,8 +74,7 @@ namespace Readinizer.Frontend.ViewModels
 
         public async void BuildTree()
         {
-            Task<List<TreeNode>> task = treeNodesFactory.CreateTree();
-            TreeNodes = await task;
+            TreeNodes = await treeNodesFactory.CreateTree();
         }
 
         private async void Discover()

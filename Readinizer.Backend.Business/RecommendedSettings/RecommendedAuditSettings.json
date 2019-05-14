@@ -67,8 +67,6 @@
     {
         "SubCategoryName": "Audit Special Logon",
         "PolicyTarget": "Logon/Logoff",
-        "Path": "Advanced Audit Policy Configuration\\Logon/Logoff",
-        "Priority": "",
         "SettingValue": "Success"
     },
     {

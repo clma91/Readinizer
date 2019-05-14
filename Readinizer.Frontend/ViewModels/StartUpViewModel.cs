@@ -32,6 +32,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IRSoPService rSoPService;
         private readonly IAnalysisService analysisService;
         private readonly ISysmonService sysmonService;
+        private readonly IRSoPPotService rSoPPotService;
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
@@ -85,8 +86,9 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, IAnalysisService analysisService,
-                                IComputerService computerService, IRSoPService rSoPService, ISysmonService sysmonService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
+                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService,
+                                IRSoPPotService rSoPPotService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
@@ -95,6 +97,7 @@ namespace Readinizer.Frontend.ViewModels
             this.rSoPService = rSoPService;
             this.sysmonService = sysmonService;
             this.analysisService = analysisService;
+            this.rSoPPotService = rSoPPotService;
             CanDiscover = true;
             CanAnalyse = true;
         }
@@ -111,17 +114,15 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         var emptyVm = new EmptyViewModel();
                         DialogHost.Show(emptyVm);
-                        
-                            await Task.Run(() => adDomainService.SearchAllDomains(domainName));
-                            await Task.Run(() => siteService.SearchAllSites());
-                            await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                            await Task.Run(() => computerService.GetComputers());
+                    
+                        await Task.Run(() => adDomainService.SearchAllDomains(domainName));
+                        await Task.Run(() => siteService.SearchAllSites());
+                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                        await Task.Run(() => computerService.GetComputers());
 
-                            DialogHost.CloseDialogCommand.Execute(null, null);
-
-                            Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-
-                            CanAnalyse = true;
+                        DialogHost.CloseDialogCommand.Execute(null, null);
+                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+                        CanAnalyse = true;
                     }
                     catch (Exception e)
                     {
@@ -135,14 +136,14 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         var emptyVm = new EmptyViewModel();
                         DialogHost.Show(emptyVm);
+
                         await Task.Run(() => adDomainService.AddThisDomain(domainName));
                         await Task.Run(() => siteService.SearchAllSites());
                         await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
                         await Task.Run(() => computerService.GetComputers());
+
                         DialogHost.CloseDialogCommand.Execute(null, null);
-
-                        Messenger.Default.Send(new SnackbarMessage("Collected domain"));
-
+                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
                         CanAnalyse = true;
                     }
                     catch (Exception e)
@@ -154,7 +155,6 @@ namespace Readinizer.Frontend.ViewModels
             }
             else
             {
-
                 Messenger.Default.Send(
                     new SnackbarMessage("Could not find specified domain in this forest"));
             }
