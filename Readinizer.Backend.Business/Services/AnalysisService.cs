@@ -243,7 +243,6 @@ namespace Readinizer.Backend.Business.Services
                     {
                         try
                         {
-                            var test = new T();
                             var setting = jsonSetting.ToObject<T>();
                             settings.Add(setting);
                         }
