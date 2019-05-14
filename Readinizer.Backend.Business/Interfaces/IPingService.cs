@@ -7,11 +7,8 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IRSoPService
+    public interface IPingService
     {
-
-        Task getRSoPOfReachableComputers();
-
-        Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName);
+        bool isPingable(string ipAddress);
     }
 }

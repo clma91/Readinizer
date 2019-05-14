@@ -43,6 +43,8 @@ namespace Readinizer.Frontend
             container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
+            container.RegisterType<ISysmonService, SysmonService>();
+            container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
             container.RegisterType<IRSoPPotService, RSoPPotService>();
 
@@ -50,9 +52,16 @@ namespace Readinizer.Frontend
 
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+            
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            if (ctx.Database.Exists())
+            {
+                ctx.Database.Delete();
+            }
+
+            ctx.Database.Create();
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();
@@ -68,5 +77,13 @@ namespace Readinizer.Frontend
             e.Handled = true;
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            ctx.Database.Connection.Close();
+            ctx.Database.Delete();
+        }
     }
 }

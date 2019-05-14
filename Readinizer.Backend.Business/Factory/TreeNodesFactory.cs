@@ -29,15 +29,17 @@ namespace Readinizer.Backend.Business.Factory
             root.Type = "Forest Root Domain: ";
             root.Name = rootDomain.Name;
             BuildTree(root, rootDomain.SubADDomains);
-
+            
             foreach (var organisationalUnit in rootDomain.OrganisationalUnits)
             {
                 root.ChildNodes.Add(new TreeNode { Type = "OU: ", Name = organisationalUnit.Name });
             }
+            
             foreach (var domainSite in rootDomain.Sites)
             {
                 root.ChildNodes.Add(new TreeNode { Type = "Site: ", Name = domainSite.Name });
             }
+            
 
             tree.Add(root);
             return tree;
@@ -45,28 +47,32 @@ namespace Readinizer.Backend.Business.Factory
 
         private void BuildTree(TreeNode root, List<ADDomain> domains)
         {
-            foreach (var domain in domains)
+            if (domains != null)
             {
-                var child = new TreeNode {Type = "Domain: ", Name = domain.Name};
-                foreach (var organisationalUnit in domain.OrganisationalUnits)
+                foreach (var domain in domains)
                 {
-                    if (organisationalUnit.ADDomain.Name.Equals(domain.Name))
+                    var child = new TreeNode { Type = "Domain: ", Name = domain.Name };
+                    foreach (var organisationalUnit in domain.OrganisationalUnits)
                     {
-                        var childOu = new TreeNode {Type = "OU: ", Name = organisationalUnit.Name};
-                        child.ChildNodes.Add(childOu);
+                        if (organisationalUnit.ADDomain.Name.Equals(domain.Name))
+                        {
+                            var childOu = new TreeNode { Type = "OU: ", Name = organisationalUnit.Name };
+                            child.ChildNodes.Add(childOu);
+                        }
                     }
+
+                    foreach (var domainSite in domain.Sites)
+                    {
+                        if (domainSite.Domains.Contains(domain))
+                        {
+                            var childSite = new TreeNode { Type = "Site: ", Name = domainSite.Name };
+                            child.ChildNodes.Add(childSite);
+                        }
+                    }
+                    root.ChildNodes.Add(child);
+                    BuildTree(child, domain.SubADDomains);
                 }
 
-                foreach (var domainSite in domain.Sites)
-                {
-                    if (domainSite.Domains.Contains(domain))
-                    {
-                        var childSite = new TreeNode {Type = "Site: ", Name = domainSite.Name};
-                        child.ChildNodes.Add(childSite);
-                    }
-                }
-                root.ChildNodes.Add(child);
-                BuildTree(child, domain.SubADDomains);
             }
         }
     }
