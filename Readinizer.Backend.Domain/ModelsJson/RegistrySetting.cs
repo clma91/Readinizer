@@ -37,7 +37,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public override bool Equals(object obj)
         {
-            // TODO: Maybe also or just CurrentValue.Name/Number
             if (GpoId != null)
             {
                 var registrySetting = obj as RegistrySetting;

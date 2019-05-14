@@ -31,7 +31,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public bool IsPresent { get; set; }
 
-        // TODO: Probably not necessary!
         public override bool Equals(object obj)
         {
             if (GpoId != null)
