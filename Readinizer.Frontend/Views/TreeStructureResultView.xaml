@@ -7,6 +7,7 @@
              xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Domain="clr-namespace:Readinizer.Backend.Domain.Models;assembly=Readinizer.Backend.Domain"
+             xmlns:converters="clr-namespace:Readinizer.Frontend.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -18,6 +19,10 @@
              MinHeight="450" MinWidth="800"
              Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:TreeStructureResultViewModel, IsDesignTimeCreatable=True}">
+    <UserControl.Resources>
+        <converters:ProgressForegroundConverter x:Key="ProgressForegroundConverter" />
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -41,10 +46,11 @@
                 <TreeView.Resources>
                     <HierarchicalDataTemplate DataType="{x:Type Domain:TreeNode}" ItemsSource="{Binding ChildNodes}">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="{Binding Type}"></Label>
-                            <Label Content="{Binding Name}"></Label>
+                            <Label Content="{Binding Type}" FontWeight="Bold"></Label>
+                            <Label Content="{Binding Name}" FontStyle="Oblique"></Label>
+                            <ProgressBar Minimum="0" Maximum="100" Width="100" Height="15" Margin="10 0 0 0" Value="{Binding RsopPotPercentage}" 
+                                         Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}"></ProgressBar>
                         </StackPanel>
-                        <!--<TreeViewItem Header="{Binding Path=Name}"></TreeViewItem>-->
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
             </TreeView>

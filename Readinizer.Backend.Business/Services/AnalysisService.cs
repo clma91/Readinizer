@@ -51,10 +51,12 @@ namespace Readinizer.Backend.Business.Services
                 var securityOptions = AnalyseSecurityOptions(rsopJson);
                 var policies = AnalysePolicies(rsopJson);
                 var registrySettings = AnalyseRegistrySetting(rsopJson);
-                
+
+                var organisationalUnit = unitOfWork.OrganisationalUnitRepository.GetByID(organisationalUnitRefId);
                 var rsop = new Rsop
                 {
-                    OrganisationalUnit = unitOfWork.OrganisationalUnitRepository.GetByID(organisationalUnitRefId),
+                    Domain = organisationalUnit.ADDomain,
+                    OrganisationalUnit = organisationalUnit,
                     Site = unitOfWork.SiteRepository.GetByID(siteRefId),
                     AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
                     Policies = policies.OrderBy(x => x.Name).ToList(),
@@ -211,12 +213,12 @@ namespace Readinizer.Backend.Business.Services
             return recommendedPolicies.Select(x =>
             {
                 x.IsPresent = presentPolicies.Contains(x);
-                x.CurrentState = policies.Where(y => y.CurrentState.Equals(x.TargetState))
+                x.CurrentState = policies.Where(y => y.Name.Equals(x.Name))
                     .Select(z => z.CurrentState)
                     .DefaultIfEmpty("Disabled")
                     .FirstOrDefault();
                 // TODO: Further Process -> Get Module Names
-                x.GpoId = policies.Where(y => y.CurrentState.Equals(x.TargetState))
+                x.GpoId = policies.Where(y => y.Name.Equals(x.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();

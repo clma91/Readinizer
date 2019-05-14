@@ -18,6 +18,6 @@ namespace Readinizer.Backend.Domain.Models
 
         public virtual ICollection<Computer> Computers { get; set; }
 
-        public Rsop Rsop { get; set; }
+        public virtual List<Rsop> Rsops { get; set; }
     }
 }

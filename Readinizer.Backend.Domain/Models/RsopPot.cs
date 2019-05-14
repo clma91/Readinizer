@@ -12,10 +12,6 @@ namespace Readinizer.Backend.Domain.Models
 
         public string Name { get; set; }
 
-        //public List<OrganisationalUnit> OrganisationalUnits { get; set; }
-
-        //public Site Site { get; set; }
-
         public virtual ICollection<Rsop> Rsops { get; set; }
     }
 }

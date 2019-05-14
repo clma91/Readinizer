@@ -120,6 +120,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\ProgressForegroundConverter.cs" />
     <Compile Include="Interfaces\IApplicationViewModel.cs" />
     <Compile Include="Interfaces\IStartUpViewModel.cs" />
     <Compile Include="Interfaces\ISpinnerViewModel.cs" />

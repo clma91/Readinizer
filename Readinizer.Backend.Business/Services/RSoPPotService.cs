@@ -54,6 +54,9 @@ namespace Readinizer.Backend.Business.Services
                     var securityOptionsEqual = SettingsEqual(currentRsop.SecurityOptions, rsop.SecurityOptions);
                     if (!securityOptionsEqual) continue;
 
+                    var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
+                    if (!domainsEqual) continue;
+
                     pot.Rsops.Add(currentRsop);
                     found = true;
                     break;
@@ -102,14 +105,14 @@ namespace Readinizer.Backend.Business.Services
 
             return true;
         }
-
+        
         private static string GetRandomRsopName()
         {
             var animalNames = JsonConvert.DeserializeObject<List<RandomName>>(File.ReadAllText(ConfigurationManager.AppSettings["AnimalNames"]));
             var adjectives = JsonConvert.DeserializeObject<List<RandomName>>(File.ReadAllText(ConfigurationManager.AppSettings["Adjectives"]));
 
-            var randomKeyAdjectives = new Random().Next(0, adjectives.Count);
-            var randomKeyAnimals = new Random().Next(0, animalNames.Count);
+            var randomKeyAdjectives = new Random(DateTime.Now.Millisecond).Next(0, adjectives.Count);
+            var randomKeyAnimals = new Random(DateTime.Now.Millisecond).Next(0, animalNames.Count);
             var adjective = adjectives.ElementAt(randomKeyAdjectives);
             var animalName = animalNames.ElementAt(randomKeyAnimals);
             var rsopName = adjective.Value + " " + animalName.Value;

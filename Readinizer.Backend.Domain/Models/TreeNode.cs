@@ -12,6 +12,8 @@ namespace Readinizer.Backend.Domain.Models
 
         public string Name { get; set; }
 
+        public double RsopPotPercentage { get; set; }
+
         public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
     }
 }

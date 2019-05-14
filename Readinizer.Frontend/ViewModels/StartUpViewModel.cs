@@ -114,17 +114,15 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         var emptyVm = new EmptyViewModel();
                         DialogHost.Show(emptyVm);
-                        
-                            await Task.Run(() => adDomainService.SearchAllDomains(domainName));
-                            await Task.Run(() => siteService.SearchAllSites());
-                            await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                            await Task.Run(() => computerService.GetComputers());
+                    
+                        await Task.Run(() => adDomainService.SearchAllDomains(domainName));
+                        await Task.Run(() => siteService.SearchAllSites());
+                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                        await Task.Run(() => computerService.GetComputers());
 
-                            DialogHost.CloseDialogCommand.Execute(null, null);
-
-                            Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-
-                            CanAnalyse = true;
+                        DialogHost.CloseDialogCommand.Execute(null, null);
+                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+                        CanAnalyse = true;
                     }
                     catch (Exception e)
                     {
@@ -138,14 +136,14 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         var emptyVm = new EmptyViewModel();
                         DialogHost.Show(emptyVm);
+
                         await Task.Run(() => adDomainService.AddThisDomain(domainName));
                         await Task.Run(() => siteService.SearchAllSites());
                         await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
                         await Task.Run(() => computerService.GetComputers());
+
                         DialogHost.CloseDialogCommand.Execute(null, null);
-
                         Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-
                         CanAnalyse = true;
                     }
                     catch (Exception e)
@@ -157,7 +155,6 @@ namespace Readinizer.Frontend.ViewModels
             }
             else
             {
-
                 Messenger.Default.Send(
                     new SnackbarMessage("Could not find specified domain in this forest"));
             }
@@ -165,40 +162,29 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            if (sysmonChecked)
+            try
             {
-                if (sysmonName == null || sysmonName == "")
+                ShowSpinnerView();
+                if (sysmonChecked)
                 {
-                    sysmonName = "Sysmon";
-                }
-
-                try
-                {
-                    ShowSpinnerView();
+                    if (string.IsNullOrEmpty(sysmonName))
+                    {
+                        sysmonName = "Sysmon";
+                    }
                     await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-                    await Task.Run(() => analysisService.Analyse());
-                    ShowTreeStructureResult();
                 }
-                catch (Exception e)
+                else
                 {
-                    ShowStartView();
-                    Messenger.Default.Send(new SnackbarMessage(e.Message));
-                }
-            }
-            else
-            {
-                try
-                {
-                    ShowSpinnerView();
                     await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-                    await Task.Run(() => analysisService.Analyse());
-                    ShowTreeStructureResult();
                 }
-                catch (Exception e)
-                {
-                    ShowStartView();
-                    Messenger.Default.Send(new SnackbarMessage(e.Message));
-                }
+                await Task.Run(() => analysisService.Analyse());
+                await Task.Run(() => rSoPPotService.GenerateRsopPots());
+                ShowTreeStructureResult();
+            }
+            catch (Exception e)
+            {
+                ShowStartView();
+                Messenger.Default.Send(new SnackbarMessage(e.Message));
             }
         }
 

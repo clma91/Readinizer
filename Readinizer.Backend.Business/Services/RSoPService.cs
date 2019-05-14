@@ -116,13 +116,12 @@ namespace Readinizer.Backend.Business.Services
         {
             try
             {
-                GPRsop test = new GPRsop(RsopMode.Logging, "");
-                test.LoggingMode = LoggingMode.Computer;
-                test.LoggingComputer = computerpath;
-                test.LoggingUser = user;
-                test.CreateQueryResults();
-                test.GenerateReportToFile(ReportType.Xml,
-                    (AppDomain.CurrentDomain.BaseDirectory + "\\RSOP\\" + "Ou_" + ouId + "-Site_" + siteId + ".xml"));
+                GPRsop gpRsop = new GPRsop(RsopMode.Logging, "");
+                gpRsop.LoggingMode = LoggingMode.Computer;
+                gpRsop.LoggingComputer = computerpath;
+                gpRsop.LoggingUser = user;
+                gpRsop.CreateQueryResults();
+                gpRsop.GenerateReportToFile(ReportType.Xml, ConfigurationManager.AppSettings["ReceivedRSoP"] + "\\" + "Ou_" + ouId + "-Site_" + siteId + ".xml");
             }
             catch (Exception e)
             {

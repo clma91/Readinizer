@@ -86,7 +86,7 @@ namespace Readinizer.Backend.Business.Services
             var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));
             ADDomain domain = new ADDomain();
             domain.Name = startDomain.Name;
-            domain.IsForestRoot = true;
+            //domain.IsForestRoot = true;
             unitOfWork.ADDomainRepository.Add(domain);
             await unitOfWork.SaveChangesAsync();
         }
@@ -101,7 +101,7 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        private static List<Domain.Models.ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
+        private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
             var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomains = new List<ADDomain>() }).ToList();
             var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomains = new List<ADDomain>()}).ToList();
@@ -111,17 +111,25 @@ namespace Readinizer.Backend.Business.Services
 
             var allModels = models.Union(treeModels).ToList();
 
-            var root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+            var root = new ADDomain();
+            if (allModels.Exists(x => IsForestRoot(x.Name)))
+            {
+                root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+                root.IsForestRoot = true;
+            }
+            else
+            {
+                root = allModels.FirstOrDefault();
+            }
             if (root != null)
             {
-                root.IsForestRoot = true;
                 root.SubADDomains.AddRange(treeModels);
             }
 
             return allModels;
         }
 
-        private static void AddSubDomains(List<AD.Domain> domains, List<Domain.Models.ADDomain> models)
+        private static void AddSubDomains(List<AD.Domain> domains, List<ADDomain> models)
         {
             foreach (var adDomain in models)
             {
