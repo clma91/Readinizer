@@ -35,10 +35,11 @@ namespace Readinizer.Frontend.ViewModels
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
         private readonly SpinnerViewModel spinnerViewModel;
-        private readonly DomainResultViewModel domainResultView;
+        private readonly DomainResultViewModel domainResultViewModel;
+        private readonly RSoPResultViewModel rsopResultViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -47,13 +48,14 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel)
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel)
 
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
             this.spinnerViewModel = spinnerViewModel;
-            this.domainResultView = domainResultViewModel;
+            this.domainResultViewModel = domainResultViewModel;
+            this.rsopResultViewModel = rsopResultViewModel;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
@@ -78,13 +80,20 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = spinnerViewModel;
         }
 
-        private void ShowDomainResultView(string key, List<object> values)
+        private void ShowDomainResultView(string key, int refId)
         {
-            CurrentViewModel = domainResultView;
-            domainResultView.Domainname = key;
-            domainResultView.Objects = values;
+            CurrentViewModel = domainResultViewModel;
+            domainResultViewModel.Domainname = key;
+            domainResultViewModel.RefId = refId;
 
         }
+
+        private void ShowRsopResultView(string key, int refId)
+        {
+            CurrentViewModel = rsopResultViewModel;
+            rsopResultViewModel.GISS = key;
+            rsopResultViewModel.RefId = refId;
+            }
 
         private void ChangeView(ChangeView message)
         {
@@ -101,8 +110,12 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if(message.ViewModelType == typeof(DomainResultViewModel))
             {
-                ShowDomainResultView(message.Key, message.Values);
+                ShowDomainResultView(message.Key, message.RefId);
                
+            }
+            else if(message.ViewModelType == typeof(RSoPResultViewModel))
+            {
+                ShowRsopResultView(message.Key, message.RefId);
             }
         }
 

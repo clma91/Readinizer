@@ -38,6 +38,7 @@ namespace Readinizer.Frontend
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
             container.RegisterType<ISpinnerViewModel, SpinnerViewModel>();
             container.RegisterType<IDomainResultViewModel, DomainResultViewModel>();
+            container.RegisterType<IRSoPResultViewModel, RSoPResultViewModel>();
 
             container.RegisterType<IADDomainService, ADDomainService>();
             container.RegisterType<ISiteService, SiteService>();
@@ -57,12 +58,12 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            if (ctx.Database.Exists())
-            {
-                ctx.Database.Delete();
-            }
+            //if (ctx.Database.Exists())
+            //{
+            //    ctx.Database.Delete();
+            //}
 
-            ctx.Database.Create();
+            ctx.Database.CreateIfNotExists();
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();
@@ -82,9 +83,9 @@ namespace Readinizer.Frontend
         {
             base.OnExit(e);
 
-            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            ctx.Database.Connection.Close();
-            ctx.Database.Delete();
+            //var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            //ctx.Database.Connection.Close();
+            //ctx.Database.Delete();
         }
     }
 }

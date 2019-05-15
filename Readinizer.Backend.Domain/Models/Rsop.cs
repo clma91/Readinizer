@@ -11,11 +11,11 @@ namespace Readinizer.Backend.Domain.Models
     {
         public int RsopId { get; set; }
 
-        public ADDomain Domain { get; set; }
+        public virtual ADDomain Domain { get; set; }
 
-        public OrganisationalUnit OrganisationalUnit { get; set; }
+        public virtual OrganisationalUnit OrganisationalUnit { get; set; }
 
-        public Site Site { get; set; }
+        public virtual Site Site { get; set; }
 
         public int? RsopPotRefId { get; set; }
 

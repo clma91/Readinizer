@@ -19,9 +19,6 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IADDomainService adDomainService;
 
-        private ICommand rsopPotViewCommand;
-        public ICommand RSoPPotViewCommand => rsopPotViewCommand ?? (rsopPotViewCommand = new RelayCommand(() => this.RSoPPotView(), () => this.CanRSoPPotView));
-
         public bool CanRSoPPotView { get; private set; }
 
         [Obsolete("Only for design data", true)]
@@ -36,12 +33,11 @@ namespace Readinizer.Frontend.ViewModels
         public DomainResultViewModel(IADDomainService adDomainService)
         {
             this.adDomainService = adDomainService;
-            CanRSoPPotView = true;
         }
 
         public string Domainname { get; set; }
 
-        public List<object> Objects { get; set; }
+        public int RefId { get; set; }
 
         private string _rsopPot = null;
         public string RsopPot
@@ -50,7 +46,7 @@ namespace Readinizer.Frontend.ViewModels
             set
             {
                 _rsopPot = value;
-                RSoPPotView();
+                RSoPPotView(_rsopPot, 2);
             }
         }
 
@@ -75,35 +71,22 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> _LoadGoodList()
         {
             List<string> goodList = new List<string>();
-            foreach (string o in Objects)
-            {
-                goodList.Add(o);
-            }
-
+            goodList.Add("GISS-1");
+            goodList.Add("GISS-3");
             return goodList;
         }
 
         private List<string> _LoadPartiallyList()
         {
             List<string> partiallyList = new List<string>();
-            foreach (string o in Objects)
-            {
-                partiallyList.Add(o);
-            }
-
-
+            partiallyList.Add("GISS-2");
             return partiallyList;
         }
 
         private List<string> _LoadBadList()
         {
             List<string> badList = new List<string>();
-            foreach (string o in Objects)
-            {
-                badList.Add(o);
-            }
-
-
+            badList.Add("GISS-4");
             return badList;
         }
 
@@ -122,9 +105,9 @@ namespace Readinizer.Frontend.ViewModels
             get => _LoadBadList();
         }
 
-        private void RSoPPotView()
+        private void RSoPPotView(string potName, int potRefId)
         {
-           Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
+           Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potName, potRefId));
 
         }
     }

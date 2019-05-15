@@ -162,12 +162,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            List<object> objects = new List<object>();
-            objects.Add("Test1");
-            objects.Add("Test2");
-            objects.Add("Test3");
-            ShowDomainResultView("readinizer.ch", objects);
-
+            ShowDomainResultView("readinizer.ch", 1);
             //if (sysmonChecked)
             //{
             //    if (sysmonName == null || sysmonName == "")
@@ -180,10 +175,8 @@ namespace Readinizer.Frontend.ViewModels
             //        ShowSpinnerView();
             //        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
             //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
             //        ShowTreeStructureResult();
-
-
-            //        ShowDomainResultView();
             //    }
             //    catch (Exception e)
             //    {
@@ -198,6 +191,7 @@ namespace Readinizer.Frontend.ViewModels
             //        ShowSpinnerView();
             //        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
             //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
             //        ShowTreeStructureResult();
             //    }
             //    catch (Exception e)
@@ -225,9 +219,9 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
 
-        private void ShowDomainResultView(string key, List<object> values)
+        private void ShowDomainResultView(string key, int refId)
         {
-            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), key, values));
+            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), key, refId));
         }
 
     }

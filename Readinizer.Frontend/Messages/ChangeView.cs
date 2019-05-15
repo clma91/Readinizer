@@ -10,18 +10,18 @@ namespace Readinizer.Frontend.Messages
     {
         public Type ViewModelType { get; private set; }
         public string Key { get; set; }
-        public List<object> Values { get; set; }
+        public int RefId { get; set; }
 
         public ChangeView(Type viewModelType)
         {
             ViewModelType = viewModelType;
         }
 
-        public ChangeView(Type viewModelType, string key, List<object> values)
+        public ChangeView(Type viewModelType, string key, int refId)
         {
             ViewModelType = viewModelType;
             Key = key;
-            Values = values;
+            RefId = refId;
         }
     }
 }
