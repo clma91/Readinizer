@@ -162,7 +162,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            ShowDomainResultView("readinizer.ch", 1);
+           ShowDomainResultView("readinizer.ch", 1);
             //if (sysmonChecked)
             //{
             //    if (sysmonName == null || sysmonName == "")

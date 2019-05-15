@@ -10,6 +10,8 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 
@@ -17,7 +19,7 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class DomainResultViewModel : ViewModelBase, IDomainResultViewModel
     {
-        private readonly IADDomainService adDomainService;
+        private readonly IUnitOfWork unitOfWork;
 
         public bool CanRSoPPotView { get; private set; }
 
@@ -30,14 +32,29 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public DomainResultViewModel(IADDomainService adDomainService)
+        public DomainResultViewModel(IUnitOfWork unitOfWork)
         {
-            this.adDomainService = adDomainService;
+            this.unitOfWork = unitOfWork;
         }
 
         public string Domainname { get; set; }
 
         public int RefId { get; set; }
+
+        private ADDomain domain { get; set; }
+
+        private List<RsopPot> loadRsopPots()
+        {
+            var domain = unitOfWork.ADDomainRepository.GetByID(RefId);
+            List<RsopPot> rsopPots = domain.RsopPots;
+
+            return rsopPots;
+        }
+
+        public List<RsopPot> RsopPots
+        {
+            get => loadRsopPots();
+        }
 
         private string _rsopPot = null;
         public string RsopPot
@@ -71,8 +88,10 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> _LoadGoodList()
         {
             List<string> goodList = new List<string>();
-            goodList.Add("GISS-1");
-            goodList.Add("GISS-3");
+            foreach (var pot in RsopPots)
+            {
+                
+            }
             return goodList;
         }
 
