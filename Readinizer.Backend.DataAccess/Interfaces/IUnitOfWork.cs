@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Backend.Domain.Models;
+using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.DataAccess.Interfaces
 {
@@ -12,6 +13,7 @@ namespace Readinizer.Backend.DataAccess.Interfaces
         GenericRepository<Site> SiteRepository { get; }
         GenericRepository<Rsop> RSoPRepository { get; }
         GenericRepository<RsopPot> RSoPPotRepository { get; }
+        GenericRepository<Gpo> GpoRepository { get; }
         Task SaveChangesAsync();
         void Dispose(bool disposing);
         void Dispose();

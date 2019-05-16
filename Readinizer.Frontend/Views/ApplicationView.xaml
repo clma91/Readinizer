@@ -20,7 +20,7 @@
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:StartUpViewModel}">
-            <views:StartUpView/>
+            <views:StartUpView></views:StartUpView>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:TreeStructureResultViewModel}">
             <views:TreeStructureResultView/>
@@ -33,6 +33,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:RSoPResultViewModel}">
             <views:RSoPResultView></views:RSoPResultView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:OUResultViewModel}">
+            <views:OUResultView></views:OUResultView>
         </DataTemplate>
     </Window.Resources>
 

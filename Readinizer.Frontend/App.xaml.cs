@@ -39,6 +39,7 @@ namespace Readinizer.Frontend
             container.RegisterType<ISpinnerViewModel, SpinnerViewModel>();
             container.RegisterType<IDomainResultViewModel, DomainResultViewModel>();
             container.RegisterType<IRSoPResultViewModel, RSoPResultViewModel>();
+            container.RegisterType<IOUResultViewModel, OUResultViewModel>();
 
             container.RegisterType<IADDomainService, ADDomainService>();
             container.RegisterType<ISiteService, SiteService>();

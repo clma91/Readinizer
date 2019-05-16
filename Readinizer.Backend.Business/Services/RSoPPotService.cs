@@ -29,7 +29,7 @@ namespace Readinizer.Backend.Business.Services
         {
             var rsops = await unitOfWork.RSoPRepository.GetAllEntities();
             var rsopPots = new List<RsopPot>();
-            var i = 1;
+            //var i = 1;
 
             AddRsopPot(rsops.First());
 

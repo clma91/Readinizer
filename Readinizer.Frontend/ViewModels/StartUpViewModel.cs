@@ -162,46 +162,47 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-           ShowDomainResultView("readinizer.ch", 1);
-            //if (sysmonChecked)
-            //{
-            //    if (sysmonName == null || sysmonName == "")
-            //    {
-            //        sysmonName = "Sysmon";
-            //    }
 
-            //    try
-            //    {
-            //        ShowSpinnerView();
-            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-            //        await Task.Run(() => analysisService.Analyse());
-            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
-            //        ShowTreeStructureResult();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        ShowStartView();
-            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
-            //    }
-            //}
-            //else
-            //{
-            //    try
-            //    {
-            //        ShowSpinnerView();
-            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-            //        await Task.Run(() => analysisService.Analyse());
-            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
-            //        ShowTreeStructureResult();
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        ShowStartView();
-            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
-            //    }
+        //    if (sysmonChecked)
+        //    {
+        //        if (sysmonName == null || sysmonName == "")
+        //        {
+        //            sysmonName = "Sysmon";
+        //        }
+
+        //        try
+        //        {
+        //            ShowSpinnerView();
+        //            await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+        //            await Task.Run(() => analysisService.Analyse());
+        //            await Task.Run(() => rSoPPotService.GenerateRsopPots());
+        //            ShowTreeStructureResult();
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            ShowStartView();
+        //            Messenger.Default.Send(new SnackbarMessage(e.Message));
+        //        }
+        //    }
+        //    else
+        //    {
+        //        try
+        //        {
+        //            ShowSpinnerView();
+        //            await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+        //            await Task.Run(() => analysisService.Analyse());
+        //            await Task.Run(() => rSoPPotService.GenerateRsopPots());
+        //            ShowTreeStructureResult();
+        //        }
+        //        catch (Exception e)
+        //        {
+        //            ShowStartView();
+        //            Messenger.Default.Send(new SnackbarMessage(e.Message));
+        //        }
 
 
-            //}
+        //    }
+            ShowDomainResultView("readinizer.ch", 1);
         }
 
         private void ShowTreeStructureResult()

@@ -157,6 +157,8 @@
     <Compile Include="Messages\SnackbarMessage.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Interfaces\IRSoPResultViewModel.cs" />
+    <Compile Include="Interfaces\IOUResultViewModel.cs" />
+    <Compile Include="ViewModels\OUResultViewModel.cs" />
     <Compile Include="ViewModels\RSoPResultViewModel.cs" />
     <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\DomainResultViewModel.cs" />
@@ -165,6 +167,9 @@
     <Compile Include="ViewModels\TreeStructureResultViewModel.cs" />
     <Compile Include="Views\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OUResultView.xaml.cs">
+      <DependentUpon>OUResultView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RSoPResultView.xaml.cs">
       <DependentUpon>RSoPResultView.xaml</DependentUpon>
@@ -188,6 +193,10 @@
     <Page Include="Views\ApplicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OUResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\RSoPResultView.xaml">
       <SubType>Designer</SubType>

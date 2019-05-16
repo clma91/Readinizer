@@ -16,5 +16,6 @@ namespace Readinizer.Backend.DataAccess.Interfaces
         DbSet<Policy> Policies { get; set; }
         DbSet<RegistrySetting> RegistrySettings { get; set; }
         DbSet<SecurityOption> SecurityOptions { get; set; }
+        DbSet<Gpo> Gpos { get; set; }
     }
 }

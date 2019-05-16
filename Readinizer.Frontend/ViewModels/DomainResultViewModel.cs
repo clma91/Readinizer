@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Documents;
@@ -21,8 +22,6 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public bool CanRSoPPotView { get; private set; }
-
         [Obsolete("Only for design data", true)]
         public DomainResultViewModel()
         {
@@ -34,7 +33,7 @@ namespace Readinizer.Frontend.ViewModels
 
         public DomainResultViewModel(IUnitOfWork unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.unitOfWork = unitOfWork; 
         }
 
         public string Domainname { get; set; }
@@ -43,38 +42,53 @@ namespace Readinizer.Frontend.ViewModels
 
         private ADDomain domain { get; set; }
 
-        private List<RsopPot> loadRsopPots()
-        {
-            var domain = unitOfWork.ADDomainRepository.GetByID(RefId);
-            List<RsopPot> rsopPots = domain.RsopPots;
+        private List<string> goodList { get; set; }
 
-            return rsopPots;
-        }
+        private List<string> badList { get; set; }
 
         public List<RsopPot> RsopPots
         {
             get => loadRsopPots();
         }
 
-        private string _rsopPot = null;
-        public string RsopPot
+        private List<RsopPot> loadRsopPots()
         {
-            get { return _rsopPot; }
-            set
-            {
-                _rsopPot = value;
-                RSoPPotView(_rsopPot, 2);
-            }
+            domain = unitOfWork.ADDomainRepository.GetByID(RefId);
+            List<RsopPot> rsopPots = domain.RsopPots;
+            return rsopPots;
         }
 
+        private void fillLists()
+        {
+            List<string> bad = new List<string>();
+            List<string> good = new List<string>();
+            foreach (var pot in RsopPots)
+            {
+                if (pot.Rsops.FirstOrDefault().RsopPercentage > 99)
+                {
+                    good.Add(pot.Name);
+                    
+                }
+                else
+                {
+                    bad.Add(pot.Name);
+                }
+            }
+
+            goodList = good;
+            badList = bad;
+
+        }
 
         private List<KeyValuePair<string, int>> _LoadPieChartData()
         {
+            fillLists();
+            int goodPots = GoodList.Count;
+            int badPots = BadList.Count;
 
             List<KeyValuePair<string, int>> valueList = new List<KeyValuePair<string, int>>();
-            valueList.Add(new KeyValuePair<string, int>("Good", 60));
-            valueList.Add(new KeyValuePair<string, int>("Bad", 30));
-            valueList.Add(new KeyValuePair<string, int>("Not Configured", 10));
+            valueList.Add(new KeyValuePair<string, int>("Correct", goodPots));
+            valueList.Add(new KeyValuePair<string, int>("Not Correct", badPots));
 
             return valueList;
         }
@@ -85,46 +99,30 @@ namespace Readinizer.Frontend.ViewModels
 
         }
 
-        private List<string> _LoadGoodList()
-        {
-            List<string> goodList = new List<string>();
-            foreach (var pot in RsopPots)
-            {
-                
-            }
-            return goodList;
-        }
-
-        private List<string> _LoadPartiallyList()
-        {
-            List<string> partiallyList = new List<string>();
-            partiallyList.Add("GISS-2");
-            return partiallyList;
-        }
-
-        private List<string> _LoadBadList()
-        {
-            List<string> badList = new List<string>();
-            badList.Add("GISS-4");
-            return badList;
-        }
-
         public List<string> GoodList
         {
-            get => _LoadGoodList();
-        }
-
-        public List<string> PartiallyList
-        {
-            get => _LoadPartiallyList();
+            get => goodList;
         }
 
         public List<string> BadList
         {
-            get => _LoadBadList();
+            get => badList;
         }
 
-        private void RSoPPotView(string potName, int potRefId)
+        private string pot;
+        public string Pot
+        {
+            get { return pot; }
+            set
+            {
+                pot = value;
+                int rsopPotID = RsopPots.Find(x => x.Name.Equals(pot)).RsopPotId;
+                ShowPotView(pot, rsopPotID);
+            }
+        }
+
+
+        private void ShowPotView(string potName, int potRefId)
         {
            Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potName, potRefId));
 

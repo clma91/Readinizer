@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Backend.Domain.Models;
+using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.DataAccess.UnityOfWork
 {
@@ -18,6 +19,7 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         private GenericRepository<Site> siteRepository;
         private GenericRepository<Rsop> rSoPRepository;
         private GenericRepository<RsopPot> rSoPPotRepository;
+        private GenericRepository<Gpo> gpoRepository;
 
         public GenericRepository<ADDomain> ADDomainRepository
         {
@@ -94,6 +96,19 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
                 }
 
                 return rSoPPotRepository;
+            }
+        }
+
+        public GenericRepository<Gpo> GpoRepository
+        {
+            get
+            {
+                if (this.gpoRepository == null)
+                {
+                    this.gpoRepository = new GenericRepository<Gpo>(context);
+                }
+
+                return gpoRepository;
             }
         }
 

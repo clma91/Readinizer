@@ -37,9 +37,10 @@ namespace Readinizer.Frontend.ViewModels
         private readonly SpinnerViewModel spinnerViewModel;
         private readonly DomainResultViewModel domainResultViewModel;
         private readonly RSoPResultViewModel rsopResultViewModel;
+        private readonly OUResultViewModel ouResultViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -48,7 +49,7 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel)
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel)
 
         {
             this.startUpViewModel = startUpViewModel;
@@ -56,6 +57,7 @@ namespace Readinizer.Frontend.ViewModels
             this.spinnerViewModel = spinnerViewModel;
             this.domainResultViewModel = domainResultViewModel;
             this.rsopResultViewModel = rsopResultViewModel;
+            this.ouResultViewModel = ouResultViewModel;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
@@ -93,7 +95,14 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = rsopResultViewModel;
             rsopResultViewModel.GISS = key;
             rsopResultViewModel.RefId = refId;
-            }
+        }
+
+        private void ShowOuResultView(string key, int refId)
+        {
+            CurrentViewModel = ouResultViewModel;
+            ouResultViewModel.Ou = key;
+            ouResultViewModel.RefId = refId;
+        }
 
         private void ChangeView(ChangeView message)
         {
@@ -116,6 +125,10 @@ namespace Readinizer.Frontend.ViewModels
             else if(message.ViewModelType == typeof(RSoPResultViewModel))
             {
                 ShowRsopResultView(message.Key, message.RefId);
+            }
+            else if (message.ViewModelType == typeof(OUResultViewModel))
+            {
+                ShowOuResultView(message.Key, message.RefId);
             }
         }
 

@@ -88,6 +88,7 @@
     <Compile Include="Models\Computer.cs" />
     <Compile Include="Models\Rsop.cs" />
     <Compile Include="Models\RsopPot.cs" />
+    <Compile Include="Models\SecuiritySettingsParserOU.cs" />
     <Compile Include="Models\SecuirtySettingsParser.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\TreeNode.cs" />

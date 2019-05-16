@@ -17,19 +17,18 @@ using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
-using Unity.Injection;
 
 namespace Readinizer.Frontend.ViewModels
 {
-    public class RSoPResultViewModel : ViewModelBase, IRSoPResultViewModel
+    public class OUResultViewModel : ViewModelBase, IOUResultViewModel
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUnitOfWork unityOfWork;
 
-        public string GISS{ get; set; }
+        public string Ou{ get; set; }
         public int RefId{ get; set; }
 
         [Obsolete("Only for design data", true)]
-        public RSoPResultViewModel()
+        public OUResultViewModel()
         {
             if (!this.IsInDesignMode)
             {
@@ -37,30 +36,30 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public RSoPResultViewModel(IUnitOfWork unitOfWork)
+        public OUResultViewModel(IUnitOfWork unityOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            this.unityOfWork = unityOfWork;
         }
 
-        private RsopPot rsopPot { get; set; }
-
-        private Rsop loadRsopOfRsopPot()
+        private List<SecuiritySettingsParserOU> loadSettings()
         {
-            rsopPot = unitOfWork.RSoPPotRepository.GetByID(RefId);
-            return rsopPot.Rsops.FirstOrDefault();
-
-        }
-
-        private List<SecuirtySettingsParser> loadSettings()
-        {
-            List<SecuirtySettingsParser> settings = new List<SecuirtySettingsParser>();
-            var rsop = loadRsopOfRsopPot();
+            var GPOs = unityOfWork.GpoRepository.GetAllEntities().Result;
+            List<SecuiritySettingsParserOU> settings = new List<SecuiritySettingsParserOU>();
+            var rsop = unityOfWork.RSoPRepository.GetByID(RefId);
             foreach (var setting in rsop.AuditSettings)
             {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
+                SecuiritySettingsParserOU parsedSetting = new SecuiritySettingsParserOU();
                 parsedSetting.Setting = setting.SubcategoryName;
                 parsedSetting.Value = setting.CurrentSettingValue.ToString();
                 parsedSetting.Target = setting.TargetSettingValue.ToString();
+                if (setting.GpoId.Equals("NoGpoId"))
+                {
+                    parsedSetting.GPO = "-";
+                }
+                else
+                {
+                    parsedSetting.GPO = GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(setting.GpoId)).Name;
+                }
 
                 if (parsedSetting.Value.Equals(parsedSetting.Target))
                 {
@@ -83,10 +82,18 @@ namespace Readinizer.Frontend.ViewModels
 
             foreach (var setting in rsop.Policies)
             {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
+                SecuiritySettingsParserOU parsedSetting = new SecuiritySettingsParserOU();
                 parsedSetting.Setting = setting.Name;
                 parsedSetting.Value = setting.CurrentState;
                 parsedSetting.Target = setting.TargetState;
+                if (setting.GpoId.Equals("NoGpoId"))
+                {
+                    parsedSetting.GPO = "-";
+                }
+                else
+                {
+                    parsedSetting.GPO = GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(setting.GpoId)).Name;
+                }
 
                 if (parsedSetting.Value.Equals(parsedSetting.Target))
                 {
@@ -105,10 +112,18 @@ namespace Readinizer.Frontend.ViewModels
 
             foreach (var setting in rsop.RegistrySettings)
             {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
+                SecuiritySettingsParserOU parsedSetting = new SecuiritySettingsParserOU();
                 parsedSetting.Setting = setting.Name;
                 parsedSetting.Value = setting.CurrentValue.Name;
                 parsedSetting.Target = setting.TargetValue.Name;
+                if (setting.GpoId.Equals("NoGpoId"))
+                {
+                    parsedSetting.GPO = "-";
+                }
+                else
+                {
+                    parsedSetting.GPO = GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(setting.GpoId)).Name;
+                }
 
                 if (parsedSetting.Value.Equals(parsedSetting.Target))
                 {
@@ -126,10 +141,18 @@ namespace Readinizer.Frontend.ViewModels
 
             foreach (var setting in rsop.SecurityOptions)
             {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
+                SecuiritySettingsParserOU parsedSetting = new SecuiritySettingsParserOU();
                 parsedSetting.Setting = setting.Description;
                 parsedSetting.Value = setting.CurrentDisplay.DisplayBoolean;
                 parsedSetting.Target = setting.TargetDisplay.DisplayBoolean;
+                if (setting.GpoId.Equals("NoGpoId"))
+                {
+                    parsedSetting.GPO = "-";
+                }
+                else
+                {
+                    parsedSetting.GPO = GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(setting.GpoId)).Name;
+                }
 
                 if (parsedSetting.Value.Equals(parsedSetting.Target))
                 {
@@ -155,54 +178,9 @@ namespace Readinizer.Frontend.ViewModels
             return settings;
         }
 
-        public List<SecuirtySettingsParser> AuditSettings
+        public List<SecuiritySettingsParserOU> AuditSettings
         {
             get => loadSettings();
-        }
-
-        private List<string> loadOUs()
-        {
-            List<string> ous = new List<string>();
-            var rsopPot = unitOfWork.RSoPPotRepository.GetByID(RefId);
-            var rsops = rsopPot.Rsops;
-            foreach (var rsop in rsops)
-            {
-                ous.Add(rsop.OrganisationalUnit.Name);
-            }
-
-            return ous;
-        }
-
-        public List<string> OUsInGISS
-        {
-            get => loadOUs();
-        }
-
-        private List<OrganisationalUnit> ous()
-        {
-            var ous = unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            return ous.Result;
-        }
-
-        private string rsop;
-        public string Rsop
-        {
-            get { return rsop; }
-            set
-            {
-                rsop = value;
-                var rsops = unitOfWork.RSoPPotRepository.GetByID(RefId).Rsops;
-                List<Rsop> rsopList = rsops.ToList();
-                int rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
-                ShowOUView(rsop, rsopID);
-            }
-        }
-
-
-        private void ShowOUView(string ouName, int rsopRefId)
-        {
-            Messenger.Default.Send(new ChangeView(typeof(OUResultViewModel), ouName, rsopRefId));
-
         }
     }
 }
