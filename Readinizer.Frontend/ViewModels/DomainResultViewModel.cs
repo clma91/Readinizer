@@ -22,6 +22,10 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unitOfWork;
 
+
+        private ICommand backCommand;
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
+
         [Obsolete("Only for design data", true)]
         public DomainResultViewModel()
         {
@@ -38,24 +42,21 @@ namespace Readinizer.Frontend.ViewModels
 
         public int RefId { get; set; }
 
-        private ADDomain domain { get => unitOfWork.ADDomainRepository.GetByID(RefId); }
+        private ADDomain Domain { get; set; }
 
-        public string Domainname { get => domain.Name; }
+        public string Domainname { get => Domain.Name; }
 
         private List<string> goodList { get; set; }
 
         private List<string> badList { get; set; }
 
-        public List<RsopPot> RsopPots
-        {
-            get => loadRsopPots();
-        }
+        public List<RsopPot> RsopPots { get; set; }
 
-        private List<RsopPot> loadRsopPots()
+        public void loadRsopPots()
         {
-            
-            List<RsopPot> rsopPots = domain.RsopPots;
-            return rsopPots;
+            Domain = unitOfWork.ADDomainRepository.GetByID(RefId);
+            RsopPots = Domain.RsopPots;
+            fillLists();
         }
 
         private void fillLists()
@@ -80,9 +81,8 @@ namespace Readinizer.Frontend.ViewModels
 
         }
 
-        private List<KeyValuePair<string, int>> _LoadPieChartData()
+        private List<KeyValuePair<string, int>> loadPieChartData()
         {
-            fillLists();
             int goodPots = GoodList.Count;
             int badPots = BadList.Count;
 
@@ -95,7 +95,7 @@ namespace Readinizer.Frontend.ViewModels
 
         public List<KeyValuePair<string, int>> LoadPieChartData
         {
-            get => _LoadPieChartData();
+            get => loadPieChartData();
 
         }
 
@@ -127,5 +127,16 @@ namespace Readinizer.Frontend.ViewModels
            Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potRefId));
 
         }
+
+        private void ShowTreeStructure()
+        {
+            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
+        }
+
+        private void Back()
+        {
+            ShowTreeStructure();
+        }
     }
 }
+

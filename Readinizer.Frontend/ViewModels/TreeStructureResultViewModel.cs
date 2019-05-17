@@ -29,18 +29,39 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref rootDomain, value);
         }
 
-        private List<TreeNode> treeNodes;
-        public List<TreeNode> TreeNodes
+        private ObservableCollection<TreeNode> treeNodes;
+        public ObservableCollection<TreeNode> TreeNodes
         {
-            get => treeNodes ?? (treeNodes = new List<TreeNode>());
+            get => treeNodes ?? (treeNodes = new ObservableCollection<TreeNode>());
             set => Set(ref treeNodes, value);
         }
 
-        public ObservableCollection<List<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<List<OrganisationalUnit>>();
+        private string selecteDomain;
+        public string SelectedDomain
+        {
+            get => selecteDomain;
+            set { Set(ref selecteDomain, value); }
+        }
+
+        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<ObservableCollection<OrganisationalUnit>>();
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
 
+        private ICommand detailCommand;
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => this.ShowDetail(param)));
+
+        private void ShowDetail(Dictionary<string, int> param)
+        {
+            if (param.First().Key.Equals("Domain"))
+            {
+                Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), param.First().Value));
+            }
+            else
+            {
+                Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), param.First().Value));
+            }
+        }
 
         [Obsolete("Only for design data", true)]
         public TreeStructureResultViewModel()
@@ -55,7 +76,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             this.treeNodesFactory = treeNodesFactory;
             this.unitOfWork = unitOfWork;
-            TreeNodes = new List<TreeNode>();
+            TreeNodes = new ObservableCollection<TreeNode>();
         }
 
         public async void BuildTree()
@@ -76,7 +97,7 @@ namespace Readinizer.Frontend.ViewModels
 
                 foreach (var sortedOu in OUsWithoutRSoP)
                 {
-                    if (sortedOu.Exists(x => x.ADDomain.Name.Equals(organisationalUnit.ADDomain.Name)))
+                    if (sortedOu.ToList().Exists(x => x.ADDomain.Name.Equals(organisationalUnit.ADDomain.Name)))
                     {
                         sortedOu.Add(organisationalUnit);
                         found = true;
@@ -92,7 +113,7 @@ namespace Readinizer.Frontend.ViewModels
 
             void AddOu(OrganisationalUnit ou)
             {
-                OUsWithoutRSoP.Add(new List<OrganisationalUnit> { ou });
+                OUsWithoutRSoP.Add(new ObservableCollection<OrganisationalUnit> { ou });
             }
 
         }
@@ -101,5 +122,6 @@ namespace Readinizer.Frontend.ViewModels
         {
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
+
     }
 }

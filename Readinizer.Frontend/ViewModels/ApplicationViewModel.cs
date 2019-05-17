@@ -86,7 +86,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             CurrentViewModel = domainResultViewModel;
             domainResultViewModel.RefId = refId;
-
+            domainResultViewModel.loadRsopPots();
         }
 
         private void ShowRsopResultView(int refId)

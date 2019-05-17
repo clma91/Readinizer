@@ -26,9 +26,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IUnitOfWork unitOfWork;
 
         private ICommand backCommand;
-        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back(), () => this.CanBack));
-
-        public bool CanBack { get; private set; }
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
 
         private RsopPot rsopPot { get => unitOfWork.RSoPPotRepository.GetByID(RefId); }
 
@@ -48,7 +46,6 @@ namespace Readinizer.Frontend.ViewModels
         public RSoPResultViewModel(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
-            CanBack = true;
 
         }
 

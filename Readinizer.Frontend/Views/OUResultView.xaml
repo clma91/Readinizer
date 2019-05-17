@@ -29,7 +29,7 @@
                 <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
             </Label>
         </StackPanel>
-        <Grid MinHeight="175" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="500">
+        <Grid MinHeight="265" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="500">
             <DataGrid ItemsSource="{Binding AuditSettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Status" IsReadOnly="True">
@@ -95,8 +95,8 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <StackPanel>
-            <Button x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" HorizontalAlignment="Left" Margin="50, 20, 0, 20">Back</Button>
+        <StackPanel Height="70" VerticalAlignment="Bottom">
+            <Button x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
         </StackPanel>
     </StackPanel>
 </UserControl>

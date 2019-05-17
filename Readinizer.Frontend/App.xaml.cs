@@ -59,10 +59,10 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            //if (ctx.Database.Exists())
-            //{
-            //    ctx.Database.Delete();
-            //}
+            if (ctx.Database.Exists())
+            {
+                ctx.Database.Delete();
+            }
 
             ctx.Database.CreateIfNotExists();
 
@@ -82,11 +82,11 @@ namespace Readinizer.Frontend
 
         protected override void OnExit(ExitEventArgs e)
         {
-            //base.OnExit(e);
+            base.OnExit(e);
 
-            //var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            //ctx.Database.Connection.Close();
-            //ctx.Database.Delete();
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            ctx.Database.Connection.Close();
+            ctx.Database.Delete();
         }
     }
 }

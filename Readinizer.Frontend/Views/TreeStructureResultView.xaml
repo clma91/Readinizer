@@ -56,7 +56,7 @@
                             <Expander Grid.Column="0" VerticalAlignment="Center">
                                 <Expander.Header>
                                     <StackPanel Orientation="Horizontal">
-                                        <Label Content="{Binding Type}" FontWeight="Bold"></Label>
+                                        <Label Content="{Binding Description}" FontWeight="Bold"></Label>
                                         <Label Content="{Binding Name}" Margin="10 0 0 0"></Label>
                                     </StackPanel>
                                 </Expander.Header>
@@ -79,7 +79,11 @@
                                 <ProgressBar Minimum="0" Maximum="100" Value="{Binding RsopPotPercentage}" Width="120" Height="15"
                                              Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}"/>
                                 <Button x:Name="GetDetailView" Content="{materialDesign:PackIcon DotsHorizontal}" Height="25" Width="25" Margin="10 0 0 0" 
-                                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" ToolTip="Details"/>
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" ToolTip="Details" 
+                                        Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DetailCommand}" 
+                                        CommandParameter="{Binding TypeRefIdDictionary}"
+                                        Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.SelectedDomain}"
+                                        />
                             </StackPanel>
 
                         </Grid>
