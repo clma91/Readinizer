@@ -163,46 +163,46 @@ namespace Readinizer.Frontend.ViewModels
         private async void Analyse()
         {
 
-        //    if (sysmonChecked)
-        //    {
-        //        if (sysmonName == null || sysmonName == "")
-        //        {
-        //            sysmonName = "Sysmon";
-        //        }
+            //if (sysmonChecked)
+            //{
+            //    if (sysmonName == null || sysmonName == "")
+            //    {
+            //        sysmonName = "Sysmon";
+            //    }
 
-        //        try
-        //        {
-        //            ShowSpinnerView();
-        //            await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-        //            await Task.Run(() => analysisService.Analyse());
-        //            await Task.Run(() => rSoPPotService.GenerateRsopPots());
-        //            ShowTreeStructureResult();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            ShowStartView();
-        //            Messenger.Default.Send(new SnackbarMessage(e.Message));
-        //        }
-        //    }
-        //    else
-        //    {
-        //        try
-        //        {
-        //            ShowSpinnerView();
-        //            await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-        //            await Task.Run(() => analysisService.Analyse());
-        //            await Task.Run(() => rSoPPotService.GenerateRsopPots());
-        //            ShowTreeStructureResult();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            ShowStartView();
-        //            Messenger.Default.Send(new SnackbarMessage(e.Message));
-        //        }
+            //    try
+            //    {
+            //        ShowSpinnerView();
+            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+            //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
+            //        ShowTreeStructureResult();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ShowStartView();
+            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
+            //    }
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        ShowSpinnerView();
+            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+            //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
+            //        ShowTreeStructureResult();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ShowStartView();
+            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
+            //    }
 
 
-        //    }
-            ShowDomainResultView("readinizer.ch", 1);
+            //}
+            ShowDomainResultView(1);
         }
 
         private void ShowTreeStructureResult()
@@ -220,9 +220,9 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
 
-        private void ShowDomainResultView(string key, int refId)
+        private void ShowDomainResultView(int refId)
         {
-            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), key, refId));
+            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), refId));
         }
 
     }

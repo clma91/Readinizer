@@ -82,25 +82,22 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = spinnerViewModel;
         }
 
-        private void ShowDomainResultView(string key, int refId)
+        private void ShowDomainResultView(int refId)
         {
             CurrentViewModel = domainResultViewModel;
-            domainResultViewModel.Domainname = key;
             domainResultViewModel.RefId = refId;
 
         }
 
-        private void ShowRsopResultView(string key, int refId)
+        private void ShowRsopResultView(int refId)
         {
             CurrentViewModel = rsopResultViewModel;
-            rsopResultViewModel.GISS = key;
             rsopResultViewModel.RefId = refId;
         }
 
-        private void ShowOuResultView(string key, int refId)
+        private void ShowOuResultView(int refId)
         {
             CurrentViewModel = ouResultViewModel;
-            ouResultViewModel.Ou = key;
             ouResultViewModel.RefId = refId;
         }
 
@@ -119,16 +116,16 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if(message.ViewModelType == typeof(DomainResultViewModel))
             {
-                ShowDomainResultView(message.Key, message.RefId);
+                ShowDomainResultView(message.RefId);
                
             }
             else if(message.ViewModelType == typeof(RSoPResultViewModel))
             {
-                ShowRsopResultView(message.Key, message.RefId);
+                ShowRsopResultView(message.RefId);
             }
             else if (message.ViewModelType == typeof(OUResultViewModel))
             {
-                ShowOuResultView(message.Key, message.RefId);
+                ShowOuResultView(message.RefId);
             }
         }
 

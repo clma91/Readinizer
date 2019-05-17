@@ -9,7 +9,6 @@ namespace Readinizer.Frontend.Messages
     public class ChangeView
     {
         public Type ViewModelType { get; private set; }
-        public string Key { get; set; }
         public int RefId { get; set; }
 
         public ChangeView(Type viewModelType)
@@ -17,10 +16,9 @@ namespace Readinizer.Frontend.Messages
             ViewModelType = viewModelType;
         }
 
-        public ChangeView(Type viewModelType, string key, int refId)
+        public ChangeView(Type viewModelType, int refId)
         {
             ViewModelType = viewModelType;
-            Key = key;
             RefId = refId;
         }
     }

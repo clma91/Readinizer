@@ -92,9 +92,11 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
+        <StackPanel>
+            <Button x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" HorizontalAlignment="Left" Margin="50, 20, 0, 20">Back</Button>
+        </StackPanel>
     </StackPanel>
 </UserControl>

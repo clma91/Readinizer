@@ -36,11 +36,11 @@ namespace Readinizer.Frontend.ViewModels
             this.unitOfWork = unitOfWork; 
         }
 
-        public string Domainname { get; set; }
-
         public int RefId { get; set; }
 
-        private ADDomain domain { get; set; }
+        private ADDomain domain { get => unitOfWork.ADDomainRepository.GetByID(RefId); }
+
+        public string Domainname { get => domain.Name; }
 
         private List<string> goodList { get; set; }
 
@@ -53,7 +53,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private List<RsopPot> loadRsopPots()
         {
-            domain = unitOfWork.ADDomainRepository.GetByID(RefId);
+            
             List<RsopPot> rsopPots = domain.RsopPots;
             return rsopPots;
         }
@@ -117,14 +117,14 @@ namespace Readinizer.Frontend.ViewModels
             {
                 pot = value;
                 int rsopPotID = RsopPots.Find(x => x.Name.Equals(pot)).RsopPotId;
-                ShowPotView(pot, rsopPotID);
+                ShowPotView(rsopPotID);
+                pot = null;
             }
         }
 
-
-        private void ShowPotView(string potName, int potRefId)
+        private void ShowPotView(int potRefId)
         {
-           Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potName, potRefId));
+           Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potRefId));
 
         }
     }

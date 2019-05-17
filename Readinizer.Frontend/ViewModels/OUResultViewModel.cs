@@ -24,8 +24,16 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unityOfWork;
 
-        public string Ou{ get; set; }
+        private ICommand backCommand;
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back(), () => this.CanBack));
+
+        public bool CanBack { get; private set; }
+
+
+        
         public int RefId{ get; set; }
+        private Rsop rsop { get => unityOfWork.RSoPRepository.GetByID(RefId); }
+        public string Ou { get => rsop.OrganisationalUnit.Name; }
 
         [Obsolete("Only for design data", true)]
         public OUResultViewModel()
@@ -39,13 +47,13 @@ namespace Readinizer.Frontend.ViewModels
         public OUResultViewModel(IUnitOfWork unityOfWork)
         {
             this.unityOfWork = unityOfWork;
+            CanBack = true;
         }
 
         private List<SecuiritySettingsParserOU> loadSettings()
         {
             var GPOs = unityOfWork.GpoRepository.GetAllEntities().Result;
             List<SecuiritySettingsParserOU> settings = new List<SecuiritySettingsParserOU>();
-            var rsop = unityOfWork.RSoPRepository.GetByID(RefId);
             foreach (var setting in rsop.AuditSettings)
             {
                 SecuiritySettingsParserOU parsedSetting = new SecuiritySettingsParserOU();
@@ -181,6 +189,17 @@ namespace Readinizer.Frontend.ViewModels
         public List<SecuiritySettingsParserOU> AuditSettings
         {
             get => loadSettings();
+        }
+
+        private void ShowPotView(int potRefId)
+        {
+            Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potRefId));
+
+        }
+
+        private void Back()
+        {
+            ShowPotView(rsop.RsopPotRefId.GetValueOrDefault());
         }
     }
 }

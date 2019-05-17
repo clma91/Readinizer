@@ -25,7 +25,15 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public string GISS{ get; set; }
+        private ICommand backCommand;
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back(), () => this.CanBack));
+
+        public bool CanBack { get; private set; }
+
+        private RsopPot rsopPot { get => unitOfWork.RSoPPotRepository.GetByID(RefId); }
+
+        public string GISS{ get => rsopPot.Name; }
+
         public int RefId{ get; set; }
 
         [Obsolete("Only for design data", true)]
@@ -40,13 +48,14 @@ namespace Readinizer.Frontend.ViewModels
         public RSoPResultViewModel(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
+            CanBack = true;
+
         }
 
-        private RsopPot rsopPot { get; set; }
+        
 
         private Rsop loadRsopOfRsopPot()
         {
-            rsopPot = unitOfWork.RSoPPotRepository.GetByID(RefId);
             return rsopPot.Rsops.FirstOrDefault();
 
         }
@@ -194,15 +203,26 @@ namespace Readinizer.Frontend.ViewModels
                 var rsops = unitOfWork.RSoPPotRepository.GetByID(RefId).Rsops;
                 List<Rsop> rsopList = rsops.ToList();
                 int rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
-                ShowOUView(rsop, rsopID);
+                ShowOUView(rsopID);
+                rsop = null;
             }
         }
 
 
-        private void ShowOUView(string ouName, int rsopRefId)
+        private void ShowOUView(int rsopRefId)
         {
-            Messenger.Default.Send(new ChangeView(typeof(OUResultViewModel), ouName, rsopRefId));
+            Messenger.Default.Send(new ChangeView(typeof(OUResultViewModel), rsopRefId));
 
+        }
+
+        private void ShowDomainView(int domainRefId)
+        {
+            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), domainRefId));
+        }
+
+        private void Back()
+        {
+            ShowDomainView(rsopPot.Domain.ADDomainId);
         }
     }
 }
