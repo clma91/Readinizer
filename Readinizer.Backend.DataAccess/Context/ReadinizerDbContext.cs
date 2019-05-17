@@ -84,6 +84,7 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Domain).WithMany(x => x.Rsops);
             modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithMany(x => x.Rsops);
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithMany(x => x.Rsops);
+            
 
 
             modelBuilder.Entity<AuditSetting>().ToTable(nameof(AuditSetting));

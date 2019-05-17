@@ -162,30 +162,47 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-            try
-            {
-                ShowSpinnerView();
-                if (sysmonChecked)
-                {
-                    if (string.IsNullOrEmpty(sysmonName))
-                    {
-                        sysmonName = "Sysmon";
-                    }
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-                }
-                else
-                {
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-                }
-                await Task.Run(() => analysisService.Analyse());
-                await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                ShowTreeStructureResult();
-            }
-            catch (Exception e)
-            {
-                ShowStartView();
-                Messenger.Default.Send(new SnackbarMessage(e.Message));
-            }
+
+            //if (sysmonChecked)
+            //{
+            //    if (sysmonName == null || sysmonName == "")
+            //    {
+            //        sysmonName = "Sysmon";
+            //    }
+
+            //    try
+            //    {
+            //        ShowSpinnerView();
+            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+            //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
+            //        ShowTreeStructureResult();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ShowStartView();
+            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
+            //    }
+            //}
+            //else
+            //{
+            //    try
+            //    {
+            //        ShowSpinnerView();
+            //        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+            //        await Task.Run(() => analysisService.Analyse());
+            //        await Task.Run(() => rSoPPotService.GenerateRsopPots());
+            //        ShowTreeStructureResult();
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        ShowStartView();
+            //        Messenger.Default.Send(new SnackbarMessage(e.Message));
+            //    }
+
+
+            //}
+            ShowDomainResultView(1);
         }
 
         private void ShowTreeStructureResult()
@@ -201,6 +218,11 @@ namespace Readinizer.Frontend.ViewModels
         private void ShowStartView()
         {
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
+        }
+
+        private void ShowDomainResultView(int refId)
+        {
+            Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), refId));
         }
 
     }

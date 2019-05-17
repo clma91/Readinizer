@@ -37,6 +37,9 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
             container.RegisterType<ISpinnerViewModel, SpinnerViewModel>();
+            container.RegisterType<IDomainResultViewModel, DomainResultViewModel>();
+            container.RegisterType<IRSoPResultViewModel, RSoPResultViewModel>();
+            container.RegisterType<IOUResultViewModel, OUResultViewModel>();
 
             container.RegisterType<IADDomainService, ADDomainService>();
             container.RegisterType<ISiteService, SiteService>();
@@ -54,7 +57,7 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
-            
+
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
             //if (ctx.Database.Exists())
             //{
