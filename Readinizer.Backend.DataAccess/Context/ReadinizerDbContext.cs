@@ -76,6 +76,7 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<RsopPot>().ToTable(nameof(RsopPot));
             modelBuilder.Entity<RsopPot>().HasKey(x => x.RsopPotId);
             modelBuilder.Entity<RsopPot>().HasMany(x => x.Rsops).WithOptional().HasForeignKey(x => x.RsopPotRefId);
+            modelBuilder.Entity<RsopPot>().HasOptional(x => x.Domain).WithMany(x => x.RsopPots);
 
 
             modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));

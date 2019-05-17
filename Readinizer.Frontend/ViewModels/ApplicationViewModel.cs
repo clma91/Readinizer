@@ -85,7 +85,8 @@ namespace Readinizer.Frontend.ViewModels
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
                 ShowTreeStructureResultView();
-            } else if (message.ViewModelType == typeof(SpinnerViewModel))
+            }
+            else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
                 ShowSpinnerView();
             }

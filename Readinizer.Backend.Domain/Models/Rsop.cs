@@ -11,11 +11,11 @@ namespace Readinizer.Backend.Domain.Models
     {
         public int RsopId { get; set; }
 
-        public ADDomain Domain { get; set; }
+        public virtual ADDomain Domain { get; set; }
 
-        public OrganisationalUnit OrganisationalUnit { get; set; }
+        public virtual OrganisationalUnit OrganisationalUnit { get; set; }
 
-        public Site Site { get; set; }
+        public virtual Site Site { get; set; }
 
         public int? RsopPotRefId { get; set; }
 
@@ -40,46 +40,11 @@ namespace Readinizer.Backend.Domain.Models
                 var counterRegistrySettings = RegistrySettings.Count(registrySetting => registrySetting.IsPresent && registrySetting.CurrentValue.Number == registrySetting.TargetValue.Number
                                                                                         && registrySetting.CurrentValue.Element.Modules == registrySetting.TargetValue.Element.Modules);
                 var counterSecurityOptions = SecurityOptions.Count(securityOption => securityOption.TargetDisplay.DisplayBoolean == securityOption.CurrentDisplay.DisplayBoolean);
+
                 var overallCounter = counterAuditSettings + counterPolicies + counterRegistrySettings + counterSecurityOptions;
                 var sumOfSettings = AuditSettings.Count + Policies.Count + RegistrySettings.Count + SecurityOptions.Count;
+
                 return Math.Round(((double)overallCounter / (double)sumOfSettings) * 100);
-            }
-        }
-
-        public double AuditSettingPercentage
-        {
-            get
-            {
-                var counter = AuditSettings.Count(auditSetting => auditSetting.IsPresent && auditSetting.TargetSettingValue.Equals(auditSetting.CurrentSettingValue));
-                return Math.Round(((double)counter / (double)AuditSettings.Count) * 100);
-            }
-        }
-
-        public double PoliciesPercentage
-        {
-            get
-            {
-                var counter = Policies.Count(policy => policy.TargetState == policy.CurrentState);
-                return Math.Round(((double)counter / (double)Policies.Count) * 100);
-            }
-        }
-
-        public double RegistrySettingsPercentage
-        {
-            get
-            {
-                var counter = RegistrySettings.Count(registrySetting => registrySetting.IsPresent && registrySetting.CurrentValue.Number == registrySetting.TargetValue.Number
-                                                                        && registrySetting.CurrentValue.Element.Modules == registrySetting.TargetValue.Element.Modules);
-                return Math.Round(((double)counter / (double)RegistrySettings.Count) * 100);
-            }
-        }
-
-        public double SecurityOptionsPercentage
-        {
-            get
-            {
-                var counter = SecurityOptions.Count(securityOption => securityOption.TargetDisplay.DisplayBoolean == securityOption.CurrentDisplay.DisplayBoolean);
-                return Math.Round(((double)counter / (double)SecurityOptions.Count) * 100);
             }
         }
     }

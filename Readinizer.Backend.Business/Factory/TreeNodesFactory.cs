@@ -34,12 +34,18 @@ namespace Readinizer.Backend.Business.Factory
             root.RsopPotPercentage = rootDomain.RsopsPercentage ?? 0.0;
             foreach (var rsopPot in rsopPots)
             {
+                var Ous = new List<OrganisationalUnit>();
+                foreach (var rsop in rsopPot.Rsops)
+                {
+                    Ous.Add(rsop.OrganisationalUnit);
+                }
                 var rsopPotOfDomain = new TreeNode
                 {
-                    Type = "RSoP Pot: ",
+                    Type = "Group of identical security settings: ",
                     Name = rsopPot.Name,
-                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage
-                };
+                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+            };
                 root.ChildNodes.Add(rsopPotOfDomain);
             }
 
@@ -70,9 +76,10 @@ namespace Readinizer.Backend.Business.Factory
                     {
                         var rsopPotOfDomain = new TreeNode
                         {
-                            Type = "RSoP Pot: ",
+                            Type = "Group of identical security settings: ",
                             Name = rsopPot.Name,
-                            RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage
+                            RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                            OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
                         };
                         child.ChildNodes.Add(rsopPotOfDomain);
                     }

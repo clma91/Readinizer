@@ -57,11 +57,13 @@ namespace Readinizer.Backend.Business.Services
                 logger.Error(severDownException, message);
                 throw new InvalidAuthenticationException(message);
             }
-            //// TODO: catch specified domain could not be contacted
-            //catch (ActiveDirectoryObjectNotFoundException adObjectioFoundException)
-            //{
-            //    var message = adObjectioFoundException.Message;
-            //}
+            catch (ActiveDirectoryObjectNotFoundException adObjectioFoundException)
+            {
+                var message = $"The domain {adObjectioFoundException.Name} could not be contacted";
+                logger.Error(adObjectioFoundException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            //// TODO: catch 0x80005000
             catch (Exception e)
             {
                 var message = e.Message;
@@ -86,7 +88,6 @@ namespace Readinizer.Backend.Business.Services
             var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));
             ADDomain domain = new ADDomain();
             domain.Name = startDomain.Name;
-            //domain.IsForestRoot = true;
             unitOfWork.ADDomainRepository.Add(domain);
             await unitOfWork.SaveChangesAsync();
         }

@@ -96,8 +96,8 @@ namespace Readinizer.Backend.Business.Services
                                 collectedSiteIds.Add(computer.SiteRefId);
 
                                 getRSoP(computer.ComputerName + "." + domainName,
-                                    OU.OrganisationalUnitId, computer.SiteRefId,
-                                    user);
+                                                                OU.OrganisationalUnitId, computer.SiteRefId,
+                                                                user);
                             }
 
                             computer.isSysmonRunning = sysmonService.isSysmonRunning(serviceName, user,
@@ -128,6 +128,6 @@ namespace Readinizer.Backend.Business.Services
                 Console.WriteLine(e);
                 throw;
             }
-       }   
+        }   
     }
 }

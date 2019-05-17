@@ -29,7 +29,6 @@ namespace Readinizer.Backend.Business.Services
         {
             var rsops = await unitOfWork.RSoPRepository.GetAllEntities();
             var rsopPots = new List<RsopPot>();
-            var i = 1;
 
             AddRsopPot(rsops.First());
 
@@ -57,7 +56,7 @@ namespace Readinizer.Backend.Business.Services
                     var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
                     if (!domainsEqual) continue;
 
-                    pot.Rsops.Add(currentRsop);
+                    pot.Rsops.Add(rsop);
                     found = true;
                     break;
                 }
@@ -74,6 +73,7 @@ namespace Readinizer.Backend.Business.Services
                 rsopPots.Add(new RsopPot
                 {
                     Name = GetRandomRsopName(),
+                    Domain = rsop.Domain,
                     Rsops = new List<Rsop> { rsop }
                 });
             }

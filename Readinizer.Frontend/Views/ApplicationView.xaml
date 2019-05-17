@@ -16,6 +16,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="Readinizer" 
+        MinWidth="820" MinHeight="480"
         Width="Auto" Height="Auto" SizeToContent="WidthAndHeight">
 
     <Window.Resources>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -31,30 +32,15 @@ namespace Readinizer.Frontend.ViewModels
         private List<TreeNode> treeNodes;
         public List<TreeNode> TreeNodes
         {
-            get
-            {
-                if (treeNodes == null)
-                {
-                    treeNodes = new List<TreeNode>();
-                }
-
-                return treeNodes;
-            }
+            get => treeNodes ?? (treeNodes = new List<TreeNode>());
             set => Set(ref treeNodes, value);
         }
 
-
-
-        private List<ADDomain> subDomins;
-
-        public List<ADDomain> SubDomains
-        {
-            get => subDomins;
-            set => Set(ref subDomins, value);
-        }
+        public ObservableCollection<List<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<List<OrganisationalUnit>>();
 
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
+
 
         [Obsolete("Only for design data", true)]
         public TreeStructureResultViewModel()
@@ -74,10 +60,44 @@ namespace Readinizer.Frontend.ViewModels
 
         public async void BuildTree()
         {
+            await SetOusWithoutRSoPs();
             TreeNodes = await treeNodesFactory.CreateTree();
         }
 
-        private async void Discover()
+        private async Task SetOusWithoutRSoPs()
+        {
+            var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => !x.HasReachableComputer);
+            AddOu(ousWithoutRsoP.First());
+
+            foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
+            {
+                bool found = false;
+
+                foreach (var sortedOu in OUsWithoutRSoP)
+                {
+                    if (sortedOu.Exists(x => x.ADDomain.Name.Equals(organisationalUnit.ADDomain.Name)))
+                    {
+                        sortedOu.Add(organisationalUnit);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    AddOu(organisationalUnit);
+                }
+            }
+
+            void AddOu(OrganisationalUnit ou)
+            {
+                OUsWithoutRSoP.Add(new List<OrganisationalUnit> { ou });
+            }
+
+        }
+
+        private void Discover()
         {
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
