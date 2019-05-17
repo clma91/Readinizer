@@ -37,21 +37,34 @@ namespace Readinizer.Frontend
             container.RegisterType<IStartUpViewModel, StartUpViewModel>();
             container.RegisterType<ITreeStructureResultViewModel, TreeStructureResultViewModel>();
             container.RegisterType<ISpinnerViewModel, SpinnerViewModel>();
+            container.RegisterType<IDomainResultViewModel, DomainResultViewModel>();
+            container.RegisterType<IRSoPResultViewModel, RSoPResultViewModel>();
+            container.RegisterType<IOUResultViewModel, OUResultViewModel>();
 
             container.RegisterType<IADDomainService, ADDomainService>();
             container.RegisterType<ISiteService, SiteService>();
             container.RegisterType<IOrganisationalUnitService, OrganisationalUnitService>();
             container.RegisterType<IComputerService, ComputerService>();
             container.RegisterType<IRSoPService, RSoPService>();
+            container.RegisterType<ISysmonService, SysmonService>();
+            container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
+            container.RegisterType<IRSoPPotService, RSoPPotService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<ReadinizerDbContext>());
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            if (ctx.Database.Exists())
+            {
+                ctx.Database.Delete();
+            }
+
+            ctx.Database.CreateIfNotExists();
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();
@@ -67,5 +80,13 @@ namespace Readinizer.Frontend
             e.Handled = true;
         }
 
+        protected override void OnExit(ExitEventArgs e)
+        {
+            base.OnExit(e);
+
+            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+            ctx.Database.Connection.Close();
+            ctx.Database.Delete();
+        }
     }
 }

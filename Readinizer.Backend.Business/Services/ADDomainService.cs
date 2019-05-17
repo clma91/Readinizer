@@ -21,7 +21,7 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task SearchAllDomains()
+        public async Task SearchAllDomains(string domainname)
         {
             var domains = new List<AD.Domain>();
             var treeDomains = new List<AD.Domain>();
@@ -29,8 +29,8 @@ namespace Readinizer.Backend.Business.Services
 
             try
             {
-                var forestRootDomain = Forest.GetCurrentForest().RootDomain;
-                var domainTrusts = forestRootDomain.GetAllTrustRelationships();
+                var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));         // Forest.GetCurrentForest().RootDomain;
+                var domainTrusts = startDomain.GetAllTrustRelationships();
 
                 foreach (TrustRelationshipInformation domainTrust in domainTrusts)
                 {
@@ -43,7 +43,7 @@ namespace Readinizer.Backend.Business.Services
                     }
                 }
 
-                AddAllChildDomains(forestRootDomain, domains);
+                AddAllChildDomains(startDomain, domains);
             }
             catch (UnauthorizedAccessException accessException)
             {
@@ -57,6 +57,13 @@ namespace Readinizer.Backend.Business.Services
                 logger.Error(severDownException, message);
                 throw new InvalidAuthenticationException(message);
             }
+            catch (ActiveDirectoryObjectNotFoundException adObjectioFoundException)
+            {
+                var message = $"The domain {adObjectioFoundException.Name} could not be contacted";
+                logger.Error(adObjectioFoundException, message);
+                throw new InvalidAuthenticationException(message);
+            }
+            //// TODO: catch 0x80005000
             catch (Exception e)
             {
                 var message = e.Message;
@@ -75,7 +82,16 @@ namespace Readinizer.Backend.Business.Services
 
             await unitOfWork.SaveChangesAsync();
         }
-        
+
+        public async Task AddThisDomain(string domainname)
+        {
+            var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));
+            ADDomain domain = new ADDomain();
+            domain.Name = startDomain.Name;
+            unitOfWork.ADDomainRepository.Add(domain);
+            await unitOfWork.SaveChangesAsync();
+        }
+
         private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
         {
             domains.Add(root);
@@ -86,7 +102,7 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        private static List<Domain.Models.ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
+        private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
             var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomains = new List<ADDomain>() }).ToList();
             var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomains = new List<ADDomain>()}).ToList();
@@ -96,17 +112,25 @@ namespace Readinizer.Backend.Business.Services
 
             var allModels = models.Union(treeModels).ToList();
 
-            var root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+            var root = new ADDomain();
+            if (allModels.Exists(x => IsForestRoot(x.Name)))
+            {
+                root = allModels.FirstOrDefault(m => IsForestRoot(m.Name));
+                root.IsForestRoot = true;
+            }
+            else
+            {
+                root = allModels.FirstOrDefault();
+            }
             if (root != null)
             {
-                root.IsForestRoot = true;
                 root.SubADDomains.AddRange(treeModels);
             }
 
             return allModels;
         }
 
-        private static void AddSubDomains(List<AD.Domain> domains, List<Domain.Models.ADDomain> models)
+        private static void AddSubDomains(List<AD.Domain> domains, List<ADDomain> models)
         {
             foreach (var adDomain in models)
             {

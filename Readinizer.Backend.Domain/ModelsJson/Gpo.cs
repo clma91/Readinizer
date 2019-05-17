@@ -4,45 +4,62 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Readinizer.Backend.Domain.Models;
+using Readinizer.Backend.Domain.ModelsJson.Converter;
+using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Gpo
     {
+        public int GpoId { get; set; }
+
+        public int RsopRefId { get; set; }
+
+        public Rsop Rsop { get; set; }
+
         [JsonProperty("Name")]
         public string Name { get; set; }
 
         [JsonProperty("Identifier")]
-        public Identifier GpoIdentifier { get; set; }
+        public Identifier GpoIdentifier { get; set; } = new Identifier();
 
         [JsonProperty("Path")]
         public Path GpoPath { get; set; }
 
         [JsonProperty("Enabled")]
         public string Enabled { get; set; }
-
+        
         [JsonProperty("Link")]
-        public Link Link { get; set; }
-    }
+        [JsonConverter(typeof(SingleValueArrayConverter<Link>))]
+        public List<Link> Link { get; set; }
 
-    public class Identifier
-    {
-        [JsonProperty("#text")]
-        public string Id { get; set; }
-    }
-
-    public class Path
-    {
-        [JsonProperty("Identifier")]
-        public Identifier GpoIdentifier { get; set; }
-    }
-
-    public class Link
-    {
-        [JsonProperty("SOMPath")]
-        public string SOMPath { get; set; }
-
-        [JsonProperty("AppliedOrder")]
-        public string AppliedOrder { get; set; }
+        public Gpo NotIdentified()
+        {
+            return new Gpo
+            {
+                Name = "Undefined",
+                GpoIdentifier = new Identifier
+                {
+                    Id = "No Identifier"
+                },
+                GpoPath = new Path
+                {
+                    GpoIdentifier = new Identifier
+                    {
+                        Id = "No Identifier"
+                    }
+                },
+                Enabled = "Undefined",
+                Link = new List<Link>
+                {
+                    new Link
+                    {
+                        AppliedOrder = "Undefined",
+                        SOMPath = "Undefined"
+                    }
+                }
+            };
+        }
     }
 }

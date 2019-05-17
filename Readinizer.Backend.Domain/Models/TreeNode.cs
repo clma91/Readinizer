@@ -8,10 +8,16 @@ namespace Readinizer.Backend.Domain.Models
 {
     public class TreeNode
     {
-        public string Type { get; set; }
+        public Dictionary<string, int> TypeRefIdDictionary { get; set; }
 
         public string Name { get; set; }
 
+        public string Description { get; set; }
+
+        public double RsopPotPercentage { get; set; }
+
         public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
+
+        public List<OrganisationalUnit> OrganisationalUnits { get; set; }
     }
 }

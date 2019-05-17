@@ -64,20 +64,32 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\InvalidAuthenticationException.cs" />
+    <Compile Include="ModelsJson\AuditSettingJson.cs" />
     <Compile Include="ModelsJson\AuditSetting.cs" />
-    <Compile Include="ModelsJson\AuditSettingReco.cs" />
+    <Compile Include="ModelsJson\Converter\SingleValueArrayConverter.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Display.cs" />
     <Compile Include="ModelsJson\Gpo.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Element.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Identifier.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Link.cs" />
+    <Compile Include="ModelsJson\HelperClasses\ListBox.cs" />
+    <Compile Include="ModelsJson\HelperClasses\ModuleNames.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Path.cs" />
+    <Compile Include="ModelsJson\HelperClasses\RandomName.cs" />
+    <Compile Include="ModelsJson\PolicyJson.cs" />
     <Compile Include="ModelsJson\Policy.cs" />
-    <Compile Include="ModelsJson\PolicyReco.cs" />
+    <Compile Include="ModelsJson\RegistrySettingJson.cs" />
     <Compile Include="ModelsJson\RegistrySetting.cs" />
-    <Compile Include="ModelsJson\RegistrySettingReco.cs" />
+    <Compile Include="ModelsJson\SecurityOptionJson.cs" />
     <Compile Include="ModelsJson\SecurityOption.cs" />
-    <Compile Include="ModelsJson\SecurityOptionReco.cs" />
-    <Compile Include="ModelsJson\Value.cs" />
+    <Compile Include="ModelsJson\HelperClasses\Value.cs" />
     <Compile Include="Models\ADDomain.cs" />
     <Compile Include="Models\OrganisationalUnit.cs" />
     <Compile Include="Models\Computer.cs" />
     <Compile Include="Models\Rsop.cs" />
+    <Compile Include="Models\RsopPot.cs" />
+    <Compile Include="Models\SecuiritySettingsParserOU.cs" />
+    <Compile Include="Models\SecuirtySettingsParser.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\TreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

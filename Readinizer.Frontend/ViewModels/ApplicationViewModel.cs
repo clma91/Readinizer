@@ -35,9 +35,12 @@ namespace Readinizer.Frontend.ViewModels
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
         private readonly SpinnerViewModel spinnerViewModel;
+        private readonly DomainResultViewModel domainResultViewModel;
+        private readonly RSoPResultViewModel rsopResultViewModel;
+        private readonly OUResultViewModel ouResultViewModel;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -46,12 +49,15 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel)
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel)
 
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
             this.spinnerViewModel = spinnerViewModel;
+            this.domainResultViewModel = domainResultViewModel;
+            this.rsopResultViewModel = rsopResultViewModel;
+            this.ouResultViewModel = ouResultViewModel;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
@@ -67,13 +73,32 @@ namespace Readinizer.Frontend.ViewModels
 
         private void ShowTreeStructureResultView()
         {
-            treeStructureResultViewModel.BuildTree();
             CurrentViewModel = treeStructureResultViewModel;
+            treeStructureResultViewModel.BuildTree();
         }
 
         private void ShowSpinnerView()
         {
             CurrentViewModel = spinnerViewModel;
+        }
+
+        private void ShowDomainResultView(int refId)
+        {
+            CurrentViewModel = domainResultViewModel;
+            domainResultViewModel.RefId = refId;
+            domainResultViewModel.loadRsopPots();
+        }
+
+        private void ShowRsopResultView(int refId)
+        {
+            CurrentViewModel = rsopResultViewModel;
+            rsopResultViewModel.RefId = refId;
+        }
+
+        private void ShowOuResultView(int refId)
+        {
+            CurrentViewModel = ouResultViewModel;
+            ouResultViewModel.RefId = refId;
         }
 
         private void ChangeView(ChangeView message)
@@ -85,9 +110,23 @@ namespace Readinizer.Frontend.ViewModels
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
                 ShowTreeStructureResultView();
-            } else if (message.ViewModelType == typeof(SpinnerViewModel))
+            }
+            else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
                 ShowSpinnerView();
+            }
+            else if(message.ViewModelType == typeof(DomainResultViewModel))
+            {
+                ShowDomainResultView(message.RefId);
+               
+            }
+            else if(message.ViewModelType == typeof(RSoPResultViewModel))
+            {
+                ShowRsopResultView(message.RefId);
+            }
+            else if (message.ViewModelType == typeof(OUResultViewModel))
+            {
+                ShowOuResultView(message.RefId);
             }
         }
 

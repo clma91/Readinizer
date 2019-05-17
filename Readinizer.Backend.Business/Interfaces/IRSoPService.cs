@@ -11,5 +11,7 @@ namespace Readinizer.Backend.Business.Interfaces
     {
 
         Task getRSoPOfReachableComputers();
+
+        Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName);
     }
 }

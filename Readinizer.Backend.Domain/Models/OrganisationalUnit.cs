@@ -19,7 +19,9 @@ namespace Readinizer.Backend.Domain.Models
 
         public int ADDomainRefId { get; set; }
 
-        public ADDomain ADDomain { get; set; }
+        public virtual ADDomain ADDomain { get; set; }
+
+        public virtual List<Rsop> Rsops { get; set; }
 
         public virtual ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
 

@@ -16,17 +16,27 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="Readinizer" 
+        MinWidth="820" MinHeight="480"
         Width="Auto" Height="Auto" SizeToContent="WidthAndHeight">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:StartUpViewModel}">
-            <views:StartUpView/>
+            <views:StartUpView></views:StartUpView>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:TreeStructureResultViewModel}">
             <views:TreeStructureResultView/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:SpinnerViewModel}">
             <views:SpinnerView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DomainResultViewModel}">
+            <views:DomainResultView></views:DomainResultView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:RSoPResultViewModel}">
+            <views:RSoPResultView></views:RSoPResultView>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:OUResultViewModel}">
+            <views:OUResultView></views:OUResultView>
         </DataTemplate>
     </Window.Resources>
 

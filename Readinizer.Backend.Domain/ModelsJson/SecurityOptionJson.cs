@@ -4,30 +4,29 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
-    public class SecurityOptionReco
+    public class SecurityOptionJson
     {
-        [JsonProperty("Description")]
-        public string Description { get; set; }
+        public SecurityOptionJson()
+        {
+            KeyName = "Undefined";
+            CurrentSettingNumber = "Undefined";
+            CurrentDisplay = new Display();
+        }
 
-        [JsonProperty("Path")]
-        public string Path { get; set; }
+        [JsonProperty("GPO")]
+        public Gpo Gpo { get; set; }
 
         [JsonProperty("KeyName")]
         public string KeyName { get; set; }
 
         [JsonProperty("SettingNumber")]
-        public string TargetSettingNumber { get; set; }
+        public string CurrentSettingNumber { get; set; }
 
         [JsonProperty("Display")]
-        public Display TargetDisplay { get; set; }
-
-        public bool IsPresent { get; set; }
-
         public Display CurrentDisplay { get; set; }
-
-        public string CurrentSettingNumber { get; set; }
     }
 }

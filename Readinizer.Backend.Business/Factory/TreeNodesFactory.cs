@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,56 +19,94 @@ namespace Readinizer.Backend.Business.Factory
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<List<TreeNode>> CreateTree()
+        public async Task<ObservableCollection<TreeNode>> CreateTree()
         {
             var domains = await unitOfWork.ADDomainRepository.GetAllEntities();
-            var tree = new List<TreeNode>();
+            var tree = new ObservableCollection<TreeNode>();
             var root = new TreeNode();
 
-            var rootDomain = domains.Find(x => x.IsForestRoot);
+            var rootDomain = domains.FirstOrDefault();
+            var rsopPots = GetRsopPotsOfDomain(rootDomain);
+            rootDomain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage));
+            unitOfWork.ADDomainRepository.Update(rootDomain);
 
-            root.Type = "Forest Root Domain: ";
+            root.Description = rootDomain.IsForestRoot ? "Forest Root Domain: " : "Domain: ";
+            root.TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", rootDomain.ADDomainId } };
             root.Name = rootDomain.Name;
+            root.RsopPotPercentage = rootDomain.RsopsPercentage ?? 0.0;
+            foreach (var rsopPot in rsopPots)
+            {
+                var Ous = new List<OrganisationalUnit>();
+                foreach (var rsop in rsopPot.Rsops)
+                {
+                    Ous.Add(rsop.OrganisationalUnit);
+                }
+                var rsopPotOfDomain = new TreeNode
+                {
+                    Description = "Group of identical security settings: ",
+                    TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
+                    Name = rsopPot.Name,
+                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                };
+                root.ChildNodes.Add(rsopPotOfDomain);
+            }
+
             BuildTree(root, rootDomain.SubADDomains);
 
-            foreach (var organisationalUnit in rootDomain.OrganisationalUnits)
-            {
-                root.ChildNodes.Add(new TreeNode { Type = "OU: ", Name = organisationalUnit.Name });
-            }
-            foreach (var domainSite in rootDomain.Sites)
-            {
-                root.ChildNodes.Add(new TreeNode { Type = "Site: ", Name = domainSite.Name });
-            }
-
+            await unitOfWork.SaveChangesAsync();
             tree.Add(root);
             return tree;
         }
 
         private void BuildTree(TreeNode root, List<ADDomain> domains)
         {
-            foreach (var domain in domains)
+            if (domains != null)
             {
-                var child = new TreeNode {Type = "Domain: ", Name = domain.Name};
-                foreach (var organisationalUnit in domain.OrganisationalUnits)
+                foreach (var domain in domains)
                 {
-                    if (organisationalUnit.ADDomain.Name.Equals(domain.Name))
-                    {
-                        var childOu = new TreeNode {Type = "OU: ", Name = organisationalUnit.Name};
-                        child.ChildNodes.Add(childOu);
-                    }
-                }
+                    var rsopPots = GetRsopPotsOfDomain(domain);
+                    domain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
+                    unitOfWork.ADDomainRepository.Update(domain);
 
-                foreach (var domainSite in domain.Sites)
-                {
-                    if (domainSite.Domains.Contains(domain))
+                    var child = new TreeNode
                     {
-                        var childSite = new TreeNode {Type = "Site: ", Name = domainSite.Name};
-                        child.ChildNodes.Add(childSite);
+                        Description = "Domain: ",
+                        TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
+                        Name = domain.Name,
+                        RsopPotPercentage = domain.RsopsPercentage ?? 0.0
+                    };
+                    foreach (var rsopPot in rsopPots)
+                    {
+                        var rsopPotOfDomain = new TreeNode
+                        {
+                            Description = "Group of identical security settings: ",
+                            TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
+                            Name = rsopPot.Name,
+                            RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                            OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                        };
+                        child.ChildNodes.Add(rsopPotOfDomain);
                     }
+
+                    root.ChildNodes.Add(child);
+                    BuildTree(child, domain.SubADDomains);
                 }
-                root.ChildNodes.Add(child);
-                BuildTree(child, domain.SubADDomains);
             }
+        }
+
+        private List<RsopPot> GetRsopPotsOfDomain(ADDomain domain)
+        {
+            var rsopsOfDomain = domain.Rsops;
+            var rsopPots = new HashSet<RsopPot>();
+
+            foreach (var rsop in rsopsOfDomain)
+            {
+                rsopPots.Add(unitOfWork.RSoPPotRepository.GetByID(rsop.RsopPotRefId));
+            }
+
+            rsopPots.Remove(null);
+            return rsopPots.ToList();
         }
     }
 }

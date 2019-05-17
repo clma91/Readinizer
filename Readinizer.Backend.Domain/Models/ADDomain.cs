@@ -25,5 +25,11 @@ namespace Readinizer.Backend.Domain.Models
         public virtual List<OrganisationalUnit> OrganisationalUnits { get; set; }
 
         public virtual ICollection<Site> Sites { get; set; }
+
+        public virtual List<Rsop> Rsops { get; set; }
+
+        public virtual List<RsopPot> RsopPots { get; set; }
+
+        public double? RsopsPercentage { get; set; }
     }
 }
