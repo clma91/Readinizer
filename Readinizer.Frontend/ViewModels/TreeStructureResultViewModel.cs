@@ -36,15 +36,17 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref treeNodes, value);
         }
 
+        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<ObservableCollection<OrganisationalUnit>>();
+
+        public ObservableCollection<ADDomain> UnavailableDomains { get; set; } = new ObservableCollection<ADDomain>();
+
         private string selecteDomain;
         public string SelectedDomain
         {
             get => selecteDomain;
             set { Set(ref selecteDomain, value); }
         }
-
-        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<ObservableCollection<OrganisationalUnit>>();
-
+        
         private ICommand discoverCommand;
         public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
 
@@ -82,7 +84,20 @@ namespace Readinizer.Frontend.ViewModels
         public async void BuildTree()
         {
             await SetOusWithoutRSoPs();
+            await SetUnavailableDomains();
             TreeNodes = await treeNodesFactory.CreateTree();
+        }
+
+        private async Task SetUnavailableDomains()
+        {
+            var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            foreach (var domain in allDomains)
+            {
+                if (!domain.IsAvailable)
+                {
+                    UnavailableDomains.Add(domain);
+                }
+            }
         }
 
         private async Task SetOusWithoutRSoPs()

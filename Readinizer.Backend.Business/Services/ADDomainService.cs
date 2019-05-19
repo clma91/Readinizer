@@ -21,29 +21,33 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task SearchAllDomains(string domainname)
+        public async Task<List<string>> SearchDomains(string domainName, bool subdomainsChecked)
         {
             var domains = new List<AD.Domain>();
-            var treeDomains = new List<AD.Domain>();
             var treeDomainsWithChildren = new List<AD.Domain>();
+            var unavailableDomains = new List<string>();
 
             try
             {
-                var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));         // Forest.GetCurrentForest().RootDomain;
-                var domainTrusts = startDomain.GetAllTrustRelationships();
-
-                foreach (TrustRelationshipInformation domainTrust in domainTrusts)
+                AD.Domain startDomain;
+                if (string.IsNullOrEmpty(domainName))
                 {
-                    if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
-                    {
-                        var treeDomain =
-                            AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain,
-                                domainTrust.TargetName));
-                        treeDomains.Add(treeDomain);
-                    }
+                    startDomain = Forest.GetCurrentForest().RootDomain;
+                }
+                else
+                {
+                    startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainName));
                 }
 
-                AddAllChildDomains(startDomain, domains);
+                if (subdomainsChecked)
+                {
+                    GetTreeDomains(startDomain, treeDomainsWithChildren, unavailableDomains);
+                    AddAllChildDomains(startDomain, domains, unavailableDomains);
+                }
+                else
+                {
+                    domains.Add(startDomain);
+                }
             }
             catch (UnauthorizedAccessException accessException)
             {
@@ -63,7 +67,6 @@ namespace Readinizer.Backend.Business.Services
                 logger.Error(adObjectioFoundException, message);
                 throw new InvalidAuthenticationException(message);
             }
-            //// TODO: catch 0x80005000
             catch (Exception e)
             {
                 var message = e.Message;
@@ -71,41 +74,67 @@ namespace Readinizer.Backend.Business.Services
                 throw new InvalidAuthenticationException(message);
             }
 
-            foreach (var treeDomain in treeDomains)
-            {
-                AddAllChildDomains(treeDomain, treeDomainsWithChildren);
-            }
-
             var models = MapToDomainModel(domains, treeDomainsWithChildren);
-
             unitOfWork.ADDomainRepository.AddRange(models);
 
+            var modelsUnavailable = unavailableDomains.Select(x => new ADDomain { Name = x, IsAvailable = false }).ToList();
+            unitOfWork.ADDomainRepository.AddRange(modelsUnavailable);
+
             await unitOfWork.SaveChangesAsync();
+
+            return unavailableDomains;
         }
 
-        public async Task AddThisDomain(string domainname)
+        private static void GetTreeDomains(AD.Domain startDomain, List<AD.Domain> treeDomainsWithChildren, List<string> unavailableDomains)
         {
-            var startDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainname));
-            ADDomain domain = new ADDomain();
-            domain.Name = startDomain.Name;
-            unitOfWork.ADDomainRepository.Add(domain);
-            await unitOfWork.SaveChangesAsync();
+            var domainTrusts = startDomain.GetAllTrustRelationships();
+            List<AD.Domain> treeDomains = new List<AD.Domain>();
+
+            foreach (TrustRelationshipInformation domainTrust in domainTrusts)
+            {
+                if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
+                {
+                    try
+                    {
+                        var treeDomain =
+                            AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, domainTrust.TargetName));
+                        treeDomains.Add(treeDomain);
+                    }
+                    catch
+                    {
+                        unavailableDomains.Add(domainTrust.TargetName);
+                    }
+                }
+            }
+
+            foreach (var treeDomain in treeDomains)
+            {
+                AddAllChildDomains(treeDomain, treeDomainsWithChildren, unavailableDomains);
+            }
         }
 
-        private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains)
+        private static void AddAllChildDomains(AD.Domain root, List<AD.Domain> domains, List<string> unavailableDomains)
         {
             domains.Add(root);
 
             for (var i = 0; i < root.Children.Count; ++i)
             {
-                AddAllChildDomains(root.Children[i], domains);
+                try
+                {
+                    var subdomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, root.Children[i].Name));
+                    AddAllChildDomains(subdomain, domains, unavailableDomains);
+                }
+                catch
+                {
+                    unavailableDomains.Add(root.Children[i].Name);
+                }
             }
         }
 
         private static List<ADDomain> MapToDomainModel(List<AD.Domain> domains, List<AD.Domain> treeDomains)
         {
-            var models = domains.Select(x => new ADDomain { Name = x.Name, SubADDomains = new List<ADDomain>() }).ToList();
-            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsTreeRoot = true, SubADDomains = new List<ADDomain>()}).ToList();
+            var models = domains.Select(x => new ADDomain { Name = x.Name, IsAvailable = true, SubADDomains = new List<ADDomain>() }).ToList();
+            var treeModels = treeDomains.Select(x => new ADDomain {Name = x.Name, IsAvailable = true, IsTreeRoot = true, SubADDomains = new List<ADDomain>() }).ToList();
 
             AddSubDomains(domains, models);
             AddSubDomains(treeDomains, treeModels);

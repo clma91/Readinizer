@@ -20,6 +20,8 @@ namespace Readinizer.Backend.Domain.Models
 
         public bool IsForestRoot { get; set; }
 
+        public bool IsAvailable { get; set; }
+
         public virtual List<ADDomain> SubADDomains { get; set; }
 
         public virtual List<OrganisationalUnit> OrganisationalUnits { get; set; }

@@ -13,6 +13,7 @@ namespace Readinizer.Backend.Business.Factory
     public class TreeNodesFactory : ITreeNodesFactory
     {
         private readonly IUnitOfWork unitOfWork;
+        private static int RSoPId = 1;
 
         public TreeNodesFactory(IUnitOfWork unitOfWork)
         {
@@ -31,6 +32,7 @@ namespace Readinizer.Backend.Business.Factory
             unitOfWork.ADDomainRepository.Update(rootDomain);
 
             root.Description = rootDomain.IsForestRoot ? "Forest Root Domain: " : "Domain: ";
+            root.IsRSoP = false;
             root.TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", rootDomain.ADDomainId } };
             root.Name = rootDomain.Name;
             root.RsopPotPercentage = rootDomain.RsopsPercentage ?? 0.0;
@@ -43,7 +45,8 @@ namespace Readinizer.Backend.Business.Factory
                 }
                 var rsopPotOfDomain = new TreeNode
                 {
-                    Description = "Group of identical security settings: ",
+                    Description = RSoPId++.ToString() + ". group of identical security settings",
+                    IsRSoP = true,
                     TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
                     Name = rsopPot.Name,
                     RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
@@ -65,32 +68,37 @@ namespace Readinizer.Backend.Business.Factory
             {
                 foreach (var domain in domains)
                 {
-                    var rsopPots = GetRsopPotsOfDomain(domain);
-                    domain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
-                    unitOfWork.ADDomainRepository.Update(domain);
+                    if (domain.IsAvailable)
+                    {
+                        var rsopPots = GetRsopPotsOfDomain(domain);
+                        domain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
+                        unitOfWork.ADDomainRepository.Update(domain);
 
-                    var child = new TreeNode
-                    {
-                        Description = "Domain: ",
-                        TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
-                        Name = domain.Name,
-                        RsopPotPercentage = domain.RsopsPercentage ?? 0.0
-                    };
-                    foreach (var rsopPot in rsopPots)
-                    {
-                        var rsopPotOfDomain = new TreeNode
+                        var child = new TreeNode
                         {
-                            Description = "Group of identical security settings: ",
-                            TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
-                            Name = rsopPot.Name,
-                            RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                            OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                            Description = "Domain: ",
+                            IsRSoP = false,
+                            TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
+                            Name = domain.Name,
+                            RsopPotPercentage = domain.RsopsPercentage ?? 0.0
                         };
-                        child.ChildNodes.Add(rsopPotOfDomain);
-                    }
+                        foreach (var rsopPot in rsopPots)
+                        {
+                            var rsopPotOfDomain = new TreeNode
+                            {
+                                Description = "Group of identical security settings: ",
+                                IsRSoP = true,
+                                TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
+                                Name = rsopPot.Name,
+                                RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                                OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                            };
+                            child.ChildNodes.Add(rsopPotOfDomain);
+                        }
 
-                    root.ChildNodes.Add(child);
-                    BuildTree(child, domain.SubADDomains);
+                        root.ChildNodes.Add(child);
+                        BuildTree(child, domain.SubADDomains);
+                    }
                 }
             }
         }

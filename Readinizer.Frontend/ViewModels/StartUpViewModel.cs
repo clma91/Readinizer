@@ -104,53 +104,30 @@ namespace Readinizer.Frontend.ViewModels
  
         private async void Discover()
         {
-
-            if (domainName != null && adDomainService.IsDomainInForest(domainName))
+            if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-
-                if (subdomainsChecked)
+                try
                 {
-                    try
+                    var emptyVm = new EmptyViewModel();
+                    DialogHost.Show(emptyVm);
+                
+                    var unavailableDomains = await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
+                    if (unavailableDomains.Count > 0)
                     {
-                        var emptyVm = new EmptyViewModel();
-                        DialogHost.Show(emptyVm);
-                    
-                        await Task.Run(() => adDomainService.SearchAllDomains(domainName));
-                        await Task.Run(() => siteService.SearchAllSites());
-                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                        await Task.Run(() => computerService.GetComputers());
+                        Messenger.Default.Send(new SnackbarMessage("The following subdomains could not be contacted: " + string.Join(", ", unavailableDomains)));
+                    }
+                    await Task.Run(() => siteService.SearchAllSites());
+                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    await Task.Run(() => computerService.GetComputers());
 
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-                        CanAnalyse = true;
-                    }
-                    catch (Exception e)
-                    {
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage(e.Message));
-                    }
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+                    CanAnalyse = true;
                 }
-                else
+                catch (Exception e)
                 {
-                    try
-                    {
-                        var emptyVm = new EmptyViewModel();
-                        DialogHost.Show(emptyVm);
-
-                        await Task.Run(() => adDomainService.AddThisDomain(domainName));
-                        await Task.Run(() => siteService.SearchAllSites());
-                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                        await Task.Run(() => computerService.GetComputers());
-
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-                        CanAnalyse = true;
-                    }
-                    catch (Exception e)
-                    {
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage(e.Message));
-                    }
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    Messenger.Default.Send(new SnackbarMessage(e.Message));
                 }
             }
             else
