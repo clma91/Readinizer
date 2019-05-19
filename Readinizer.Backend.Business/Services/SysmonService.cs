@@ -32,7 +32,7 @@ namespace Readinizer.Backend.Business.Services
             {
                 foreach (var computer in OU.Computers)
                 {
-                    var domain = allDomains.Find(x => x.ADDomainId == OU.ADDomainRefId);
+                    var domain = OU.ADDomain;
 
                     
                     if (pingService.isPingable(computer.IpAddress))
