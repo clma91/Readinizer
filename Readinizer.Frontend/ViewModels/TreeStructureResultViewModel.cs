@@ -120,7 +120,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private void Discover()
         {
-            Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
+            Messenger.Default.Send(new ChangeView(typeof(SysmonResultViewModel)));
         }
 
     }
