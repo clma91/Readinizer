@@ -14,14 +14,14 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d"
-             MinHeight="450" MinWidth="800"
+             MinHeight="700" MinWidth="1080"
              Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:RSoPResultViewModel, IsDesignTimeCreatable=True}">
     <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30"/>
-                <RowDefinition Height="30"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="40"/>
                 <RowDefinition Height="2*"/>
                 <RowDefinition Height="30"/>
                 <RowDefinition Height="1*"/>
@@ -36,7 +36,7 @@
                     <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
                 </Label>
             </StackPanel>
-            <Grid  Grid.Row="2" MinHeight="175" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="250">
+            <Grid  Grid.Row="2" MinHeight="200" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="400">
                 <DataGrid ItemsSource="{Binding AuditSettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False">
                     <DataGrid.Columns>
                         <DataGridTemplateColumn Header="Status" IsReadOnly="True">

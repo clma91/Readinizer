@@ -17,12 +17,12 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        MinHeight="600" MinWidth="800"
+        MinHeight="700" MinWidth="1080"
         Width="Auto" Height="Auto"
         d:DataContext="{d:DesignInstance viewModels:DomainResultViewModel, IsDesignTimeCreatable=True}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
@@ -100,6 +100,7 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="1*"/>
+                    <RowDefinition Height="70"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Center">
                     <Label>
@@ -130,8 +131,8 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </StackPanel>
-                <Button Grid.Row="4" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
             </Grid>
         </StackPanel>
+        <Button Grid.Row="4" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
     </Grid>
 </UserControl>
