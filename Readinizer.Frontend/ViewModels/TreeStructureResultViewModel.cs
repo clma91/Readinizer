@@ -55,11 +55,7 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref selecteDomain, value);
         }
 
-        public string WithSysmon
-        {
-            get;
-            set;
-        }
+        public string WithSysmon { get; set; }
 
         private ICommand sysmonCommand;
         public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(() => Sysmon()));

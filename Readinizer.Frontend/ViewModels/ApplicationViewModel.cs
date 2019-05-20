@@ -54,7 +54,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IExportService exportService;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -65,7 +65,7 @@ namespace Readinizer.Frontend.ViewModels
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
                                     ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
                                     DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
-                                    OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel
+                                    OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel,
                                     IDialogService dialogService, IExportService exportService)
         {
             this.startUpViewModel = startUpViewModel;
