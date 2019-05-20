@@ -12,10 +12,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Gpo
     {
+        [JsonIgnore]
         public int GpoId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         [JsonProperty("Name")]

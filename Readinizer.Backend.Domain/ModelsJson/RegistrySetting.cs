@@ -11,10 +11,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class RegistrySetting
     {
+        [JsonIgnore]
         public int RegistrySettingId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }

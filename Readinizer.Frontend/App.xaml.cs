@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using MaterialDesignThemes.Wpf;
+using MvvmDialogs;
 using Readinizer.Backend.Business.Factory;
 using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
@@ -50,11 +51,13 @@ namespace Readinizer.Frontend
             container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
             container.RegisterType<IRSoPPotService, RSoPPotService>();
+            container.RegisterType<IExportService, ExportService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            container.RegisterSingleton<IDialogService, DialogService>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 

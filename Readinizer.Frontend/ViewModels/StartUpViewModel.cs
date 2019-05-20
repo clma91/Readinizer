@@ -34,8 +34,6 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISysmonService sysmonService;
         private readonly IRSoPPotService rSoPPotService;
 
-        private ICommand discoverCommand;
-        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover(), () => this.CanDiscover));
         private ICommand analyseCommand;
         public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse(), () => this.CanAnalyse));
 
@@ -80,7 +78,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public StartUpViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -102,37 +100,6 @@ namespace Readinizer.Frontend.ViewModels
             CanAnalyse = true;
         }
  
-        private async void Discover()
-        {
-            if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
-            {
-                try
-                {
-                    var emptyVm = new EmptyViewModel();
-                    DialogHost.Show(emptyVm);
-                
-                    await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
-                    await Task.Run(() => siteService.SearchAllSites());
-                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                    await Task.Run(() => computerService.GetComputers());
-
-                    DialogHost.CloseDialogCommand.Execute(null, null);
-                    Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-                    CanAnalyse = true;
-                }
-                catch (Exception e)
-                {
-                    DialogHost.CloseDialogCommand.Execute(null, null);
-                    Messenger.Default.Send(new SnackbarMessage(e.Message));
-                }
-            }
-            else
-            {
-                Messenger.Default.Send(
-                    new SnackbarMessage("Could not find specified domain in this forest"));
-            }
-        }
-
         private async void Analyse()
         {
             if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))

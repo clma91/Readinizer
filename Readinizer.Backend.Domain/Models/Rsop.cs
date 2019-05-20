@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Domain.Models
 {
     public class Rsop
     {
+        [JsonIgnore]
         public int RsopId { get; set; }
 
         public virtual ADDomain Domain { get; set; }
@@ -17,8 +19,10 @@ namespace Readinizer.Backend.Domain.Models
 
         public virtual Site Site { get; set; }
 
+        [JsonIgnore]
         public int? RsopPotRefId { get; set; }
 
+        [JsonIgnore]
         public virtual RsopPot RsopPot { get; set; }
 
         public virtual ICollection<AuditSetting> AuditSettings { get; set; }

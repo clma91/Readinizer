@@ -47,7 +47,7 @@ namespace Readinizer.Backend.Business.Services
                     {
                         if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
                         {
-                            computer.PingSuccessfull = true;
+                            computer.PingSuccessful = true;
                             unitOfWork.ComputerRepository.Update(computer);
 
                             OU.HasReachableComputer = true;
@@ -87,7 +87,7 @@ namespace Readinizer.Backend.Business.Services
                         {
                             if (!collectedSiteIds.Contains(computer.SiteRefId))
                             {
-                                computer.PingSuccessfull = true;
+                                computer.PingSuccessful = true;
                                 unitOfWork.ComputerRepository.Update(computer);
 
                                 OU.HasReachableComputer = true;

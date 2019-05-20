@@ -33,9 +33,9 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="6*"/>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="2*"/>
+            <RowDefinition Height="3*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="1*"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
 
@@ -52,26 +52,29 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition/>
-                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
                                 <Expander Grid.Column="0" VerticalAlignment="Center" IsHitTestVisible="{Binding IsRSoP}">
                                     <Expander.Header>
                                         <StackPanel Orientation="Horizontal">
                                             <Label Content="{Binding Description}" FontWeight="Bold"></Label>
-                                            <!--<Label Content="{Binding Name}" Margin="10 0 0 0"></Label>-->
+                                            <Label Content="{Binding Name}" Margin="10 0 0 0"></Label>
                                         </StackPanel>
                                     </Expander.Header>
 
                                     <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="30 0 0 0" AllowDrop="False">
                                         <TextBlock Margin="0 0 0 5" Text="Organisational Units" />
-                                        <ListBox x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganisationalUnits}">
-                                            <ListBox.ItemTemplate>
+                                        <ListView x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganisationalUnits}">
+                                            <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <TextBlock Name="TextBoxList" Text="{Binding Name}"/>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Text="- "/>
+                                                        <TextBlock Text="{Binding Name}"/>
+                                                    </StackPanel>
                                                 </DataTemplate>
-                                            </ListBox.ItemTemplate>
-                                        </ListBox>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
                                     </StackPanel>
                                 </Expander>
 
@@ -102,25 +105,31 @@
                     <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
                 </Label>
 
-                <ListView Grid.Row="1" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}">
+                <ListView Grid.Row="1" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Margin="20 0 0 0">
-                                <StackPanel Orientation="Horizontal">
+                            <Grid Margin="20 0 0 0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Row="0" Orientation="Horizontal">
                                     <TextBlock Text="Domain: "/>
                                     <TextBlock Margin="5 0 0 0" Text="{Binding ADDomain.Name}"/>
                                 </StackPanel>
-                                <ListView ItemsSource="{Binding}">
+                                <ListView Grid.Row="1" ItemsSource="{Binding}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                                                <TextBlock Text="Organisational Unit: "/>
+                                                <TextBlock Text="- Organisational Unit: "/>
                                                 <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
-                            </StackPanel>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -151,7 +160,6 @@
             </Grid>
         </Border>
 
-        <Button x:Name="Discover" Grid.Row="6" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Column="3">Save</Button>
-
+        <Button x:Name="Discover" Grid.Row="4" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Column="3">Save</Button>
     </Grid>
 </UserControl>

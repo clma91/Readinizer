@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -12,7 +10,6 @@ using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Frontend.Converters;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 
@@ -63,7 +60,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private ICommand detailCommand;
         public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
-
+        
         private void ShowDetail(Dictionary<string, int> param)
         {
             if (param.First().Key.Equals("Domain"))
@@ -96,7 +93,11 @@ namespace Readinizer.Frontend.ViewModels
         {
             await SetOusWithoutRSoPs();
             await SetUnavailableDomains();
-            TreeNodes = await treeNodesFactory.CreateTree();
+            if (TreeNodes.Count <= 0)
+            {
+                TreeNodes = await treeNodesFactory.CreateTree();
+            }
+            Messenger.Default.Send(new EnableExport());
         }
 
         private async Task SetUnavailableDomains()

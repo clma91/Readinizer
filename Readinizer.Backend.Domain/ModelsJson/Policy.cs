@@ -11,10 +11,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Policy 
     {
+        [JsonIgnore]
         public int PolicyId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }
@@ -51,7 +54,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
                     return CurrentState == otherPolicy.CurrentState && ModuleNames.ValueElementData == otherPolicy.ModuleNames.ValueElementData;
                 }
 
-                return CurrentState.Equals(otherPolicy.CurrentState);
+                return TargetState.Equals(otherPolicy.CurrentState);
             }
 
             return base.Equals(obj);

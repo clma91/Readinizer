@@ -37,7 +37,7 @@ namespace Readinizer.Backend.Business.Services
                     
                     if (pingService.isPingable(computer.IpAddress))
                     {
-                        computer.PingSuccessfull = true;
+                        computer.PingSuccessful = true;
                         computer.isSysmonRunning =  isSysmonRunning(
                             serviceName, System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(),
                             computer.ComputerName, domain.Name);

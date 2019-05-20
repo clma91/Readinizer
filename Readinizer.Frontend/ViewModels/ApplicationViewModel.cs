@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MaterialDesignThemes.Wpf;
+using MvvmDialogs;
+using MvvmDialogs.FrameworkDialogs.SaveFile;
+using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
@@ -19,15 +19,26 @@ namespace Readinizer.Frontend.ViewModels
     public class ApplicationViewModel : ViewModelBase, IApplicationViewModel
     {
         private ICommand closeCommand;
-        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => this.OnClose(), () => true));
+        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => OnClose()));
         private ICommand githubCommand;
-        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => this.OnGithub(), () => true));
+        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => OnGithub()));
+        private ICommand exportRSoPPotsCommand;
+        public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
+        private ICommand exportRSoPsCommand;
+        public ICommand ExportRSoPsCommand => exportRSoPsCommand ?? (exportRSoPsCommand = new RelayCommand(() => Export(typeof(Rsop))));
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
         {
-            get { return currentViewModel; }
-            set { Set(ref currentViewModel, value); }
+            get => currentViewModel;
+            set => Set(ref currentViewModel, value);
+        }
+
+        private bool canExport;
+        public bool CanExport
+        {
+            get => canExport;
+            set => Set(ref canExport, value);
         }
 
         public ISnackbarMessageQueue SnackbarMessageQueue { get; }
@@ -38,9 +49,11 @@ namespace Readinizer.Frontend.ViewModels
         private readonly DomainResultViewModel domainResultViewModel;
         private readonly RSoPResultViewModel rsopResultViewModel;
         private readonly OUResultViewModel ouResultViewModel;
+        private readonly IDialogService dialogService;
+        private readonly IExportService exportService;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -48,9 +61,10 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel)
-
+        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
+                                    ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
+                                    DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
+                                    OUResultViewModel ouResultViewModel, IDialogService dialogService, IExportService exportService)
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
@@ -58,12 +72,15 @@ namespace Readinizer.Frontend.ViewModels
             this.domainResultViewModel = domainResultViewModel;
             this.rsopResultViewModel = rsopResultViewModel;
             this.ouResultViewModel = ouResultViewModel;
+            this.dialogService = dialogService;
+            this.exportService = exportService;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
             ShowStartUpView();
             Messenger.Default.Register<ChangeView>(this, ChangeView);
             Messenger.Default.Register<SnackbarMessage>(this, OnShowMessage);
+            Messenger.Default.Register<EnableExport>(this, EnableExport);
         }
 
         private void ShowStartUpView()
@@ -130,6 +147,12 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
+        private void EnableExport(EnableExport message)
+        {
+            CanExport = message.ExportEnabled;
+            RaisePropertyChanged(nameof(CanExport));
+        }
+
         private void OnShowMessage(SnackbarMessage message)
         {
             SnackbarMessageQueue.Enqueue(message.Message);
@@ -144,5 +167,36 @@ namespace Readinizer.Frontend.ViewModels
         {
             Process.Start("https://github.com/clma91/Readinizer/wiki");
         }
+
+        private async void Export(Type type)
+        {
+            var settings = new SaveFileDialogSettings
+            {
+                Title = "Save all identical audit settings",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Filter = "JSON-file (*.json)|*.json|All Files (*.*)|*.*",
+                CreatePrompt = false,
+                CheckFileExists = false
+            };
+
+            bool? success = dialogService.ShowSaveFileDialog(this, settings);
+            if (success == true)
+            {
+                var exportPath = settings.FileName;
+                if (settings.CheckPathExists)
+                {
+                    var successfullyExported = await exportService.Export(type, exportPath);
+                    if (!successfullyExported)
+                    {
+                        Messenger.Default.Send(new SnackbarMessage($"Something went wrong during saving the file"));
+                    }
+                }
+                else
+                {
+                    Messenger.Default.Send(new SnackbarMessage($"The specified path '{exportPath}' does not exist"));
+                }
+            }
+        }
+
     }
 }
