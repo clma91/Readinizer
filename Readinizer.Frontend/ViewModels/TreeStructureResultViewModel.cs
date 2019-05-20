@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
+using Readinizer.Frontend.Converters;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 
@@ -36,15 +37,25 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref treeNodes, value);
         }
 
-        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<ObservableCollection<OrganisationalUnit>>();
+        private ObservableCollection<ObservableCollection<OrganisationalUnit>> ouWithoutRSoP;
+        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP
+        {
+            get => ouWithoutRSoP ?? (ouWithoutRSoP = new ObservableCollection<ObservableCollection<OrganisationalUnit>>());
+            set => Set(ref ouWithoutRSoP, value);
+        }
 
-        public ObservableCollection<ADDomain> UnavailableDomains { get; set; } = new ObservableCollection<ADDomain>();
+        private ObservableCollection<ADDomain> unavailableDomains;
+        public ObservableCollection<ADDomain> UnavailableDomains
+        {
+            get => unavailableDomains ?? (unavailableDomains = new ObservableCollection<ADDomain>());
+            set => Set(ref unavailableDomains, value);
+        }
 
         private string selecteDomain;
         public string SelectedDomain
         {
             get => selecteDomain;
-            set { Set(ref selecteDomain, value); }
+            set => Set(ref selecteDomain, value);
         }
         
         private ICommand discoverCommand;
@@ -91,6 +102,8 @@ namespace Readinizer.Frontend.ViewModels
         private async Task SetUnavailableDomains()
         {
             var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            UnavailableDomains.Clear();
+
             foreach (var domain in allDomains)
             {
                 if (!domain.IsAvailable)
@@ -98,6 +111,7 @@ namespace Readinizer.Frontend.ViewModels
                     UnavailableDomains.Add(domain);
                 }
             }
+            RaisePropertyChanged(nameof(UnavailableDomains));
         }
 
         private async Task SetOusWithoutRSoPs()
@@ -105,6 +119,7 @@ namespace Readinizer.Frontend.ViewModels
             var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => !x.HasReachableComputer);
             AddOu(ousWithoutRsoP.First());
+            OUsWithoutRSoP.Clear();
 
             foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
             {
@@ -130,7 +145,7 @@ namespace Readinizer.Frontend.ViewModels
             {
                 OUsWithoutRSoP.Add(new ObservableCollection<OrganisationalUnit> { ou });
             }
-
+            RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
 
         private void Discover()

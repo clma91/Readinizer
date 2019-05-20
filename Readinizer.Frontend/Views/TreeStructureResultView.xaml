@@ -16,7 +16,7 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d" 
-             MinHeight="450" MinWidth="800"
+             MinHeight="700" MinWidth="1080"
              Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:TreeStructureResultViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
@@ -34,9 +34,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="6*"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="30"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
@@ -94,49 +92,64 @@
             </TreeView>
         </Border>
 
-        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4">
-            <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
-        </Label>
-        <Grid Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4">
-            <ListView x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Margin="20 0 0 0">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="Domain: " FontSize="15"/>
-                                <TextBlock Margin="5 0 0 0" Text="{Binding ADDomain.Name}"/>
-                            </StackPanel>
-                            <ListView ItemsSource="{Binding}">
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                                            <TextBlock Text="Organisational Unit: " FontSize="15"/>
-                                            <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0">
+                    <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
+                </Label>
 
-        <Label HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10 0 0 0" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4"  Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}"  >
-            <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
-        </Label>
-        <Grid Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4">
-            <ListView ItemsSource="{Binding UnavailableDomains}" >
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                            <TextBlock Margin="5 0 0 0" Text="-"/>
-                            <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
-                        </StackPanel>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </Grid>
+                <ListView Grid.Row="1" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Margin="20 0 0 0">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Domain: "/>
+                                    <TextBlock Margin="5 0 0 0" Text="{Binding ADDomain.Name}"/>
+                                </StackPanel>
+                                <ListView ItemsSource="{Binding}">
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                                                <TextBlock Text="Organisational Unit: "/>
+                                                <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5"
+                Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <Label Grid.Row="0">
+                    <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
+                </Label>
+                <ListView Grid.Row="1" ItemsSource="{Binding UnavailableDomains}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                                <TextBlock Margin="5 0 0 0" Text="-"/>
+                                <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Border>
 
         <Button x:Name="Discover" Grid.Row="6" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Column="3">Save</Button>
 
