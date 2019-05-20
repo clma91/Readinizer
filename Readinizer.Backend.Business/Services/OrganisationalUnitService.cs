@@ -21,41 +21,44 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task GetAllOrganisationalUnits()
         {
-            List<Domain.Models.ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             
-            foreach (Domain.Models.ADDomain domain in allDomains)
+            foreach (ADDomain domain in allDomains)
             {
-                DirectoryEntry entry = new DirectoryEntry("LDAP://" + domain.Name);
-                DirectorySearcher searcher = new DirectorySearcher(entry);
-                searcher.Filter = ("(objectCategory=organizationalUnit)");
-                searcher.SearchScope = SearchScope.OneLevel;
-                var foundOUs = new List<OrganisationalUnit>();
-
-                foreach (SearchResult searchResult in searcher.FindAll())
+                if (domain.IsAvailable)
                 {
-                    OrganisationalUnit foundOU = new OrganisationalUnit();
-                    foundOU.Name = searchResult.Properties["ou"][0].ToString();
-                    foundOU.LdapPath = searchResult.Path;
-                    foundOU.ADDomainRefId = domain.ADDomainId;
-                    foundOU.SubOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
+                    DirectoryEntry entry = new DirectoryEntry("LDAP://" + domain.Name);
+                    DirectorySearcher searcher = new DirectorySearcher(entry);
+                    searcher.Filter = ("(objectCategory=organizationalUnit)");
+                    searcher.SearchScope = SearchScope.OneLevel;
+                    var foundOUs = new List<OrganisationalUnit>();
 
-                    foundOUs.Add(foundOU);
+                    foreach (SearchResult searchResult in searcher.FindAll())
+                    {
+                        OrganisationalUnit foundOU = new OrganisationalUnit();
+                        foundOU.Name = searchResult.Properties["ou"][0].ToString();
+                        foundOU.LdapPath = searchResult.Path;
+                        foundOU.ADDomainRefId = domain.ADDomainId;
+                        foundOU.SubOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
+
+                        foundOUs.Add(foundOU);
+                    }
+
+                    DirectorySearcher defaultContainerSearcher = new DirectorySearcher(entry);
+                    defaultContainerSearcher.Filter = ("(objectCategory=Container)");
+                    defaultContainerSearcher.Filter = ("(CN=Computers)");
+                    foreach (SearchResult defaultContainers in defaultContainerSearcher.FindAll())
+                    {
+                        OrganisationalUnit foundContainer = new OrganisationalUnit();
+                        foundContainer.Name = defaultContainers.Properties["cn"][0].ToString();
+                        foundContainer.LdapPath = defaultContainers.Path;
+                        foundContainer.ADDomainRefId = domain.ADDomainId;
+
+                        foundOUs.Add(foundContainer);
+                    }
+
+                    unitOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
                 }
-
-                DirectorySearcher defaultContainerSearcher = new DirectorySearcher(entry);
-                defaultContainerSearcher.Filter = ("(objectCategory=Container)");
-                defaultContainerSearcher.Filter = ("(CN=Computers)"); 
-                foreach (SearchResult defaultContainers in defaultContainerSearcher.FindAll())
-                {
-                    OrganisationalUnit foundContainer = new OrganisationalUnit();
-                    foundContainer.Name = defaultContainers.Properties["cn"][0].ToString();
-                    foundContainer.LdapPath = defaultContainers.Path;
-                    foundContainer.ADDomainRefId = domain.ADDomainId;
-
-                    foundOUs.Add(foundContainer);
-                }
-
-                unitOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
             }
             await unitOfWork.SaveChangesAsync();
         }

@@ -104,53 +104,26 @@ namespace Readinizer.Frontend.ViewModels
  
         private async void Discover()
         {
-
-            if (domainName != null && adDomainService.IsDomainInForest(domainName))
+            if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-
-                if (subdomainsChecked)
+                try
                 {
-                    try
-                    {
-                        var emptyVm = new EmptyViewModel();
-                        DialogHost.Show(emptyVm);
-                    
-                        await Task.Run(() => adDomainService.SearchAllDomains(domainName));
-                        await Task.Run(() => siteService.SearchAllSites());
-                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                        await Task.Run(() => computerService.GetComputers());
+                    var emptyVm = new EmptyViewModel();
+                    DialogHost.Show(emptyVm);
+                
+                    await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
+                    await Task.Run(() => siteService.SearchAllSites());
+                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    await Task.Run(() => computerService.GetComputers());
 
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-                        CanAnalyse = true;
-                    }
-                    catch (Exception e)
-                    {
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage(e.Message));
-                    }
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
+                    CanAnalyse = true;
                 }
-                else
+                catch (Exception e)
                 {
-                    try
-                    {
-                        var emptyVm = new EmptyViewModel();
-                        DialogHost.Show(emptyVm);
-
-                        await Task.Run(() => adDomainService.AddThisDomain(domainName));
-                        await Task.Run(() => siteService.SearchAllSites());
-                        await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
-                        await Task.Run(() => computerService.GetComputers());
-
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage("Collected all domains"));
-                        CanAnalyse = true;
-                    }
-                    catch (Exception e)
-                    {
-                        DialogHost.CloseDialogCommand.Execute(null, null);
-                        Messenger.Default.Send(new SnackbarMessage(e.Message));
-                    }
+                    DialogHost.CloseDialogCommand.Execute(null, null);
+                    Messenger.Default.Send(new SnackbarMessage(e.Message));
                 }
             }
             else
@@ -162,18 +135,27 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-
-            if (sysmonChecked)
+            if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-                if (sysmonName == null || sysmonName == "")
-                {
-                    sysmonName = "Sysmon";
-                }
-
                 try
                 {
                     ShowSpinnerView();
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                    await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
+                    await Task.Run(() => siteService.SearchAllSites());
+                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    await Task.Run(() => computerService.GetComputers());
+                    if (sysmonChecked)
+                    {
+                        if (string.IsNullOrEmpty(sysmonName))
+                        {
+                            sysmonName = "Sysmon";
+                        }
+                        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                    }
+                    else
+                    {
+                        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                    }
                     await Task.Run(() => analysisService.Analyse());
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
                     ShowTreeStructureResult();
@@ -186,21 +168,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else
             {
-                try
-                {
-                    ShowSpinnerView();
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-                    await Task.Run(() => analysisService.Analyse());
-                    await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                    ShowTreeStructureResult();
-                }
-                catch (Exception e)
-                {
-                    ShowStartView();
-                    Messenger.Default.Send(new SnackbarMessage(e.Message));
-                }
-
-
+                Messenger.Default.Send(new SnackbarMessage("Could not find specified domain in this forest"));
             }
         }
 

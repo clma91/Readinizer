@@ -12,6 +12,7 @@ using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
+using Readinizer.Frontend.Converters;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 
@@ -36,20 +37,32 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref treeNodes, value);
         }
 
+        private ObservableCollection<ObservableCollection<OrganisationalUnit>> ouWithoutRSoP;
+        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP
+        {
+            get => ouWithoutRSoP ?? (ouWithoutRSoP = new ObservableCollection<ObservableCollection<OrganisationalUnit>>());
+            set => Set(ref ouWithoutRSoP, value);
+        }
+
+        private ObservableCollection<ADDomain> unavailableDomains;
+        public ObservableCollection<ADDomain> UnavailableDomains
+        {
+            get => unavailableDomains ?? (unavailableDomains = new ObservableCollection<ADDomain>());
+            set => Set(ref unavailableDomains, value);
+        }
+
         private string selecteDomain;
         public string SelectedDomain
         {
             get => selecteDomain;
-            set { Set(ref selecteDomain, value); }
+            set => Set(ref selecteDomain, value);
         }
-
-        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP { get; set; } = new ObservableCollection<ObservableCollection<OrganisationalUnit>>();
-
+        
         private ICommand discoverCommand;
-        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
+        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => Discover()));
 
         private ICommand detailCommand;
-        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => this.ShowDetail(param)));
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
 
         private void ShowDetail(Dictionary<string, int> param)
         {
@@ -82,7 +95,23 @@ namespace Readinizer.Frontend.ViewModels
         public async void BuildTree()
         {
             await SetOusWithoutRSoPs();
+            await SetUnavailableDomains();
             TreeNodes = await treeNodesFactory.CreateTree();
+        }
+
+        private async Task SetUnavailableDomains()
+        {
+            var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            UnavailableDomains.Clear();
+
+            foreach (var domain in allDomains)
+            {
+                if (!domain.IsAvailable)
+                {
+                    UnavailableDomains.Add(domain);
+                }
+            }
+            RaisePropertyChanged(nameof(UnavailableDomains));
         }
 
         private async Task SetOusWithoutRSoPs()
@@ -90,6 +119,7 @@ namespace Readinizer.Frontend.ViewModels
             var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => !x.HasReachableComputer);
             AddOu(ousWithoutRsoP.First());
+            OUsWithoutRSoP.Clear();
 
             foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
             {
@@ -115,7 +145,7 @@ namespace Readinizer.Frontend.ViewModels
             {
                 OUsWithoutRSoP.Add(new ObservableCollection<OrganisationalUnit> { ou });
             }
-
+            RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
 
         private void Discover()
