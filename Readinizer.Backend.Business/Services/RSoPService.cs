@@ -12,7 +12,7 @@ using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
 using Microsoft.GroupPolicy;
-
+using System.IO;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -32,6 +32,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task getRSoPOfReachableComputers()
         {
+            clearOldRsops();
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
@@ -68,6 +69,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName)
         {
+            clearOldRsops();
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
@@ -128,6 +130,17 @@ namespace Readinizer.Backend.Business.Services
                 Console.WriteLine(e);
                 throw;
             }
-        }   
+        }
+
+        public void clearOldRsops()
+        {
+            string[] filePaths = Directory.GetFiles(ConfigurationManager.AppSettings["ReceivedRSoP"]);
+            foreach (string filePath in filePaths)
+            {
+
+                File.Delete(filePath);
+            }
+                
+        }
     }
 }

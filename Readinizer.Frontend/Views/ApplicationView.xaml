@@ -40,6 +40,9 @@
         <DataTemplate DataType="{x:Type viewModels:OUResultViewModel}">
             <views:OUResultView></views:OUResultView>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SysmonResultViewModel}">
+            <views:SysmonResultView></views:SysmonResultView>
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel>

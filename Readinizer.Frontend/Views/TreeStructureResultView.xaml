@@ -160,6 +160,7 @@
             </Grid>
         </Border>
 
-        <Button x:Name="Discover" Grid.Row="4" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Column="3">Save</Button>
+        <Button x:Name="Discover" Grid.Row="6" Width="100" Height="50" Command="{Binding DiscoverCommand}" Grid.Column="3">Save</Button>
+
     </Grid>
 </UserControl>

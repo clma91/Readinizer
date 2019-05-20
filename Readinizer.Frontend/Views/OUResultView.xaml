@@ -14,22 +14,28 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d"
-             MinHeight="450" MinWidth="800"
+             MinHeight="700" MinWidth="1080"
              Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:OUResultViewModel, IsDesignTimeCreatable=True}">
 
-    <StackPanel>
-        <StackPanel Height="50" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Height="30" Width="800" Grid.Row="0">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="24"></TextBlock>
+                <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="20"></TextBlock>
             </Label>
         </StackPanel>
-        <StackPanel Height="50" Width="800">
+        <StackPanel Height="30" Width="800" Grid.Row="1">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
                 <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
             </Label>
         </StackPanel>
-        <Grid MinHeight="265" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="500">
+        <Grid Grid.Row="2" MinHeight="265" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="500">
             <DataGrid ItemsSource="{Binding AuditSettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="Status" IsReadOnly="True">
@@ -95,8 +101,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <StackPanel Height="70" VerticalAlignment="Bottom">
-            <Button x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
-        </StackPanel>
-    </StackPanel>
+        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
+        </Grid>
 </UserControl>

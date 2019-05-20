@@ -49,6 +49,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly DomainResultViewModel domainResultViewModel;
         private readonly RSoPResultViewModel rsopResultViewModel;
         private readonly OUResultViewModel ouResultViewModel;
+        private readonly SysmonResultViewModel sysmonResultViewModel;
         private readonly IDialogService dialogService;
         private readonly IExportService exportService;
 
@@ -64,7 +65,8 @@ namespace Readinizer.Frontend.ViewModels
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
                                     ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
                                     DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
-                                    OUResultViewModel ouResultViewModel, IDialogService dialogService, IExportService exportService)
+                                    OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel
+                                    IDialogService dialogService, IExportService exportService)
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
@@ -72,6 +74,7 @@ namespace Readinizer.Frontend.ViewModels
             this.domainResultViewModel = domainResultViewModel;
             this.rsopResultViewModel = rsopResultViewModel;
             this.ouResultViewModel = ouResultViewModel;
+            this.sysmonResultViewModel = sysmonResultViewModel;
             this.dialogService = dialogService;
             this.exportService = exportService;
 
@@ -88,10 +91,12 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = startUpViewModel;
         }
 
-        private void ShowTreeStructureResultView()
+        private void ShowTreeStructureResultView(string visability)
         {
             CurrentViewModel = treeStructureResultViewModel;
+            treeStructureResultViewModel.WithSysmon = visability;
             treeStructureResultViewModel.BuildTree();
+            
         }
 
         private void ShowSpinnerView()
@@ -118,6 +123,13 @@ namespace Readinizer.Frontend.ViewModels
             ouResultViewModel.RefId = refId;
         }
 
+        private void ShowSysmonResultView()
+        {
+            CurrentViewModel = sysmonResultViewModel;
+            sysmonResultViewModel.loadComputers();
+
+        }
+
         private void ChangeView(ChangeView message)
         {
             if (message.ViewModelType == typeof(StartUpViewModel))
@@ -126,7 +138,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
-                ShowTreeStructureResultView();
+                ShowTreeStructureResultView(message.Visability);
             }
             else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
@@ -144,6 +156,10 @@ namespace Readinizer.Frontend.ViewModels
             else if (message.ViewModelType == typeof(OUResultViewModel))
             {
                 ShowOuResultView(message.RefId);
+            }
+            else if (message.ViewModelType == typeof(SysmonResultViewModel))
+            {
+                ShowSysmonResultView();
             }
         }
 

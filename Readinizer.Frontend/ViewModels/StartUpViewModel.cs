@@ -104,6 +104,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
+                string sysmonVisability = "Hidden";
                 try
                 {
                     ShowSpinnerView();
@@ -118,14 +119,16 @@ namespace Readinizer.Frontend.ViewModels
                             sysmonName = "Sysmon";
                         }
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                        sysmonVisability = "Visible";
                     }
                     else
                     {
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                     }
+
                     await Task.Run(() => analysisService.Analyse());
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                    ShowTreeStructureResult();
+                    ShowTreeStructureResult(sysmonVisability);
                 }
                 catch (Exception e)
                 {
@@ -139,9 +142,9 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        private void ShowTreeStructureResult()
+        private void ShowTreeStructureResult(string visability)
         {
-            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
+            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel), visability));
         }
 
         private void ShowSpinnerView()
