@@ -57,9 +57,15 @@ namespace Readinizer.Frontend.ViewModels
             get => selecteDomain;
             set => Set(ref selecteDomain, value);
         }
-        
-        private ICommand discoverCommand;
-        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => Discover()));
+
+        public string WithSysmon
+        {
+            get;
+            set;
+        }
+
+        private ICommand sysmonCommand;
+        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(() => Sysmon()));
 
         private ICommand detailCommand;
         public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
@@ -148,7 +154,7 @@ namespace Readinizer.Frontend.ViewModels
             RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
 
-        private void Discover()
+        private void Sysmon()
         {
             Messenger.Default.Send(new ChangeView(typeof(SysmonResultViewModel)));
         }

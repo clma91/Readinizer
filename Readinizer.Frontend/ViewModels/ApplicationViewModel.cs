@@ -73,10 +73,12 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = startUpViewModel;
         }
 
-        private void ShowTreeStructureResultView()
+        private void ShowTreeStructureResultView(string visability)
         {
             CurrentViewModel = treeStructureResultViewModel;
+            treeStructureResultViewModel.WithSysmon = visability;
             treeStructureResultViewModel.BuildTree();
+            
         }
 
         private void ShowSpinnerView()
@@ -118,7 +120,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
-                ShowTreeStructureResultView();
+                ShowTreeStructureResultView(message.Visability);
             }
             else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
