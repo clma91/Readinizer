@@ -21,7 +21,7 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<List<string>> SearchDomains(string domainName, bool subdomainsChecked)
+        public async Task SearchDomains(string domainName, bool subdomainsChecked)
         {
             var domains = new List<AD.Domain>();
             var treeDomainsWithChildren = new List<AD.Domain>();
@@ -81,8 +81,6 @@ namespace Readinizer.Backend.Business.Services
             unitOfWork.ADDomainRepository.AddRange(modelsUnavailable);
 
             await unitOfWork.SaveChangesAsync();
-
-            return unavailableDomains;
         }
 
         private static void GetTreeDomains(AD.Domain startDomain, List<AD.Domain> treeDomainsWithChildren, List<string> unavailableDomains)
@@ -121,8 +119,8 @@ namespace Readinizer.Backend.Business.Services
             {
                 try
                 {
-                    var subdomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, root.Children[i].Name));
-                    AddAllChildDomains(subdomain, domains, unavailableDomains);
+                    var subDomain = AD.Domain.GetDomain(new DirectoryContext(DirectoryContextType.Domain, root.Children[i].Name));
+                    AddAllChildDomains(subDomain, domains, unavailableDomains);
                 }
                 catch
                 {
@@ -151,10 +149,8 @@ namespace Readinizer.Backend.Business.Services
             {
                 root = allModels.FirstOrDefault();
             }
-            if (root != null)
-            {
-                root.SubADDomains.AddRange(treeModels);
-            }
+
+            root?.SubADDomains.AddRange(treeModels);
 
             return allModels;
         }

@@ -111,11 +111,7 @@ namespace Readinizer.Frontend.ViewModels
                     var emptyVm = new EmptyViewModel();
                     DialogHost.Show(emptyVm);
                 
-                    var unavailableDomains = await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
-                    if (unavailableDomains.Count > 0)
-                    {
-                        Messenger.Default.Send(new SnackbarMessage("The following subdomains could not be contacted: " + string.Join(", ", unavailableDomains)));
-                    }
+                    await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
                     await Task.Run(() => siteService.SearchAllSites());
                     await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
                     await Task.Run(() => computerService.GetComputers());
@@ -139,18 +135,27 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void Analyse()
         {
-
-            if (sysmonChecked)
+            if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-                if (sysmonName == null || sysmonName == "")
-                {
-                    sysmonName = "Sysmon";
-                }
-
                 try
                 {
                     ShowSpinnerView();
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                    await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
+                    await Task.Run(() => siteService.SearchAllSites());
+                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    await Task.Run(() => computerService.GetComputers());
+                    if (sysmonChecked)
+                    {
+                        if (string.IsNullOrEmpty(sysmonName))
+                        {
+                            sysmonName = "Sysmon";
+                        }
+                        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                    }
+                    else
+                    {
+                        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                    }
                     await Task.Run(() => analysisService.Analyse());
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
                     ShowTreeStructureResult();
@@ -163,21 +168,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else
             {
-                try
-                {
-                    ShowSpinnerView();
-                    await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
-                    await Task.Run(() => analysisService.Analyse());
-                    await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                    ShowTreeStructureResult();
-                }
-                catch (Exception e)
-                {
-                    ShowStartView();
-                    Messenger.Default.Send(new SnackbarMessage(e.Message));
-                }
-
-
+                Messenger.Default.Send(new SnackbarMessage("Could not find specified domain in this forest"));
             }
         }
 

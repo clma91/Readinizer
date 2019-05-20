@@ -59,10 +59,10 @@ namespace Readinizer.Frontend.ViewModels
         }
         
         private ICommand discoverCommand;
-        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => this.Discover()));
+        public ICommand DiscoverCommand => discoverCommand ?? (discoverCommand = new RelayCommand(() => Discover()));
 
         private ICommand detailCommand;
-        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => this.ShowDetail(param)));
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
 
         private void ShowDetail(Dictionary<string, int> param)
         {
