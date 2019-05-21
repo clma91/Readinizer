@@ -13,9 +13,15 @@ namespace Readinizer.Backend.Domain.Models
         [JsonIgnore]
         public int RsopId { get; set; }
 
+        public int? DomainRefId { get; set; }
+
         public virtual ADDomain Domain { get; set; }
 
+        public int? OURefId { get; set; }
+
         public virtual OrganisationalUnit OrganisationalUnit { get; set; }
+
+        public int? SiteRefId { get; set; }
 
         public virtual Site Site { get; set; }
 

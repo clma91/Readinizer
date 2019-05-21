@@ -73,7 +73,7 @@ namespace Readinizer.Backend.Business.Services
                 rsopPots.Add(new RsopPot
                 {
                     Name = "",
-                    Domain = rsop.Domain,
+                    DomainRefId = rsop.Domain.ADDomainId,
                     Rsops = new List<Rsop> { rsop }
                 });
             }

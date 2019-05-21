@@ -46,9 +46,9 @@ namespace Readinizer.Frontend.ViewModels
 
         public string Domainname { get => Domain.Name; }
 
-        private List<string> goodList { get; set; }
+        private List<RsopPot> goodList { get; set; }
 
-        private List<string> badList { get; set; }
+        private List<RsopPot> badList { get; set; }
 
         public List<RsopPot> RsopPots { get; set; }
 
@@ -61,18 +61,18 @@ namespace Readinizer.Frontend.ViewModels
 
         private void fillLists()
         {
-            List<string> bad = new List<string>();
-            List<string> good = new List<string>();
+            List<RsopPot> bad = new List<RsopPot>();
+            List<RsopPot> good = new List<RsopPot>();
             foreach (var pot in RsopPots)
             {
                 if (pot.Rsops.FirstOrDefault().RsopPercentage > 99)
                 {
-                    good.Add(pot.Name);
+                    good.Add(pot);
                     
                 }
                 else
                 {
-                    bad.Add(pot.Name);
+                    bad.Add(pot);
                 }
             }
 
@@ -99,26 +99,26 @@ namespace Readinizer.Frontend.ViewModels
 
         }
 
-        public List<string> GoodList
+        public List<RsopPot> GoodList
         {
             get => goodList;
         }
 
-        public List<string> BadList
+        public List<RsopPot> BadList
         {
             get => badList;
         }
 
-        private string pot;
-        public string Pot
+        private string potName;
+        public string PotName
         {
-            get { return pot; }
+            get { return potName; }
             set
             {
-                pot = value;
-                int rsopPotID = RsopPots.Find(x => x.Name.Equals(pot)).RsopPotId;
+                potName = value;
+                int rsopPotID = RsopPots.Find(x => x.Name.Equals(potName)).RsopPotId;
                 ShowPotView(rsopPotID);
-                pot = null;
+                potName = null;
             }
         }
 

@@ -55,9 +55,9 @@ namespace Readinizer.Backend.Business.Services
                 var organisationalUnit = unitOfWork.OrganisationalUnitRepository.GetByID(organisationalUnitRefId);
                 var rsop = new Rsop
                 {
-                    Domain = organisationalUnit.ADDomain,
-                    OrganisationalUnit = organisationalUnit,
-                    Site = unitOfWork.SiteRepository.GetByID(siteRefId),
+                    DomainRefId = organisationalUnit.ADDomain.ADDomainId,
+                    OURefId = organisationalUnit.OrganisationalUnitId,
+                    SiteRefId = unitOfWork.SiteRepository.GetByID(siteRefId).SiteId,
                     AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
                     Policies = policies.OrderBy(x => x.Name).ToList(),
                     RegistrySettings = registrySettings.OrderBy(x => x.Name).ToList(),

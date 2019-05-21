@@ -60,12 +60,12 @@ namespace Readinizer.Frontend.ViewModels
             {
                 if (computer.isSysmonRunning != null && computer.isSysmonRunning.Value)
                 {
-                    good.Add(computer.ComputerName);
+                    good.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
                     
                 }
                 else
                 {
-                    bad.Add(computer.ComputerName);
+                    bad.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
                 }
             }
 
