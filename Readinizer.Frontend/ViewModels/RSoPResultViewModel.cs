@@ -28,7 +28,7 @@ namespace Readinizer.Frontend.ViewModels
         private ICommand backCommand;
         public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
 
-        private RsopPot rsopPot { get => unitOfWork.RSoPPotRepository.GetByID(RefId); }
+        private RsopPot rsopPot { get => unitOfWork.RsopPotRepository.GetByID(RefId); }
 
         public string GISS{ get => rsopPot.Name; }
 
@@ -169,7 +169,7 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> loadOUs()
         {
             List<string> ous = new List<string>();
-            var rsopPot = unitOfWork.RSoPPotRepository.GetByID(RefId);
+            var rsopPot = unitOfWork.RsopPotRepository.GetByID(RefId);
             var rsops = rsopPot.Rsops;
             foreach (var rsop in rsops)
             {
@@ -197,7 +197,7 @@ namespace Readinizer.Frontend.ViewModels
             set
             {
                 rsop = value;
-                var rsops = unitOfWork.RSoPPotRepository.GetByID(RefId).Rsops;
+                var rsops = unitOfWork.RsopPotRepository.GetByID(RefId).Rsops;
                 List<Rsop> rsopList = rsops.ToList();
                 int rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
                 ShowOUView(rsopID);

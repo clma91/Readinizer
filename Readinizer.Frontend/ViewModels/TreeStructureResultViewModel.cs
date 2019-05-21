@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using MvvmDialogs;
+using MvvmDialogs.FrameworkDialogs.OpenFile;
+using MvvmDialogs.FrameworkDialogs.SaveFile;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
@@ -19,6 +23,9 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ITreeNodesFactory treeNodesFactory;
+        private readonly IDialogService dialogService;
+        private readonly IAnalysisService analysisService;
+        private readonly IRSoPPotService rSoPPotService;
 
         private ADDomain rootDomain;
         public ADDomain RootDomain
@@ -60,6 +67,9 @@ namespace Readinizer.Frontend.ViewModels
         private ICommand sysmonCommand;
         public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(() => Sysmon()));
 
+        private ICommand importRSoPsCommand;
+        public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(() => ImportRSoPs()));
+        
         private ICommand detailCommand;
         public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
         
@@ -84,15 +94,20 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public TreeStructureResultViewModel(ITreeNodesFactory treeNodesFactory, IUnitOfWork unitOfWork)
+        public TreeStructureResultViewModel(ITreeNodesFactory treeNodesFactory, IUnitOfWork unitOfWork, IDialogService dialogService, 
+                                            IAnalysisService analysisService, IRSoPPotService rSoPPotService)
         {
             this.treeNodesFactory = treeNodesFactory;
             this.unitOfWork = unitOfWork;
+            this.dialogService = dialogService;
+            this.analysisService = analysisService;
+            this.rSoPPotService = rSoPPotService;
             TreeNodes = new ObservableCollection<TreeNode>();
         }
 
         public async void BuildTree()
         {
+            // TODO: doubles if coming back from other view?
             await SetOusWithoutRSoPs();
             await SetUnavailableDomains();
             if (TreeNodes.Count <= 0)
@@ -156,5 +171,36 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeView(typeof(SysmonResultViewModel)));
         }
 
+        private async void ImportRSoPs()
+        {
+            var settings = new OpenFileDialogSettings
+            {
+                Title = "Import RSoPs of unanalysed Organisational Units",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Filter = "XML-file (*.xml)|*.xml|All Files (*.*)|*.*",
+                Multiselect = true
+            };
+
+            bool? success = dialogService.ShowOpenFileDialog(this, settings);
+            if (success == true)
+            {
+                var importPath = settings.FileName;
+                if (settings.CheckPathExists)
+                {
+                    importPath = Path.GetDirectoryName(importPath);
+                    var newRsops = await Task.Run(() => analysisService.Analyse(importPath));
+                    if (newRsops != null)
+                    {
+                        await Task.Run(() => rSoPPotService.UpdateRsopPots(newRsops));
+                        TreeNodes.Clear();
+                        BuildTree();
+                    }
+                }
+                else
+                {
+                    Messenger.Default.Send(new SnackbarMessage($"The specified path '{importPath}' does not exist"));
+                }
+            }
+        }
     }
 }

@@ -46,7 +46,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
                     return false;
                 }
 
-                return SubcategoryName.Equals(auditSetting.SubcategoryName) && TargetSettingValue.Equals(auditSetting.CurrentSettingValue);
+                return SubcategoryName.Equals(auditSetting.SubcategoryName) && CurrentSettingValue.Equals(auditSetting.CurrentSettingValue);
             }
 
             return base.Equals(obj);

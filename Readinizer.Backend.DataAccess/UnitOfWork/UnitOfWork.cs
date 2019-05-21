@@ -15,19 +15,21 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         private ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;
         private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
+        private OrganisationalUnitRepository specificOrganisationalUnitRepository;
         private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
-        private GenericRepository<Rsop> rSoPRepository;
-        private GenericRepository<RsopPot> rSoPPotRepository;
+        private SiteRepository specificSiteRepository;
+        private GenericRepository<Rsop> rsopRepository;
+        private GenericRepository<RsopPot> rsopPotRepository;
         private GenericRepository<Gpo> gpoRepository;
 
         public GenericRepository<ADDomain> ADDomainRepository
         {
             get
             {
-                if (this.adDomainRepository == null)
+                if (adDomainRepository == null)
                 {
-                    this.adDomainRepository = new GenericRepository<ADDomain>(context);
+                    adDomainRepository = new GenericRepository<ADDomain>(context);
                 }
 
                 return adDomainRepository;
@@ -38,12 +40,25 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         {
             get
             {
-                if (this.organisationalUnitRepository == null)
+                if (organisationalUnitRepository == null)
                 {
-                    this.organisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
+                    organisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
                 }
 
                 return organisationalUnitRepository;
+            }
+        }
+
+        public OrganisationalUnitRepository SpecificOrganisationalUnitRepository
+        {
+            get
+            {
+                if (specificOrganisationalUnitRepository == null)
+                {
+                    specificOrganisationalUnitRepository = new OrganisationalUnitRepository(context);
+                }
+
+                return specificOrganisationalUnitRepository;
             }
         }
 
@@ -51,9 +66,9 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         {
             get
             {
-                if (this.computerRepository == null)
+                if (computerRepository == null)
                 {
-                    this.computerRepository = new GenericRepository<Computer>(context);
+                    computerRepository = new GenericRepository<Computer>(context);
                 }
 
                 return computerRepository;
@@ -64,38 +79,51 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         {
             get
             {
-                if (this.siteRepository == null)
+                if (siteRepository == null)
                 {
-                    this.siteRepository = new GenericRepository<Site>(context);
+                    siteRepository = new GenericRepository<Site>(context);
                 }
 
                 return siteRepository;
             }
         }
 
-        public GenericRepository<Rsop> RSoPRepository
+        public SiteRepository SpecificSiteRepository
         {
             get
             {
-                if (this.rSoPRepository == null)
+                if (specificSiteRepository == null)
                 {
-                    this.rSoPRepository = new GenericRepository<Rsop>(context);
+                    specificSiteRepository = new SiteRepository(context);
                 }
 
-                return rSoPRepository;
+                return specificSiteRepository;
             }
         }
 
-        public GenericRepository<RsopPot> RSoPPotRepository
+        public GenericRepository<Rsop> RsopRepository
         {
             get
             {
-                if (this.rSoPPotRepository == null)
+                if (rsopRepository == null)
                 {
-                    this.rSoPPotRepository = new GenericRepository<RsopPot>(context);
+                    rsopRepository = new GenericRepository<Rsop>(context);
                 }
 
-                return rSoPPotRepository;
+                return rsopRepository;
+            }
+        }
+
+        public GenericRepository<RsopPot> RsopPotRepository
+        {
+            get
+            {
+                if (rsopPotRepository == null)
+                {
+                    rsopPotRepository = new GenericRepository<RsopPot>(context);
+                }
+
+                return rsopPotRepository;
             }
         }
 
@@ -103,9 +131,9 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
         {
             get
             {
-                if (this.gpoRepository == null)
+                if (gpoRepository == null)
                 {
-                    this.gpoRepository = new GenericRepository<Gpo>(context);
+                    gpoRepository = new GenericRepository<Gpo>(context);
                 }
 
                 return gpoRepository;
@@ -117,11 +145,11 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
             return context.SaveChangesAsync();
         }
 
-        private bool disposed = false;
+        private bool disposed;
 
         public virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!disposed)
             {
                 if (disposing)
                 {
@@ -129,7 +157,7 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
                 }
             }
 
-            this.disposed = true;
+            disposed = true;
         }
 
         public void Dispose()

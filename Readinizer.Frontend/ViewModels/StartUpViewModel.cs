@@ -126,7 +126,7 @@ namespace Readinizer.Frontend.ViewModels
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                     }
 
-                    await Task.Run(() => analysisService.Analyse());
+                    await Task.Run(() => analysisService.Analyse(null));
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
                     ShowTreeStructureResult(sysmonVisability);
                 }

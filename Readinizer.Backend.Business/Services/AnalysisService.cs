@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
@@ -11,7 +9,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
-using Readinizer.Backend.DataAccess.UnityOfWork;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
@@ -27,24 +24,26 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task Analyse()
+        public async Task<List<Rsop>> Analyse(string importPath)
         {
-            var receivedRsopPath = ConfigurationManager.AppSettings["ReceivedRSoP"];
-            var directoryInfo = new DirectoryInfo(receivedRsopPath);
+            var rsopPath = string.IsNullOrEmpty(importPath) ? ConfigurationManager.AppSettings["ReceivedRSoP"] : importPath;
+            var directoryInfo = new DirectoryInfo(rsopPath);
             var rsopXml = directoryInfo.GetFiles("*.xml");
             var rsops = new List<Rsop>();
             
+            AnalyseEachXml(rsopXml, rsops);
+            unitOfWork.RsopRepository.AddRange(rsops);
+            await unitOfWork.SaveChangesAsync();
+            return rsops;
+        }
+
+        private void AnalyseEachXml(FileInfo[] rsopXml, List<Rsop> rsops)
+        {
             foreach (var xml in rsopXml)
             {
                 var doc = new XmlDocument();
                 doc.Load(xml.FullName);
                 var rsopJson = XmlToJson(doc);
-
-                var fileName = xml.Name.Replace(".xml", "");
-                var organisationalUnitRefId = 0;
-                var siteRefId = 0;
-                int.TryParse(fileName.Substring(0, fileName.IndexOf("-")).Replace("Ou_", ""), out organisationalUnitRefId);
-                int.TryParse(fileName.Substring(fileName.IndexOf("-") + 1).Replace("Site_", ""), out siteRefId);
 
                 var allRsopGpos = GetAllRsopGpos(rsopJson);
                 var auditSettings = AnalyseAuditSettings(rsopJson);
@@ -52,12 +51,17 @@ namespace Readinizer.Backend.Business.Services
                 var policies = AnalysePolicies(rsopJson);
                 var registrySettings = AnalyseRegistrySetting(rsopJson);
 
-                var organisationalUnit = unitOfWork.OrganisationalUnitRepository.GetByID(organisationalUnitRefId);
+                var organisationalUnit = GetOrganisationalUnitOfRsop(rsopJson);
+                if (organisationalUnit == null) { continue; }
+
+                var site = GetSiteOfRsop(rsopJson);
+                if (site == null) { continue; }
+
                 var rsop = new Rsop
                 {
                     Domain = organisationalUnit.ADDomain,
                     OrganisationalUnit = organisationalUnit,
-                    Site = unitOfWork.SiteRepository.GetByID(siteRefId),
+                    Site = site,
                     AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
                     Policies = policies.OrderBy(x => x.Name).ToList(),
                     RegistrySettings = registrySettings.OrderBy(x => x.Name).ToList(),
@@ -67,13 +71,12 @@ namespace Readinizer.Backend.Business.Services
 
                 rsops.Add(rsop);
             }
-            unitOfWork.RSoPRepository.AddRange(rsops);
-            await unitOfWork.SaveChangesAsync();
         }
 
         /// <summary>
         /// This method is used to convert the RSoP from XML to JSON for easier handling.
         /// But more important, the namespaces (q1:, q2:, ..., qn:) of the XML are removed with the Regex-Pattern "q[0-9]:".
+        /// This had to be done because the namespaces are applied "randomly" to the RSoP, depending on which settings are present.
         /// 
         /// --------- Before: ---------
         /// <q2:AuditSetting>
@@ -82,7 +85,7 @@ namespace Readinizer.Backend.Business.Services
         ///     <q2:SettingValue>0</q2:SettingValue>
         /// </q2:AuditSetting>
         ///
-        /// --------- After: ---------
+        /// --------- After:  ---------
         /// <AuditSetting>
         ///     ...
         ///     <SubcategoryName>Audit File System</SubcategoryName>
@@ -90,8 +93,8 @@ namespace Readinizer.Backend.Business.Services
         /// </AuditSetting>
         /// 
         /// </summary>
-        /// <param name="doc"></param>
-        /// <returns></returns>
+        /// <param name="doc">Loaded XML as a XmlDocument</param>
+        /// <returns>The cleaned JSON</returns>
         private static JObject XmlToJson(XmlNode doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
@@ -99,6 +102,31 @@ namespace Readinizer.Backend.Business.Services
             var jsonNonNamespaceText = namespaceRegex.Replace(jsonText, "");
             var rsop = JObject.Parse(jsonNonNamespaceText);
             return rsop;
+        }
+
+        private OrganisationalUnit GetOrganisationalUnitOfRsop(JToken rsop)
+        {
+            var jsonComputerResultsSOM = rsop.SelectToken("$..ComputerResults.SOM");
+            var jsonComputerResultsDomain = rsop.SelectToken("$..ComputerResults.Domain");
+            var computerResultsSOM = jsonComputerResultsSOM.Value<string>();
+            var domainName = jsonComputerResultsDomain.Value<string>();
+            var ouName = computerResultsSOM.Split('/').Last();
+            var organisationalUnit = unitOfWork.SpecificOrganisationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
+
+            if (!organisationalUnit.HasReachableComputer)
+            {
+                organisationalUnit.HasReachableComputer = true;
+                unitOfWork.OrganisationalUnitRepository.Update(organisationalUnit);
+            }
+            return organisationalUnit;
+        }
+
+        private Site GetSiteOfRsop(JToken rsop)
+        {
+            var jsonComputerResultsSite = rsop.SelectToken("$..ComputerResults.Site");
+            var siteName = jsonComputerResultsSite.Value<string>();
+            var site = unitOfWork.SpecificSiteRepository.GetOrganisationalUnitByName(siteName);
+            return site;
         }
 
         private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)

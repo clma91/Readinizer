@@ -8,6 +8,8 @@
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Domain="clr-namespace:Readinizer.Backend.Domain.Models;assembly=Readinizer.Backend.Domain"
              xmlns:converters="clr-namespace:Readinizer.Frontend.Converters"
+             xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+             md:DialogServiceViews.IsRegistered="True"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -34,8 +36,10 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="3*"/>
-            <RowDefinition Height="1*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
 
@@ -95,17 +99,19 @@
             </TreeView>
         </Border>
 
-        <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Label Grid.Row="0">
-                    <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
-                </Label>
 
-                <ListView Grid.Row="1" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+        <Label Grid.Row="2" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
+            <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
+        </Label>
+        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}"
+                BorderThickness="0.5" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <ListView Grid.Column="0" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -117,14 +123,14 @@
 
                                 <StackPanel Grid.Row="0" Orientation="Horizontal">
                                     <TextBlock Text="Domain: "/>
-                                    <TextBlock Margin="5 0 0 0" Text="{Binding ADDomain.Name}"/>
+                                    <TextBlock Margin="10 0 0 0" Text="{Binding ADDomain.Name}"/>
                                 </StackPanel>
                                 <ListView Grid.Row="1" ItemsSource="{Binding}">
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                                                <TextBlock Text="- Organisational Unit: "/>
-                                                <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
+                                            <StackPanel Orientation="Horizontal" Margin="11 0 0 0">
+                                                <TextBlock Text="- OU: "/>
+                                                <TextBlock Margin="10 0 0 0" Text="{Binding Name}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
@@ -133,21 +139,20 @@
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
+
+                <Button x:Name="GetDetailView" Grid.Column="1" Margin="50 0 50 0" Content="{materialDesign:PackIcon Plus}"
+                        Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="Add RSoP-XML of unanalyzed OUs"
+                        Command="{Binding ImportRSoPsCommand}"/>
             </Grid>
         </Border>
 
-        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5"
-                Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
+        <Label Grid.Row="4" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
+            <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
+        </Label>
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" 
+                BorderThickness="0.5" Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-
-                <Label Grid.Row="0">
-                    <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
-                </Label>
-                <ListView Grid.Row="1" ItemsSource="{Binding UnavailableDomains}">
+                <ListView ItemsSource="{Binding UnavailableDomains}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
@@ -160,7 +165,7 @@
             </Grid>
         </Border>
 
-        <Button x:Name="Sysmon" Grid.Row="4" Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" Grid.Column="3">Sysmon</Button>
+        <Button x:Name="Sysmon" Grid.Row="6" Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" Grid.Column="3">Sysmon</Button>
 
     </Grid>
 </UserControl>

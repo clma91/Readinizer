@@ -9,10 +9,12 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     {
         GenericRepository<Domain.Models.ADDomain> ADDomainRepository { get; }
         GenericRepository<OrganisationalUnit> OrganisationalUnitRepository { get; }
+        OrganisationalUnitRepository SpecificOrganisationalUnitRepository { get; }
         GenericRepository<Computer> ComputerRepository { get; }
         GenericRepository<Site> SiteRepository { get; }
-        GenericRepository<Rsop> RSoPRepository { get; }
-        GenericRepository<RsopPot> RSoPPotRepository { get; }
+        SiteRepository SpecificSiteRepository { get; }
+        GenericRepository<Rsop> RsopRepository { get; }
+        GenericRepository<RsopPot> RsopPotRepository { get; }
         GenericRepository<Gpo> GpoRepository { get; }
         Task SaveChangesAsync();
         void Dispose(bool disposing);

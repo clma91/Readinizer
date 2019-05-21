@@ -32,7 +32,7 @@ namespace Readinizer.Frontend.ViewModels
 
         
         public int RefId{ get; set; }
-        private Rsop rsop { get => unityOfWork.RSoPRepository.GetByID(RefId); }
+        private Rsop rsop { get => unityOfWork.RsopRepository.GetByID(RefId); }
         public string Ou { get => rsop.OrganisationalUnit.Name; }
 
         [Obsolete("Only for design data", true)]

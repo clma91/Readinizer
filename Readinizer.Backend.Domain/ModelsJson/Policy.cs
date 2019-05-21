@@ -54,7 +54,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
                     return CurrentState == otherPolicy.CurrentState && ModuleNames.ValueElementData == otherPolicy.ModuleNames.ValueElementData;
                 }
 
-                return TargetState.Equals(otherPolicy.CurrentState);
+                return CurrentState.Equals(otherPolicy.CurrentState);
             }
 
             return base.Equals(obj);

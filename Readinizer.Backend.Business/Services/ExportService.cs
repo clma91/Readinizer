@@ -23,12 +23,12 @@ namespace Readinizer.Backend.Business.Services
             var successfullyExported = false;
             if (type == typeof(RsopPot))
             {
-                var allRSoPPots = await unitOfWork.RSoPPotRepository.GetAllEntities();
+                var allRSoPPots = await unitOfWork.RsopPotRepository.GetAllEntities();
                 successfullyExported = ExportToJson(path, allRSoPPots);
             }
             if (type == typeof(Rsop))
             {
-                var allRSoPs = await unitOfWork.RSoPRepository.GetAllEntities();
+                var allRSoPs = await unitOfWork.RsopRepository.GetAllEntities();
                 successfullyExported = ExportToJson(path, allRSoPs);
             }
 

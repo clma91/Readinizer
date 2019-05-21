@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ namespace Readinizer.Backend.Business.Factory
     public class TreeNodesFactory : ITreeNodesFactory
     {
         private readonly IUnitOfWork unitOfWork;
-        private static int RSoPId = 1;
 
         public TreeNodesFactory(IUnitOfWork unitOfWork)
         {
@@ -28,34 +28,32 @@ namespace Readinizer.Backend.Business.Factory
 
             var rootDomain = domains.FirstOrDefault();
             var rsopPots = GetRsopPotsOfDomain(rootDomain);
-            rootDomain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage));
-            unitOfWork.ADDomainRepository.Update(rootDomain);
-
-            root.Description = rootDomain.IsForestRoot ? "Forest Root Domain: " : "Domain: ";
-            root.IsRSoP = false;
-            root.TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", rootDomain.ADDomainId } };
-            root.Name = rootDomain.Name;
-            root.RsopPotPercentage = rootDomain.RsopsPercentage ?? 0.0;
-            foreach (var rsopPot in rsopPots)
+            if (rootDomain != null)
             {
-                var Ous = new List<OrganisationalUnit>();
-                foreach (var rsop in rsopPot.Rsops)
-                {
-                    Ous.Add(rsop.OrganisationalUnit);
-                }
-                var rsopPotOfDomain = new TreeNode
-                {
-                    Description = RSoPId++.ToString() + ". group of identical security settings",
-                    IsRSoP = true,
-                    TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
-                    Name = rsopPot.Name,
-                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
-                };
-                root.ChildNodes.Add(rsopPotOfDomain);
-            }
+                rootDomain.DomainPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage));
+                unitOfWork.ADDomainRepository.Update(rootDomain);
 
-            BuildTree(root, rootDomain.SubADDomains);
+                root.Description = rootDomain.IsForestRoot ? "Forest Root Domain: " : "Domain: ";
+                root.IsRSoP = false;
+                root.TypeRefIdDictionary = new Dictionary<string, int> {{"Domain", rootDomain.ADDomainId}};
+                root.Name = rootDomain.Name;
+                root.RsopPotPercentage = rootDomain.DomainPercentage ?? 0.0;
+                foreach (var rsopPot in rsopPots)
+                {
+                    var rsopPotOfDomain = new TreeNode
+                    {
+                        Description = rsopPot.Name,
+                        IsRSoP = true,
+                        TypeRefIdDictionary = new Dictionary<string, int> {{"RSoPPot", rsopPot.RsopPotId}},
+                        Name = rsopPot.DateTime,
+                        RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                        OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                    };
+                    root.ChildNodes.Add(rsopPotOfDomain);
+                }
+
+                BuildTree(root, rootDomain.SubADDomains);
+            }
 
             await unitOfWork.SaveChangesAsync();
             tree.Add(root);
@@ -71,7 +69,7 @@ namespace Readinizer.Backend.Business.Factory
                     if (domain.IsAvailable)
                     {
                         var rsopPots = GetRsopPotsOfDomain(domain);
-                        domain.RsopsPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
+                        domain.DomainPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
                         unitOfWork.ADDomainRepository.Update(domain);
 
                         var child = new TreeNode
@@ -80,20 +78,23 @@ namespace Readinizer.Backend.Business.Factory
                             IsRSoP = false,
                             TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
                             Name = domain.Name,
-                            RsopPotPercentage = domain.RsopsPercentage ?? 0.0
+                            RsopPotPercentage = domain.DomainPercentage ?? 0.0
                         };
-                        foreach (var rsopPot in rsopPots)
+                        if (rsopPots != null)
                         {
-                            var rsopPotOfDomain = new TreeNode
+                            foreach (var rsopPot in rsopPots)
                             {
-                                Description = "Group of identical security settings: ",
-                                IsRSoP = true,
-                                TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
-                                Name = rsopPot.Name,
-                                RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                                OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
-                            };
-                            child.ChildNodes.Add(rsopPotOfDomain);
+                                var rsopPotOfDomain = new TreeNode
+                                {
+                                    Description = rsopPot.Name,
+                                    IsRSoP = true,
+                                    TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
+                                    Name = rsopPot.DateTime,
+                                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
+                                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                                };
+                                child.ChildNodes.Add(rsopPotOfDomain);
+                            }
                         }
 
                         root.ChildNodes.Add(child);
@@ -108,12 +109,15 @@ namespace Readinizer.Backend.Business.Factory
             var rsopsOfDomain = domain.Rsops;
             var rsopPots = new HashSet<RsopPot>();
 
-            foreach (var rsop in rsopsOfDomain)
+            if (rsopsOfDomain != null)
             {
-                rsopPots.Add(unitOfWork.RSoPPotRepository.GetByID(rsop.RsopPotRefId));
+                foreach (var rsop in rsopsOfDomain)
+                {
+                    rsopPots.Add(unitOfWork.RsopPotRepository.GetByID(rsop.RsopPotRefId));
+                }
+                rsopPots.Remove(null);
             }
 
-            rsopPots.Remove(null);
             return rsopPots.ToList();
         }
     }

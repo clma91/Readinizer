@@ -19,6 +19,11 @@ namespace Readinizer.Frontend.Converters
                 var observableCollection = (ObservableCollection<ADDomain>) value;
                 return observableCollection.Count <= 0 ? Visibility.Hidden : Visibility.Visible;
             }
+            if (value is ObservableCollection<OrganisationalUnit>)
+            {
+                var observableCollection = (ObservableCollection<OrganisationalUnit>)value;
+                return observableCollection.Count <= 0 ? Visibility.Hidden : Visibility.Visible;
+            }
             return value == null ? Visibility.Hidden : Visibility.Visible;
         }
 

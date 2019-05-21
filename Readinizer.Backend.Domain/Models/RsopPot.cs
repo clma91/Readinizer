@@ -14,6 +14,8 @@ namespace Readinizer.Backend.Domain.Models
 
         public string Name { get; set; }
 
+        public string DateTime { get; set; }
+
         public virtual ADDomain Domain { get; set; }
 
         public virtual ICollection<Rsop> Rsops { get; set; }
