@@ -113,7 +113,7 @@ namespace Readinizer.Backend.Business.Services
             var ouName = computerResultsSOM.Split('/').Last();
             var organisationalUnit = unitOfWork.SpecificOrganisationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
 
-            if (!organisationalUnit.HasReachableComputer)
+            if (organisationalUnit != null && !organisationalUnit.HasReachableComputer)
             {
                 organisationalUnit.HasReachableComputer = true;
                 unitOfWork.OrganisationalUnitRepository.Update(organisationalUnit);

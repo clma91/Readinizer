@@ -100,6 +100,9 @@ namespace Readinizer.Backend.Business.Services
                 var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
                 if (!domainsEqual) continue;
 
+                var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
+                if (organisationalUnitsEqual) continue;
+
                 pot.Rsops.Add(rsop);
                 foundPot = pot;
                 break;
