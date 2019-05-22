@@ -145,12 +145,14 @@ namespace Readinizer.Frontend.ViewModels
         {
             CurrentViewModel = rsopResultViewModel;
             rsopResultViewModel.RefId = refId;
+            rsopResultViewModel.Load();
         }
 
         private void ShowOuResultView(int refId)
         {
             CurrentViewModel = ouResultViewModel;
             ouResultViewModel.RefId = refId;
+            ouResultViewModel.Load();
         }
 
         private void ShowSysmonResultView()

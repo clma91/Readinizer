@@ -36,7 +36,7 @@
             </Label>
         </StackPanel>
         <Grid Grid.Row="2" MinHeight="265" Height="Auto" Width="Auto" MaxHeight="500">
-            <DataGrid ItemsSource="{Binding AuditSettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False" MinWidth="1000">
+            <DataGrid ItemsSource="{Binding SecuritySettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False" MinWidth="1000">
                 <DataGrid.Columns>
                     <DataGridTemplateColumn Header="GPO" IsReadOnly="True" Width="225">
                         <DataGridTemplateColumn.HeaderStyle>

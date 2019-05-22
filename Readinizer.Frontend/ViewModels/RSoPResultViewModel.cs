@@ -24,6 +24,7 @@ namespace Readinizer.Frontend.ViewModels
     public class RSoPResultViewModel : ViewModelBase, IRSoPResultViewModel
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ISecuritySettingParserService securitySettingParserService;
 
         private ICommand backCommand;
         public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
@@ -34,6 +35,14 @@ namespace Readinizer.Frontend.ViewModels
 
         public int RefId{ get; set; }
 
+        private List<SecuritySettingsParsed> securitySettings;
+        public List<SecuritySettingsParsed> SecuritySettings
+        {
+            get => securitySettings;
+            set => Set(ref securitySettings, value);
+        }
+
+
         [Obsolete("Only for design data", true)]
         public RSoPResultViewModel()
         {
@@ -43,127 +52,18 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public RSoPResultViewModel(IUnitOfWork unitOfWork)
+        public RSoPResultViewModel(IUnitOfWork unitOfWork, ISecuritySettingParserService securitySettingParserService)
         {
             this.unitOfWork = unitOfWork;
-
+            this.securitySettingParserService = securitySettingParserService;
         }
 
-        
+        public void Load() => LoadSettings();
 
-        private Rsop loadRsopOfRsopPot()
+        private async void LoadSettings()
         {
-            return rsopPot.Rsops.FirstOrDefault();
-
-        }
-
-        private List<SecuirtySettingsParser> loadSettings()
-        {
-            List<SecuirtySettingsParser> settings = new List<SecuirtySettingsParser>();
-            var rsop = loadRsopOfRsopPot();
-            foreach (var setting in rsop.AuditSettings)
-            {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
-                parsedSetting.Setting = setting.SubcategoryName;
-                parsedSetting.Value = setting.CurrentSettingValue.ToString();
-                parsedSetting.Target = setting.TargetSettingValue.ToString();
-
-                if (parsedSetting.Value.Equals(parsedSetting.Target))
-                {
-                    parsedSetting.Icon = "Check";
-                    parsedSetting.Color = "Green";
-                }
-                else if (parsedSetting.Value.Equals("NoAuditing"))
-                {
-                    parsedSetting.Icon = "Exclamation";
-                    parsedSetting.Color = "Orange";
-                }
-                else
-                {
-                    parsedSetting.Icon = "Close";
-                    parsedSetting.Color = "Red";
-                }
-
-                settings.Add(parsedSetting);
-            }
-
-            foreach (var setting in rsop.Policies)
-            {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
-                parsedSetting.Setting = setting.Name;
-                parsedSetting.Value = setting.CurrentState;
-                parsedSetting.Target = setting.TargetState;
-
-                if (parsedSetting.Value.Equals(parsedSetting.Target))
-                {
-                    parsedSetting.Icon = "Check";
-                    parsedSetting.Color = "Green";
-                }
-                else
-                {
-                    parsedSetting.Icon = "Close";
-                    parsedSetting.Color = "Red";
-                }
-
-                settings.Add(parsedSetting);
-            }
-
-
-            foreach (var setting in rsop.RegistrySettings)
-            {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
-                parsedSetting.Setting = setting.Name;
-                parsedSetting.Value = setting.CurrentValue.Name;
-                parsedSetting.Target = setting.TargetValue.Name;
-
-                if (parsedSetting.Value.Equals(parsedSetting.Target))
-                {
-                    parsedSetting.Icon = "Check";
-                    parsedSetting.Color = "Green";
-                }
-                else
-                {
-                    parsedSetting.Icon = "Close";
-                    parsedSetting.Color = "Red";
-                }
-
-                settings.Add(parsedSetting);
-            }
-
-            foreach (var setting in rsop.SecurityOptions)
-            {
-                SecuirtySettingsParser parsedSetting = new SecuirtySettingsParser();
-                parsedSetting.Setting = setting.Description;
-                parsedSetting.Value = setting.CurrentDisplay.DisplayBoolean;
-                parsedSetting.Target = setting.TargetDisplay.DisplayBoolean;
-
-                if (parsedSetting.Value.Equals(parsedSetting.Target))
-                {
-                    parsedSetting.Icon = "Check";
-                    parsedSetting.Color = "Green";
-
-                }
-                else if (parsedSetting.Value.Equals("NotDefined"))
-                {
-                    parsedSetting.Icon = "Exclamation";
-                    parsedSetting.Color = "Orange";
-                }
-                else
-                {
-                    parsedSetting.Icon = "Close";
-                    parsedSetting.Color = "Red";
-                }
-
-                settings.Add(parsedSetting);
-            }
-
-
-            return settings;
-        }
-
-        public List<SecuirtySettingsParser> AuditSettings
-        {
-            get => loadSettings();
+            SecuritySettings = await securitySettingParserService.ParseSecuritySettings(RefId);
+            RaisePropertyChanged(nameof(SecuritySettings));
         }
 
         private List<string> loadOUs()
@@ -209,7 +109,6 @@ namespace Readinizer.Frontend.ViewModels
         private void ShowOUView(int rsopRefId)
         {
             Messenger.Default.Send(new ChangeView(typeof(OUResultViewModel), rsopRefId));
-
         }
 
         private void ShowDomainView(int domainRefId)

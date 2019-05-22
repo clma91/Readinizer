@@ -123,6 +123,7 @@
     <Compile Include="Interfaces\IComputerService.cs" />
     <Compile Include="Interfaces\IExportService.cs" />
     <Compile Include="Interfaces\IPingService.cs" />
+    <Compile Include="Interfaces\ISecuritySettingParserService.cs" />
     <Compile Include="Interfaces\ISysmonService.cs" />
     <Compile Include="Interfaces\IRSoPPotService.cs" />
     <Compile Include="Interfaces\ITreeNodesFactory.cs" />
@@ -134,6 +135,7 @@
     <Compile Include="Services\ADDomainService.cs" />
     <Compile Include="Services\ExportService.cs" />
     <Compile Include="Services\PingService.cs" />
+    <Compile Include="Services\SecuritySettingParserService.cs" />
     <Compile Include="Services\SysmonService.cs" />
     <Compile Include="Services\AnalysisService.cs" />
     <Compile Include="Services\OrganisationalUnitService.cs" />

@@ -53,6 +53,7 @@ namespace Readinizer.Frontend
             container.RegisterType<IRSoPPotService, RSoPPotService>();
             container.RegisterType<ISysmonResultViewModel, SysmonResultViewModel>();
             container.RegisterType<IExportService, ExportService>();
+            container.RegisterType<ISecuritySettingParserService, SecuritySettingParserService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 

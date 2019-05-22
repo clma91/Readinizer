@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class SecuiritySettingsParserOU : SecuirtySettingsParser
+    public class SecuiritySettingsParserOU : SecuritySettingsParsed
     {
         public string GPO { get; set; }
     }
