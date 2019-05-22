@@ -30,11 +30,12 @@ namespace Readinizer.Backend.Business.Services
         public async Task GenerateRsopPots()
         {
             var rsops = await unitOfWork.RsopRepository.GetAllEntities();
+            var sortedRsopsByDomain = rsops.OrderBy(x => x.Domain.ParentId).ToList();
             var rsopPots = new List<RsopPot>();
 
-            AddRsopPot(rsops.First());
+            AddRsopPot(sortedRsopsByDomain.First());
 
-            foreach (var rsop in rsops.Skip(1))
+            foreach (var rsop in sortedRsopsByDomain.Skip(1))
             {
                 var foundPot = RsopPotsEqual(rsopPots, rsop);
 
