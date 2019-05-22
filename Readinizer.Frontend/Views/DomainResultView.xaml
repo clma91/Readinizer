@@ -111,10 +111,10 @@
                     <Label>
                         <TextBlock Text="Good:" TextDecorations="Underline" FontSize="14"></TextBlock>
                     </Label>
-                    <ListBox x:Name="GoodList" ItemsSource="{Binding Path=GoodList}" SelectedItem="{Binding Path=Pot}">
+                    <ListBox x:Name="GoodList" ItemsSource="{Binding Path=GoodList}" SelectedItem="{Binding Path=PotName}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Name="TextBoxList" Text="{Binding}" FontSize="12"/>
+                                <TextBlock Name="TextBoxList" Text="{Binding Name}" FontSize="12"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
@@ -123,10 +123,10 @@
                     <Label>
                         <TextBlock Text="Bad:" TextDecorations="Underline" FontSize="14"></TextBlock>
                     </Label>
-                    <ListBox  Name="BadList" ItemsSource="{Binding Path=BadList}" SelectedItem="{Binding Path=Pot}">
+                    <ListBox  Name="BadList" ItemsSource="{Binding Path=BadList}" SelectedItem="{Binding Path=PotName}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Name="TextBoxList" Text="{Binding}"  FontSize="12"/>
+                                <TextBlock Name="TextBoxList" Text="{Binding Name}"  FontSize="12"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

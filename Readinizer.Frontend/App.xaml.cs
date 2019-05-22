@@ -63,11 +63,6 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            if (ctx.Database.Exists())
-            {
-                ctx.Database.Delete();
-            }
-
             ctx.Database.CreateIfNotExists();
 
             var applicationView = container.Resolve<ApplicationView>();
@@ -88,9 +83,7 @@ namespace Readinizer.Frontend
         {
             base.OnExit(e);
 
-            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            ctx.Database.Connection.Close();
-            ctx.Database.Delete();
+
         }
     }
 }

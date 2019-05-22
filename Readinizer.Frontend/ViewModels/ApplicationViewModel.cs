@@ -1,5 +1,9 @@
 ﻿using System;
+using System.Configuration;
+using System.Data.Entity;
 using System.Diagnostics;
+using System.Reflection.Emit;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -9,6 +13,7 @@ using MaterialDesignThemes.Wpf;
 using MvvmDialogs;
 using MvvmDialogs.FrameworkDialogs.SaveFile;
 using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
@@ -26,6 +31,12 @@ namespace Readinizer.Frontend.ViewModels
         public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
         private ICommand exportRSoPsCommand;
         public ICommand ExportRSoPsCommand => exportRSoPsCommand ?? (exportRSoPsCommand = new RelayCommand(() => Export(typeof(Rsop))));
+        private ICommand newAnalysisCommand;
+        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(() => OnNewAnalysis()));
+
+        private IUnitOfWork unitOfWork;
+
+
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -55,7 +66,7 @@ namespace Readinizer.Frontend.ViewModels
         public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -67,7 +78,7 @@ namespace Readinizer.Frontend.ViewModels
                                     ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
                                     DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
                                     OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel,
-                                    IDialogService dialogService, IExportService exportService)
+                                    IDialogService dialogService, IExportService exportService, IUnitOfWork unitOfWork)
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
@@ -78,10 +89,28 @@ namespace Readinizer.Frontend.ViewModels
             this.sysmonResultViewModel = sysmonResultViewModel;
             this.dialogService = dialogService;
             this.exportService = exportService;
+            this.unitOfWork = unitOfWork;
 
             this.SnackbarMessageQueue = snackbarMessageQueue;
 
-            ShowStartUpView();
+            var computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
+            var i = computers.Find(x => x.isSysmonRunning.HasValue) != null;
+            if (computers.Count != 0)
+            {
+                if (computers.Find(x => x.isSysmonRunning.HasValue) != null)
+                {
+                    ShowTreeStructureResultView("Visible");
+                }
+                else
+                {
+                    ShowTreeStructureResultView("Hidden");
+                }
+            }
+            else
+            {
+                ShowStartUpView();
+            }
+
             Messenger.Default.Register<ChangeView>(this, ChangeView);
             Messenger.Default.Register<SnackbarMessage>(this, OnShowMessage);
             Messenger.Default.Register<EnableExport>(this, EnableExport);
@@ -185,6 +214,13 @@ namespace Readinizer.Frontend.ViewModels
             Process.Start("https://github.com/clma91/Readinizer/wiki");
         }
 
+        private void OnNewAnalysis()
+        {
+            ClearDb();
+            ShowStartUpView();
+        }
+
+
         private async void Export(Type type)
         {
             var settings = new SaveFileDialogSettings
@@ -215,5 +251,31 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
+        private void ClearDb()
+        {
+            var dbContext = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+
+            dbContext.Database.Connection.Close();
+
+            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.OrganisationalUnitComputer");
+            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.SiteADDomain");
+
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.AuditSetting DBCC CHECKIDENT('READINIZER.dbo.AuditSetting', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RegistrySetting DBCC CHECKIDENT('READINIZER.dbo.RegistrySetting', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Policy DBCC CHECKIDENT('READINIZER.dbo.Policy', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.SecurityOption DBCC CHECKIDENT('READINIZER.dbo.SecurityOption', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Gpo DBCC CHECKIDENT('READINIZER.dbo.Gpo', NORESEED)");
+
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', NORESEED)");
+            
+            
+
+            
+        }
     }
 }
