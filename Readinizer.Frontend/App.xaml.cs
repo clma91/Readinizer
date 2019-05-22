@@ -63,11 +63,6 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            //if (ctx.Database.Exists())
-            //{
-            //    ctx.Database.Delete();
-            //}
-
             ctx.Database.CreateIfNotExists();
 
             var applicationView = container.Resolve<ApplicationView>();
@@ -88,24 +83,7 @@ namespace Readinizer.Frontend
         {
             base.OnExit(e);
 
-            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
 
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.OrganisationalUnitComputer");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.SiteADDomain");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.AuditSetting");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.RegistrySetting");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.Policy");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.SecurityOption");
-            ctx.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.Gpo");
-
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', RESEED, 0)");
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', RESEED, 0)");
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', RESEED, 0)");
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', RESEED, 0)");
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', RESEED, 0)");
-            ctx.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', RESEED, 0)");
-
-            ctx.Database.Connection.Close();
         }
     }
 }

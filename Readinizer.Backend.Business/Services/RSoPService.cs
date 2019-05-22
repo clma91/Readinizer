@@ -69,6 +69,11 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName)
         {
+            if (string.IsNullOrEmpty(serviceName))
+            {
+                serviceName = "Sysmon";
+            }
+
             clearOldRsops();
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
@@ -90,7 +95,7 @@ namespace Readinizer.Backend.Business.Services
                             if (!collectedSiteIds.Contains(computer.SiteRefId))
                             {
                                 computer.PingSuccessful = true;
-                                unitOfWork.ComputerRepository.Update(computer);
+                                
 
                                 OU.HasReachableComputer = true;
                                 unitOfWork.OrganisationalUnitRepository.Update(OU);
@@ -105,6 +110,8 @@ namespace Readinizer.Backend.Business.Services
                             computer.isSysmonRunning = sysmonService.isSysmonRunning(serviceName, user,
                                 computer.ComputerName,
                                 domainName);
+
+                            unitOfWork.ComputerRepository.Update(computer);
                         }
                     }
                 }

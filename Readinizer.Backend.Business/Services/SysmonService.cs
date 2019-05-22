@@ -28,7 +28,7 @@ namespace Readinizer.Backend.Business.Services
         List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
         List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
 
-            foreach (OrganisationalUnit OU in allOUs)
+        foreach (OrganisationalUnit OU in allOUs)
             {
                 foreach (var computer in OU.Computers)
                 {

@@ -114,10 +114,6 @@ namespace Readinizer.Frontend.ViewModels
                     await Task.Run(() => computerService.GetComputers());
                     if (sysmonChecked)
                     {
-                        if (string.IsNullOrEmpty(sysmonName))
-                        {
-                            sysmonName = "Sysmon";
-                        }
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
                         sysmonVisability = "Visible";
                     }
