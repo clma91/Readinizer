@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls.DataVisualization.Charting;
 using System.Windows.Documents;
@@ -29,9 +30,12 @@ namespace Readinizer.Frontend.ViewModels
         private ICommand backCommand;
         public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
 
-        private RsopPot rsopPot { get => unitOfWork.RsopPotRepository.GetByID(RefId); }
+        public RsopPot rsopPot { get; set; }
 
-        public string GISS{ get => rsopPot.Name; }
+        public string GISS
+        {
+            get => rsopPot.Name;
+        }
 
         public int RefId{ get; set; }
 
@@ -58,7 +62,9 @@ namespace Readinizer.Frontend.ViewModels
             this.securitySettingParserService = securitySettingParserService;
         }
 
+
         public void Load() => LoadSettings();
+
 
         private async void LoadSettings()
         {
@@ -69,7 +75,6 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> loadOUs()
         {
             List<string> ous = new List<string>();
-            var rsopPot = unitOfWork.RsopPotRepository.GetByID(RefId);
             var rsops = rsopPot.Rsops;
             foreach (var rsop in rsops)
             {
@@ -84,10 +89,10 @@ namespace Readinizer.Frontend.ViewModels
             get => loadOUs();
         }
 
-        private List<OrganisationalUnit> ous()
+        private async Task<List<OrganisationalUnit>> ousAsync()
         {
-            var ous = unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            return ous.Result;
+            var ous = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            return ous;
         }
 
         private string rsop;
@@ -97,8 +102,8 @@ namespace Readinizer.Frontend.ViewModels
             set
             {
                 rsop = value;
-                var rsops = unitOfWork.RsopPotRepository.GetByID(RefId).Rsops;
-                List<Rsop> rsopList = rsops.ToList();
+
+                List<Rsop> rsopList = rsopPot.Rsops.ToList();
                 int rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
                 ShowOUView(rsopID);
                 rsop = null;

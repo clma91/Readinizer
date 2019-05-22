@@ -145,6 +145,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             CurrentViewModel = rsopResultViewModel;
             rsopResultViewModel.RefId = refId;
+            rsopResultViewModel.rsopPot = unitOfWork.RsopPotRepository.GetByID(refId);
             rsopResultViewModel.Load();
         }
 
@@ -152,6 +153,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             CurrentViewModel = ouResultViewModel;
             ouResultViewModel.RefId = refId;
+            ouResultViewModel.rsop = unitOfWork.RsopRepository.GetByID(refId);
             ouResultViewModel.Load();
         }
 

@@ -26,12 +26,11 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISecuritySettingParserService securitySettingParserService;
 
         private ICommand backCommand;
-        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back(), () => this.CanBack));
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
 
-        public bool CanBack { get; private set; }
 
         public int RefId{ get; set; }
-        private Rsop rsop { get => unityOfWork.RsopRepository.GetByID(RefId); }
+        public Rsop rsop { get; set; }
         public string Ou { get => rsop.OrganisationalUnit.Name; }
         private List<SecuritySettingsParsed> securitySettings;
         public List<SecuritySettingsParsed> SecuritySettings
@@ -53,7 +52,6 @@ namespace Readinizer.Frontend.ViewModels
         {
             this.securitySettingParserService = securitySettingParserService;
             this.unityOfWork = unityOfWork;
-            CanBack = true;
         }
 
         public void Load() => LoadSettings();

@@ -46,9 +46,9 @@ namespace Readinizer.Frontend.ViewModels
 
         public string Domainname { get => Domain.Name; }
 
-        private List<RsopPot> goodList { get; set; }
+        private List<string> goodList { get; set; }
 
-        private List<RsopPot> badList { get; set; }
+        private List<string> badList { get; set; }
 
         public List<RsopPot> RsopPots { get; set; }
 
@@ -61,18 +61,18 @@ namespace Readinizer.Frontend.ViewModels
 
         private void fillLists()
         {
-            List<RsopPot> bad = new List<RsopPot>();
-            List<RsopPot> good = new List<RsopPot>();
+            List<string> bad = new List<string>();
+            List<string> good = new List<string>();
             foreach (var pot in RsopPots)
             {
                 if (pot.Rsops.FirstOrDefault().RsopPercentage > 99)
                 {
-                    good.Add(pot);
+                    good.Add(pot.Name);
                     
                 }
                 else
                 {
-                    bad.Add(pot);
+                    bad.Add(pot.Name);
                 }
             }
 
@@ -99,12 +99,12 @@ namespace Readinizer.Frontend.ViewModels
 
         }
 
-        public List<RsopPot> GoodList
+        public List<string> GoodList
         {
             get => goodList;
         }
 
-        public List<RsopPot> BadList
+        public List<string> BadList
         {
             get => badList;
         }
