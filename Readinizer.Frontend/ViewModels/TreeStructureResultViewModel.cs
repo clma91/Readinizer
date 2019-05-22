@@ -26,7 +26,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IDialogService dialogService;
         private readonly IAnalysisService analysisService;
         private readonly IRSoPPotService rSoPPotService;
-
+        
         private ADDomain rootDomain;
         public ADDomain RootDomain
         {

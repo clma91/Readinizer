@@ -46,18 +46,23 @@ namespace Readinizer.Backend.Business.Services
 
             void AddRsopPot(Rsop rsop)
             {
-                rsopPots.Add(new RsopPot
-                {
-                    Name = index++.ToString() + ". Group of identical security settings",
-                    DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture),
-                    Domain = rsop.Domain,
-                    Rsops = new List<Rsop> { rsop }
-                });
+                rsopPots.Add(RsopPotFactory(rsop));
             }
 
             unitOfWork.RsopPotRepository.AddRange(rsopPots);
 
             await unitOfWork.SaveChangesAsync();
+        }
+
+        private static RsopPot RsopPotFactory(Rsop rsop)
+        {
+            return new RsopPot
+            {
+                Name = index++.ToString() + ". Group of identical security settings",
+                DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture),
+                Domain = rsop.Domain,
+                Rsops = new List<Rsop> { rsop }
+            };
         }
 
         public async Task UpdateRsopPots(List<Rsop> rsops)
@@ -73,7 +78,15 @@ namespace Readinizer.Backend.Business.Services
                     foundPot.DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture);
                     unitOfWork.RsopPotRepository.Update(foundPot);
                 }
+                else if (!rsopPots.Any(x => RsopAndRsopPotsOuEqual(rsop, x.Rsops.First())))
+                {
+                    foundPot = RsopPotFactory(rsop);
+                    rsopPots.Add(foundPot);
+                    unitOfWork.RsopPotRepository.Add(foundPot);
+                }
             }
+
+            await unitOfWork.SaveChangesAsync();
         }
 
         private static RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop rsop)
@@ -100,8 +113,7 @@ namespace Readinizer.Backend.Business.Services
                 var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
                 if (!domainsEqual) continue;
 
-                var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
-                if (organisationalUnitsEqual) continue;
+                if (RsopAndRsopPotsOuEqual(rsop, currentRsop)) continue;
 
                 pot.Rsops.Add(rsop);
                 foundPot = pot;
@@ -109,6 +121,13 @@ namespace Readinizer.Backend.Business.Services
             }
 
             return foundPot;
+        }
+
+        private static bool RsopAndRsopPotsOuEqual(Rsop rsop, Rsop currentRsop)
+        {
+            var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
+            if (organisationalUnitsEqual) return true;
+            return false;
         }
 
         private static bool SettingsEqual<T>(ICollection<T> currentSettings, ICollection<T> otherSettings)

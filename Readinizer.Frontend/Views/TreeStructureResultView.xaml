@@ -19,153 +19,154 @@
              FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d" 
              MinHeight="700" MinWidth="1080"
-             Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:TreeStructureResultViewModel, IsDesignTimeCreatable=True}">
     <UserControl.Resources>
         <converters:ProgressForegroundConverter x:Key="ProgressForegroundConverter" />
         <converters:NullToInvisibleConverter x:Key="NullToInvisibleConverter" />
     </UserControl.Resources>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-            <ColumnDefinition Width="1*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="3*"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="70"/>
-        </Grid.RowDefinitions>
 
-        <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10 0 0 0">
-            <TextBlock TextDecorations="Underline" FontSize="20">Forest Structure</TextBlock>
-        </Label>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="70"/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+            <Label Grid.Row="0" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="10 0 0 0">
+                <TextBlock TextDecorations="Underline" FontSize="20">Forest Structure</TextBlock>
+            </Label>
 
-            <TreeView x:Name="TreeView" Margin="10 0 10 10" ItemsSource="{Binding TreeNodes}" HorizontalContentAlignment="Stretch" >
-                <TreeView.Resources>
-                    <HierarchicalDataTemplate DataType="{x:Type Domain:TreeNode}" ItemsSource="{Binding ChildNodes}">
-                        <Border BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
+            <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
 
-                                <Expander Grid.Column="0" VerticalAlignment="Center" IsHitTestVisible="{Binding IsRSoP}">
-                                    <Expander.Header>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Label Content="{Binding Description}" FontWeight="Bold"></Label>
-                                            <Label Content="{Binding Name}" Margin="10 0 0 0"></Label>
+                <TreeView x:Name="TreeView" Margin="10 0 10 10" ItemsSource="{Binding TreeNodes}" HorizontalContentAlignment="Stretch" >
+                    <TreeView.Resources>
+                        <HierarchicalDataTemplate DataType="{x:Type Domain:TreeNode}" ItemsSource="{Binding ChildNodes}">
+                            <Border BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Expander Grid.Column="0" VerticalAlignment="Center" IsHitTestVisible="{Binding IsRSoP}">
+                                        <Expander.Header>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Label Content="{Binding Description}" FontWeight="Bold"></Label>
+                                                <Label Content="{Binding Name}" Margin="10 0 0 0"></Label>
+                                            </StackPanel>
+                                        </Expander.Header>
+
+                                        <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="30 0 0 0" AllowDrop="False">
+                                            <TextBlock Margin="0 0 0 5" Text="Organisational Units" />
+                                            <ListView x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganisationalUnits}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="- "/>
+                                                            <TextBlock Text="{Binding Name}"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
                                         </StackPanel>
-                                    </Expander.Header>
+                                    </Expander>
 
-                                    <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="30 0 0 0" AllowDrop="False">
-                                        <TextBlock Margin="0 0 0 5" Text="Organisational Units" />
-                                        <ListView x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganisationalUnits}">
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <TextBlock Text="- "/>
-                                                        <TextBlock Text="{Binding Name}"/>
-                                                    </StackPanel>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                    </StackPanel>
-                                </Expander>
-
-                                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <ProgressBar Minimum="0" Maximum="100" Value="{Binding RsopPotPercentage}" Width="120" Height="15"
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
+                                        <ProgressBar Minimum="0" Maximum="100" Value="{Binding RsopPotPercentage}" Width="120" Height="15"
                                          Foreground="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Value, Converter={StaticResource ProgressForegroundConverter}}"/>
-                                    <Button x:Name="GetDetailView" Content="{materialDesign:PackIcon DotsHorizontal}" Height="25" Width="25" Margin="10 0 5 0" 
+                                        <Button x:Name="GetDetailView" Content="{materialDesign:PackIcon DotsHorizontal}" Height="25" Width="25" Margin="10 0 5 0" 
                                     Style="{StaticResource MaterialDesignFloatingActionMiniAccentButton}" ToolTip="Details" 
                                     Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.DetailCommand}" 
                                     CommandParameter="{Binding TypeRefIdDictionary}"
                                     Tag="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, Path=DataContext.SelectedDomain}"
                                     />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-                    </HierarchicalDataTemplate>
-                </TreeView.Resources>
-            </TreeView>
-        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </HierarchicalDataTemplate>
+                    </TreeView.Resources>
+                </TreeView>
+            </Border>
 
 
-        <Label Grid.Row="2" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
-            <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
-        </Label>
-        <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}"
+            <Label Grid.Row="2" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
+                <TextBlock  FontSize="16">Unanalyzed Organisational Units:</TextBlock>
+            </Label>
+            <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}"
                 BorderThickness="0.5" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <ListView Grid.Column="0" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    <ListView Grid.Column="0" x:Name="ListOfOus" ItemsSource="{Binding OUsWithoutRSoP}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.IsDeferredScrollingEnabled="False" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid Margin="20 0 0 0">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="20 0 0 0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition/>
+                                        <RowDefinition/>
+                                    </Grid.RowDefinitions>
 
-                                <StackPanel Grid.Row="0" Orientation="Horizontal">
-                                    <TextBlock Text="Domain: "/>
-                                    <TextBlock Margin="10 0 0 0" Text="{Binding ADDomain.Name}"/>
-                                </StackPanel>
-                                <ListView Grid.Row="1" ItemsSource="{Binding}">
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" Margin="11 0 0 0">
-                                                <TextBlock Text="- OU: "/>
-                                                <TextBlock Margin="10 0 0 0" Text="{Binding Name}"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+                                    <StackPanel Grid.Row="0" Orientation="Horizontal">
+                                        <TextBlock Text="Domain: "/>
+                                        <TextBlock Margin="10 0 0 0" Text="{Binding ADDomain.Name}"/>
+                                    </StackPanel>
+                                    <ListView Grid.Row="1" ItemsSource="{Binding}">
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal" Margin="11 0 0 0">
+                                                    <TextBlock Text="- OU: "/>
+                                                    <TextBlock Margin="10 0 0 0" Text="{Binding Name}"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                <Button x:Name="GetDetailView" Grid.Column="1" Margin="50 0 50 0" Content="{materialDesign:PackIcon Plus}"
+                    <Button x:Name="GetDetailView" Grid.Column="1" Margin="50 0 50 0" Content="{materialDesign:PackIcon Plus}"
                         Style="{StaticResource MaterialDesignFloatingActionButton}" ToolTip="Add RSoP-XML of unanalyzed OUs"
                         Command="{Binding ImportRSoPsCommand}"/>
-            </Grid>
-        </Border>
+                </Grid>
+            </Border>
 
-        <Label Grid.Row="4" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
-            <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
-        </Label>
-        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" 
+            <Label Grid.Row="4" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
+                <TextBlock FontSize="16">Unavailable Domains:</TextBlock>
+            </Label>
+            <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" 
                 BorderThickness="0.5" Visibility="{Binding UnavailableDomains, Converter={StaticResource NullToInvisibleConverter}}">
-            <Grid>
-                <ListView ItemsSource="{Binding UnavailableDomains}">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
-                                <TextBlock Margin="5 0 0 0" Text="-"/>
-                                <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-        </Border>
+                <Grid>
+                    <ListView ItemsSource="{Binding UnavailableDomains}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="10 0 0 0">
+                                    <TextBlock Margin="5 0 0 0" Text="-"/>
+                                    <TextBlock Margin="5 0 0 0" Text="{Binding Name}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
 
-        <Button x:Name="Sysmon" Grid.Row="6" Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" Grid.Column="3">Sysmon</Button>
+            <Button x:Name="Sysmon" Grid.Row="6" Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" Grid.Column="3">Sysmon</Button>
 
-    </Grid>
+        </Grid>
+    </ScrollViewer>
 </UserControl>

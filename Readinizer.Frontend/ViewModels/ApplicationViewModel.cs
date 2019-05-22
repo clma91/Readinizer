@@ -52,6 +52,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly SysmonResultViewModel sysmonResultViewModel;
         private readonly IDialogService dialogService;
         private readonly IExportService exportService;
+        public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
 
         [Obsolete("Only for desing data", true)]
         public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null)
