@@ -24,5 +24,7 @@ namespace Readinizer.Backend.Domain.ModelsJson.HelperClasses
 
         [JsonProperty("Number")]
         public string Number { get; set; }
+
+        public bool ShouldSerializeElement() => false;
     }
 }

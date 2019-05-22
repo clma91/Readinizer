@@ -29,6 +29,7 @@ namespace Readinizer.Backend.Domain.Models
         [JsonIgnore]
         public virtual List<Rsop> Rsops { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
 
         [JsonIgnore]

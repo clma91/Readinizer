@@ -64,5 +64,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
         {
             return Name.GetHashCode() * 17;
         }
+
+        public bool ShouldSerializeModuleNames() => false;
     }
 }

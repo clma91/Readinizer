@@ -37,7 +37,7 @@ namespace Readinizer.Backend.Business.Factory
                 root.IsRSoP = false;
                 root.TypeRefIdDictionary = new Dictionary<string, int> {{"Domain", rootDomain.ADDomainId}};
                 root.Name = rootDomain.Name;
-                root.RsopPotPercentage = rootDomain.DomainPercentage ?? 0.0;
+                root.AnalysisPercentage = rootDomain.DomainPercentage ?? 0.0;
                 foreach (var rsopPot in rsopPots)
                 {
                     var rsopPotOfDomain = new TreeNode
@@ -46,8 +46,9 @@ namespace Readinizer.Backend.Business.Factory
                         IsRSoP = true,
                         TypeRefIdDictionary = new Dictionary<string, int> {{"RSoPPot", rsopPot.RsopPotId}},
                         Name = rsopPot.DateTime,
-                        RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                        OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                        AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
+                        OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                        Rsop = rsopPot.Rsops.FirstOrDefault()
                     };
                     root.ChildNodes.Add(rsopPotOfDomain);
                 }
@@ -78,7 +79,7 @@ namespace Readinizer.Backend.Business.Factory
                             IsRSoP = false,
                             TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
                             Name = domain.Name,
-                            RsopPotPercentage = domain.DomainPercentage ?? 0.0
+                            AnalysisPercentage = domain.DomainPercentage ?? 0.0
                         };
                         if (rsopPots != null)
                         {
@@ -90,8 +91,9 @@ namespace Readinizer.Backend.Business.Factory
                                     IsRSoP = true,
                                     TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
                                     Name = rsopPot.DateTime,
-                                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                                    AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
+                                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                                    Rsop = rsopPot.Rsops.FirstOrDefault()
                                 };
                                 child.ChildNodes.Add(rsopPotOfDomain);
                             }
