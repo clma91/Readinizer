@@ -41,7 +41,8 @@ namespace Readinizer.Backend.Business.Services
             {
                 string json = JsonConvert.SerializeObject(collectionToExport, Formatting.Indented, new JsonSerializerSettings
                 {
-                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
                 });
                 File.WriteAllText(savePath, json);
 
