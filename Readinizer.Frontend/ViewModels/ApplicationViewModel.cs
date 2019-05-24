@@ -23,18 +23,32 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class ApplicationViewModel : ViewModelBase, IApplicationViewModel
     {
+        private readonly StartUpViewModel startUpViewModel;
+        private readonly TreeStructureResultViewModel treeStructureResultViewModel;
+        private readonly SpinnerViewModel spinnerViewModel;
+        private readonly DomainResultViewModel domainResultViewModel;
+        private readonly RSoPResultViewModel rsopResultViewModel;
+        private readonly OUResultViewModel ouResultViewModel;
+        private readonly SysmonResultViewModel sysmonResultViewModel;
+        private readonly IDialogService dialogService;
+        private readonly IExportService exportService;
+
         private ICommand closeCommand;
-        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => OnClose()));
+        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(OnClose));
+
         private ICommand githubCommand;
-        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => OnGithub()));
+        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(OnGithub));
+
         private ICommand exportRSoPPotsCommand;
         public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
+
         private ICommand exportRSoPsCommand;
         public ICommand ExportRSoPsCommand => exportRSoPsCommand ?? (exportRSoPsCommand = new RelayCommand(() => Export(typeof(Rsop))));
-        private ICommand newAnalysisCommand;
-        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(() => OnNewAnalysis()));
 
-        private IUnitOfWork unitOfWork;
+        private ICommand newAnalysisCommand;
+        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(OnNewAnalysis));
+
+        private readonly IUnitOfWork unitOfWork;
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -52,15 +66,6 @@ namespace Readinizer.Frontend.ViewModels
 
         public ISnackbarMessageQueue SnackbarMessageQueue { get; }
 
-        private readonly StartUpViewModel startUpViewModel;
-        private readonly TreeStructureResultViewModel treeStructureResultViewModel;
-        private readonly SpinnerViewModel spinnerViewModel;
-        private readonly DomainResultViewModel domainResultViewModel;
-        private readonly RSoPResultViewModel rsopResultViewModel;
-        private readonly OUResultViewModel ouResultViewModel;
-        private readonly SysmonResultViewModel sysmonResultViewModel;
-        private readonly IDialogService dialogService;
-        private readonly IExportService exportService;
         public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
 
         [Obsolete("Only for desing data", true)]
@@ -205,22 +210,11 @@ namespace Readinizer.Frontend.ViewModels
             SnackbarMessageQueue.Enqueue(message.Message);
         }
 
-        private void OnClose()
-        {
-            Application.Current.Shutdown();
-        }
-
-        private void OnGithub()
-        {
-            Process.Start("https://github.com/clma91/Readinizer/wiki");
-        }
-
         private void OnNewAnalysis()
         {
             ClearDb();
             ShowStartUpView();
         }
-
 
         private async void Export(Type type)
         {
@@ -250,6 +244,16 @@ namespace Readinizer.Frontend.ViewModels
                     Messenger.Default.Send(new SnackbarMessage($"The specified path '{exportPath}' does not exist"));
                 }
             }
+        }
+
+        private static void OnClose()
+        {
+            Application.Current.Shutdown();
+        }
+
+        private static void OnGithub()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/wiki");
         }
 
         private static void ClearDb()

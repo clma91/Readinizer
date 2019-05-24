@@ -26,12 +26,14 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISecuritySettingParserService securitySettingParserService;
 
         private ICommand backCommand;
-        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
-
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(Back));
 
         public int RefId{ get; set; }
+
         public Rsop rsop { get; set; }
-        public string Ou { get => rsop.OrganisationalUnit.Name; }
+
+        public string Ou => rsop.OrganisationalUnit.Name;
+
         private List<SecuritySettingsParsed> securitySettings;
         public List<SecuritySettingsParsed> SecuritySettings
         {
