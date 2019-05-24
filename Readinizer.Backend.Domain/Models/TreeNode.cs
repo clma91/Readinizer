@@ -12,7 +12,7 @@ namespace Readinizer.Backend.Domain.Models
         [JsonIgnore]
         public Dictionary<string, int> TypeRefIdDictionary { get; set; }
 
-        public string Name { get; set; }
+        public string Identificator { get; set; }
 
         public string Description { get; set; }
 
