@@ -107,7 +107,6 @@ namespace Readinizer.Frontend.ViewModels
 
         public async void BuildTree()
         {
-            // TODO: doubles if coming back from other view?
             await SetOusWithoutRSoPs();
             await SetUnavailableDomains();
             if (TreeNodes.Count <= 0)

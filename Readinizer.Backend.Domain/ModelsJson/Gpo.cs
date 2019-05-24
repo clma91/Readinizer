@@ -64,5 +64,9 @@ namespace Readinizer.Backend.Domain.ModelsJson
                 }
             };
         }
+
+        public bool ShouldSerializeGpoIdentifier() => false;
+
+        public bool ShouldSerializeLink() => false;
     }
 }
