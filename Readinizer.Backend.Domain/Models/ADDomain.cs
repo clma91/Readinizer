@@ -40,6 +40,7 @@ namespace Readinizer.Backend.Domain.Models
         [JsonIgnore]
         public virtual List<RsopPot> RsopPots { get; set; }
 
+        [JsonIgnore]
         public double? DomainPercentage { get; set; }
     }
 }

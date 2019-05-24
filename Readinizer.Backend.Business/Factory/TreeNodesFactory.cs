@@ -36,8 +36,8 @@ namespace Readinizer.Backend.Business.Factory
                 root.Description = rootDomain.IsForestRoot ? "Forest Root Domain: " : "Domain: ";
                 root.IsRSoP = false;
                 root.TypeRefIdDictionary = new Dictionary<string, int> {{"Domain", rootDomain.ADDomainId}};
-                root.Name = rootDomain.Name;
-                root.RsopPotPercentage = rootDomain.DomainPercentage ?? 0.0;
+                root.Identificator = rootDomain.Name;
+                root.AnalysisPercentage = rootDomain.DomainPercentage ?? 0.0;
                 foreach (var rsopPot in rsopPots)
                 {
                     var rsopPotOfDomain = new TreeNode
@@ -45,9 +45,10 @@ namespace Readinizer.Backend.Business.Factory
                         Description = rsopPot.Name,
                         IsRSoP = true,
                         TypeRefIdDictionary = new Dictionary<string, int> {{"RSoPPot", rsopPot.RsopPotId}},
-                        Name = rsopPot.DateTime,
-                        RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                        OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                        Identificator = rsopPot.DateTime,
+                        AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
+                        OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                        Rsop = rsopPot.Rsops.FirstOrDefault()
                     };
                     root.ChildNodes.Add(rsopPotOfDomain);
                 }
@@ -77,8 +78,8 @@ namespace Readinizer.Backend.Business.Factory
                             Description = "Domain: ",
                             IsRSoP = false,
                             TypeRefIdDictionary = new Dictionary<string, int> { { "Domain", domain.ADDomainId } },
-                            Name = domain.Name,
-                            RsopPotPercentage = domain.DomainPercentage ?? 0.0
+                            Identificator = domain.Name,
+                            AnalysisPercentage = domain.DomainPercentage ?? 0.0
                         };
                         if (rsopPots != null)
                         {
@@ -89,9 +90,10 @@ namespace Readinizer.Backend.Business.Factory
                                     Description = rsopPot.Name,
                                     IsRSoP = true,
                                     TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
-                                    Name = rsopPot.DateTime,
-                                    RsopPotPercentage = rsopPot.Rsops.First().RsopPercentage,
-                                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList()
+                                    Identificator = rsopPot.DateTime,
+                                    AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
+                                    OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                                    Rsop = rsopPot.Rsops.FirstOrDefault()
                                 };
                                 child.ChildNodes.Add(rsopPotOfDomain);
                             }

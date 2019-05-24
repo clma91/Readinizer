@@ -27,8 +27,8 @@ namespace Readinizer.Backend.Business.Services
             var successfullyExported = false;
             if (type == typeof(RsopPot))
             {
-                var test = await treeNodesFactory.CreateTree();
-                successfullyExported = ExportToJson(path, test.ToList());
+                var treeStructure = await treeNodesFactory.CreateTree();
+                successfullyExported = ExportToJson(path, treeStructure.ToList());
             }
             if (type == typeof(Rsop))
             {
