@@ -23,7 +23,6 @@ namespace Readinizer.Frontend.ViewModels
         public string ProgressText
         {
             get => progressText;
-
             set => Set(ref progressText, value);
         }
 

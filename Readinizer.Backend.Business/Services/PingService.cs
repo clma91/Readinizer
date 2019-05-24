@@ -19,29 +19,25 @@ namespace Readinizer.Backend.Business.Services
     {
         public bool isPingable(string ipAddress)
         {
-            bool pingable = false;
+            bool isPingable;
             Ping pinger = null;
 
             try
             {
                 pinger = new Ping();
-                PingReply reply = pinger.Send(ipAddress, 200); //TODO set ping timeout
-                pingable = reply.Status == IPStatus.Success;
+                var reply = pinger.Send(ipAddress, 500);
+                isPingable = reply.Status == IPStatus.Success;
             }
             catch (PingException)
             {
-                // Discard PingExceptions and return false;
                 return false;
             }
             finally
             {
-                if (pinger != null)
-                {
-                    pinger.Dispose();
-                }
+                pinger?.Dispose();
             }
 
-            return pingable;
+            return isPingable;
         }
 
     }

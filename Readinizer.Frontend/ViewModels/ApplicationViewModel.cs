@@ -36,8 +36,6 @@ namespace Readinizer.Frontend.ViewModels
 
         private IUnitOfWork unitOfWork;
 
-
-
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
         {
@@ -75,9 +73,9 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
-                                    ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
-                                    DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
-                                    OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel,
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, 
+                                    RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel,
+                                    SysmonResultViewModel sysmonResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
                                     IDialogService dialogService, IExportService exportService, IUnitOfWork unitOfWork)
         {
             this.startUpViewModel = startUpViewModel;
@@ -91,7 +89,7 @@ namespace Readinizer.Frontend.ViewModels
             this.exportService = exportService;
             this.unitOfWork = unitOfWork;
 
-            this.SnackbarMessageQueue = snackbarMessageQueue;
+            SnackbarMessageQueue = snackbarMessageQueue;
 
             var computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
             var i = computers.Find(x => x.isSysmonRunning.HasValue) != null;
@@ -121,12 +119,11 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = startUpViewModel;
         }
 
-        private void ShowTreeStructureResultView(string visability)
+        private void ShowTreeStructureResultView(string visibility)
         {
             CurrentViewModel = treeStructureResultViewModel;
-            treeStructureResultViewModel.WithSysmon = visability;
+            treeStructureResultViewModel.WithSysmon = visibility;
             treeStructureResultViewModel.BuildTree();
-            
         }
 
         private void ShowSpinnerView()
@@ -255,7 +252,7 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        private void ClearDb()
+        private static void ClearDb()
         {
             var dbContext = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
 
@@ -269,17 +266,12 @@ namespace Readinizer.Frontend.ViewModels
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Policy DBCC CHECKIDENT('READINIZER.dbo.Policy', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.SecurityOption DBCC CHECKIDENT('READINIZER.dbo.SecurityOption', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Gpo DBCC CHECKIDENT('READINIZER.dbo.Gpo', NORESEED)");
-
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', NORESEED)");
-            
-            
-
-            
         }
     }
 }
