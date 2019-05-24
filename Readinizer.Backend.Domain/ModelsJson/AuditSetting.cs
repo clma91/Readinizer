@@ -35,6 +35,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public bool IsPresent { get; set; }
 
+        public bool IsStatusOk => CurrentSettingValue.Equals(TargetSettingValue);
+
         public override bool Equals(object obj)
         {
             if (GpoId != null && SubcategoryName != null)

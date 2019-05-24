@@ -35,14 +35,16 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("SettingNumber")]
         public string TargetSettingNumber { get; set; }
 
-        [JsonProperty("Display")]
+        [JsonProperty("TargetDisplay")]
         public Display TargetDisplay { get; set; }
-
-        public bool IsPresent { get; set; }
 
         public Display CurrentDisplay { get; set; } = new Display();
 
         public string CurrentSettingNumber { get; set; }
+
+        public bool IsPresent { get; set; }
+
+        public bool IsStatusOk => CurrentDisplay.DisplayBoolean.Equals(TargetDisplay.DisplayBoolean);
 
         public override bool Equals(object obj)
         {

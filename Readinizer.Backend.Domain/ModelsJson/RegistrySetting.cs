@@ -34,9 +34,11 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("TargetValue")]
         public Value TargetValue { get; set; }
 
+        public Value CurrentValue { get; set; } = new Value();
+
         public bool IsPresent { get; set; }
 
-        public Value CurrentValue { get; set; } = new Value();
+        public bool IsStatusOk => CurrentValue.Number.Equals(TargetValue.Number);
 
         public override bool Equals(object obj)
         {
