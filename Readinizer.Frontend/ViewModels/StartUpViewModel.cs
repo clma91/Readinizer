@@ -34,7 +34,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IRSoPPotService rSoPPotService;
 
         private ICommand analyseCommand;
-        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => Analyse()));
+        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(Analyse));
 
         private bool subdomainsChecked;
         public bool SubdomainsChecked
@@ -91,7 +91,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-                var sysmonVisability = "Hidden";
+                var sysmonVisibility = "Hidden";
                 try
                 {
                     ShowSpinnerView();
@@ -108,7 +108,7 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         ChangeProgressText("Looking for RSoPs and check if Sysmon is running...");
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-                        sysmonVisability = "Visible";
+                        sysmonVisibility = "Visible";
                     }
                     else
                     {
@@ -118,7 +118,7 @@ namespace Readinizer.Frontend.ViewModels
                     ChangeProgressText("Analysing collected RSoPs...");
                     await Task.Run(() => analysisService.Analyse(null));
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                    ShowTreeStructureResult(sysmonVisability);
+                    ShowTreeStructureResult(sysmonVisibility);
                 }
                 catch (Exception e)
                 {
@@ -156,6 +156,5 @@ namespace Readinizer.Frontend.ViewModels
         {
             Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), refId));
         }
-
     }
 }

@@ -26,7 +26,16 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IDialogService dialogService;
         private readonly IAnalysisService analysisService;
         private readonly IRSoPPotService rSoPPotService;
-        
+
+        private ICommand sysmonCommand;
+        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(Sysmon));
+
+        private ICommand importRSoPsCommand;
+        public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(ImportRSoPs));
+
+        private ICommand detailCommand;
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
+
         private ADDomain rootDomain;
         public ADDomain RootDomain
         {
@@ -55,23 +64,14 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref unavailableDomains, value);
         }
 
-        private string selecteDomain;
+        private string selectDomain;
         public string SelectedDomain
         {
-            get => selecteDomain;
-            set => Set(ref selecteDomain, value);
+            get => selectDomain;
+            set => Set(ref selectDomain, value);
         }
 
         public string WithSysmon { get; set; }
-
-        private ICommand sysmonCommand;
-        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(() => Sysmon()));
-
-        private ICommand importRSoPsCommand;
-        public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(() => ImportRSoPs()));
-        
-        private ICommand detailCommand;
-        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
         
         private void ShowDetail(Dictionary<string, int> param)
         {
@@ -165,7 +165,7 @@ namespace Readinizer.Frontend.ViewModels
             RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
 
-        private void Sysmon()
+        private static void Sysmon()
         {
             Messenger.Default.Send(new ChangeView(typeof(SysmonResultViewModel)));
         }

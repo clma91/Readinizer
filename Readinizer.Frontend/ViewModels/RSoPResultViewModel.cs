@@ -28,16 +28,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISecuritySettingParserService securitySettingParserService;
 
         private ICommand backCommand;
-        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
-
-        public RsopPot rsopPot { get; set; }
-
-        public string GISS
-        {
-            get => rsopPot.Name;
-        }
-
-        public int RefId{ get; set; }
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(Back));
 
         private List<SecuritySettingsParsed> securitySettings;
         public List<SecuritySettingsParsed> SecuritySettings
@@ -45,6 +36,30 @@ namespace Readinizer.Frontend.ViewModels
             get => securitySettings;
             set => Set(ref securitySettings, value);
         }
+
+        private string rsop;
+        public string Rsop
+        {
+            get => rsop;
+            set
+            {
+                rsop = value;
+                var rsopList = rsopPot.Rsops.ToList();
+                var rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
+                ShowOUView(rsopID);
+                rsop = null;
+            }
+        }
+
+        public RsopPot rsopPot { get; set; }
+
+        public string GISS => rsopPot.Name;
+
+        public int RefId { get; set; }
+
+        public List<string> OUsInGISS => loadOUs();
+
+        public void Load() => LoadSettings();
 
 
         [Obsolete("Only for design data", true)]
@@ -62,10 +77,6 @@ namespace Readinizer.Frontend.ViewModels
             this.securitySettingParserService = securitySettingParserService;
         }
 
-
-        public void Load() => LoadSettings();
-
-
         private async void LoadSettings()
         {
             SecuritySettings = await securitySettingParserService.ParseSecuritySettings(RefId);
@@ -74,49 +85,22 @@ namespace Readinizer.Frontend.ViewModels
 
         private List<string> loadOUs()
         {
-            List<string> ous = new List<string>();
             var rsops = rsopPot.Rsops;
-            foreach (var rsop in rsops)
-            {
-                ous.Add(rsop.OrganisationalUnit.Name);
-            }
-
-            return ous;
+            return rsops.Select(rsop => rsop.OrganisationalUnit.Name).ToList();
         }
 
-        public List<string> OUsInGISS
-        {
-            get => loadOUs();
-        }
-
-        private async Task<List<OrganisationalUnit>> ousAsync()
+        private async Task<List<OrganisationalUnit>> GetOusAsync()
         {
             var ous = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             return ous;
         }
 
-        private string rsop;
-        public string Rsop
-        {
-            get { return rsop; }
-            set
-            {
-                rsop = value;
-
-                List<Rsop> rsopList = rsopPot.Rsops.ToList();
-                int rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
-                ShowOUView(rsopID);
-                rsop = null;
-            }
-        }
-
-
-        private void ShowOUView(int rsopRefId)
+        private static void ShowOUView(int rsopRefId)
         {
             Messenger.Default.Send(new ChangeView(typeof(OUResultViewModel), rsopRefId));
         }
 
-        private void ShowDomainView(int domainRefId)
+        private static void ShowDomainView(int domainRefId)
         {
             Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), domainRefId));
         }

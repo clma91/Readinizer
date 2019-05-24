@@ -44,7 +44,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public OUResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -64,7 +64,7 @@ namespace Readinizer.Frontend.ViewModels
             RaisePropertyChanged(nameof(SecuritySettings));
         }
 
-        private void ShowPotView(int potRefId)
+        private static void ShowPotView(int potRefId)
         {
             Messenger.Default.Send(new ChangeView(typeof(RSoPResultViewModel), potRefId));
 

@@ -58,7 +58,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public DomainResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
