@@ -35,10 +35,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IRSoPPotService rSoPPotService;
 
         private ICommand analyseCommand;
-        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse(), () => this.CanAnalyse));
-
-        public bool CanDiscover { get; private set; }
-        public bool CanAnalyse { get; private set; }
+        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse()));
 
         private bool subdomainsChecked;
         public bool SubdomainsChecked
@@ -96,8 +93,6 @@ namespace Readinizer.Frontend.ViewModels
             this.sysmonService = sysmonService;
             this.analysisService = analysisService;
             this.rSoPPotService = rSoPPotService;
-            CanDiscover = true;
-            CanAnalyse = true;
         }
  
         private async void Analyse()
@@ -108,20 +103,27 @@ namespace Readinizer.Frontend.ViewModels
                 try
                 {
                     ShowSpinnerView();
+                    ChangeProgressText("Looking for Domains...");
                     await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
+                    ChangeProgressText("Looking for Sites...");
                     await Task.Run(() => siteService.SearchAllSites());
+                    ChangeProgressText("Looking for Organisation Units...");
                     await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    ChangeProgressText("Looking for Computers...");
                     await Task.Run(() => computerService.GetComputers());
+                    
                     if (sysmonChecked)
                     {
+                        ChangeProgressText("Looking for RSoPs and check if Sysmon is running...");
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
                         sysmonVisability = "Visible";
                     }
                     else
                     {
+                        ChangeProgressText("Looking for RSoPs...");
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                     }
-
+                    ChangeProgressText("Analysing collected RSoPs...");
                     await Task.Run(() => analysisService.Analyse(null));
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
                     ShowTreeStructureResult(sysmonVisability);
@@ -136,6 +138,11 @@ namespace Readinizer.Frontend.ViewModels
             {
                 Messenger.Default.Send(new SnackbarMessage("Could not find specified domain in this forest"));
             }
+        }
+
+        private static void ChangeProgressText(string progressText)
+        {
+            Messenger.Default.Send(new ChangeProgressText(progressText));
         }
 
         private void ShowTreeStructureResult(string visability)

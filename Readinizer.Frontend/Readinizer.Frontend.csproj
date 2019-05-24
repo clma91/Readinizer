@@ -159,6 +159,7 @@
     <Compile Include="Interfaces\ITreeStructureResultViewModel.cs" />
     <Compile Include="Messages\ChangeView.cs" />
     <Compile Include="Messages\EnableExport.cs" />
+    <Compile Include="Messages\ChangeProgressText.cs" />
     <Compile Include="Messages\SnackbarMessage.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Interfaces\IRSoPResultViewModel.cs" />
