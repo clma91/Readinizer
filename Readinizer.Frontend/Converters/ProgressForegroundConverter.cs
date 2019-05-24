@@ -15,7 +15,8 @@ namespace Readinizer.Frontend.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double progress = (double)value;
-            Brush foreground = Brushes.Red;
+            Brush foreground = Brushes.Green;
+            Brush background = Brushes.Red;
 
             if (progress > 90d)
             {
