@@ -63,7 +63,7 @@ namespace Readinizer.Frontend
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
-            AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
+            //AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
             ctx.Database.CreateIfNotExists();
 

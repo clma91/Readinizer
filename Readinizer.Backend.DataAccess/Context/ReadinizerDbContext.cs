@@ -16,7 +16,7 @@ namespace Readinizer.Backend.DataAccess
     {
         public ReadinizerDbContext()
             : base("name=ReadinizerDbContext")
-        { 
+        {
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
