@@ -80,11 +80,6 @@
         "TargetSettingValue": "SuccessAndFailure"
     },
     {
-        "SubCategoryName": "Audit Filtering Platform Connection",
-        "PolicyTarget": "Object Access",
-        "TargetSettingValue": "SuccessAndFailure"
-    },
-    {
         "SubCategoryName": "Audit Handle Manipulation",
         "PolicyTarget": "Object Access",
         "TargetSettingValue": "Success"
