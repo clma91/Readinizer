@@ -12,17 +12,17 @@
     {
         "SubCategoryName": "Audit Computer Account Management",
         "PolicyTarget": "Account Management",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     },
     {
         "SubCategoryName": "Audit Other Account Management Events",
         "PolicyTarget": "Account Management",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     },
     {
         "SubCategoryName": "Audit Security Group Management",
         "PolicyTarget": "Account Management",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     },
     {
         "SubCategoryName": "Audit User Account Management",
@@ -112,7 +112,7 @@
     {
         "SubCategoryName": "Audit Audit Policy Change",
         "PolicyTarget": "Policy Change",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     },
     {
         "SubCategoryName": "Audit MPSSVC Rule-Level Policy Change",
@@ -137,6 +137,6 @@
     {
         "SubCategoryName": "Audit System Integrity",
         "PolicyTarget": "System",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     }
 ]
