@@ -62,10 +62,12 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<IDialogService, DialogService>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
+            AppDomain.CurrentDomain.SetData("AppData", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Readinizer");
+            //AppDomain.CurrentDomain.SetData("Recommended", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Readinizer\\RecommendedSettings");
 
-            //AppDomain.CurrentDomain.SetData("DataDirectory", AppDomain.CurrentDomain.BaseDirectory);
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
             ctx.Database.CreateIfNotExists();
+            
 
             var applicationView = container.Resolve<ApplicationView>();
             applicationView.Show();

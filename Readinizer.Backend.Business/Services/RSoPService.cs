@@ -130,7 +130,7 @@ namespace Readinizer.Backend.Business.Services
                 gpRsop.LoggingComputer = computerpath;
                 gpRsop.LoggingUser = user;
                 gpRsop.CreateQueryResults();
-                gpRsop.GenerateReportToFile(ReportType.Xml, ConfigurationManager.AppSettings["ReceivedRSoP"] + "\\" + "Ou_" + ouId + "-Site_" + siteId + ".xml");
+                gpRsop.GenerateReportToFile(ReportType.Xml, Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\ReceivedRsop" + "\\Ou_" + ouId + "-Site_" + siteId + ".xml");
             }
             catch (Exception e)
             {
@@ -141,7 +141,7 @@ namespace Readinizer.Backend.Business.Services
 
         public void clearOldRsops()
         {
-            string[] filePaths = Directory.GetFiles(ConfigurationManager.AppSettings["ReceivedRSoP"]);
+            string[] filePaths = Directory.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\ReceivedRsop");
             foreach (string filePath in filePaths)
             {
 

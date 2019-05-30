@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task<List<Rsop>> Analyse(string importPath)
         {
-            var rsopPath = string.IsNullOrEmpty(importPath) ? ConfigurationManager.AppSettings["ReceivedRSoP"] : importPath;
+            var rsopPath = string.IsNullOrEmpty(importPath) ? Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\ReceivedRsop" : importPath;
             var directoryInfo = new DirectoryInfo(rsopPath);
             var rsopXml = directoryInfo.GetFiles("*.xml");
             var rsops = new List<Rsop>();
@@ -131,7 +132,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
-            var recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], new List<AuditSetting>());
+            var recommendedAuditSettings = GetRecommendedSettings(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\RecommendedSettings\\RecommendedAuditSettings.json", new List<AuditSetting>());
 
             var jsonAuditSettings = rsop.SelectToken("$..AuditSetting");
             var auditSettings = new List<AuditSettingJson>();
@@ -160,7 +161,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
-            var recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], new List<SecurityOption>());
+            var recommendedSecurityOptions = GetRecommendedSettings(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\RecommendedSettings\\RecommendedSecurityOptions.json", new List<SecurityOption>());
 
             var jsonSecurityOptions = rsop.SelectToken("$..SecurityOptions");
             var securityOptions = new List<SecurityOptionJson>();
@@ -197,7 +198,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
         {
-            var recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], new List<RegistrySetting>());
+            var recommendedRegistrySettings = GetRecommendedSettings(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\RecommendedSettings\\RecommendedRegistrySettings.json", new List<RegistrySetting>());
 
             var jsonRegistrySettings = rsop.SelectToken("$..RegistrySetting");
             var registrySettings = new List<RegistrySettingJson>();
@@ -227,7 +228,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static List<Policy> AnalysePolicies(JToken rsop)
         {
-            var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
+            var recommendedPolicies = GetRecommendedSettings(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer\\RecommendedSettings\\RecommendedPolicies.json", new List<Policy>());
 
             var jsonPolicies = rsop.SelectToken("$..Policy");
             var policies = new List<PolicyJson>();

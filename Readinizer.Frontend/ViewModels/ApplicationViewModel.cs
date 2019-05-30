@@ -114,6 +114,7 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Register<ChangeView>(this, ChangeView);
             Messenger.Default.Register<SnackbarMessage>(this, OnShowMessage);
             Messenger.Default.Register<EnableExport>(this, EnableExport);
+
         }
 
         private void ShowStartUpView()
