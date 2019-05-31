@@ -79,6 +79,19 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.GroupPolicy.Management, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Readinizer.Backend.Business\DependentAssemblies\Microsoft.GroupPolicy.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.GroupPolicy.Management.Interop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Readinizer.Backend.Business\DependentAssemblies\Microsoft.GroupPolicy.Management.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\Readinizer.Backend.Business\DependentAssemblies\Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib.dll</HintPath>
+    </Reference>
     <Reference Include="MvvmDialogs, Version=5.3.0.0, Culture=neutral, PublicKeyToken=3d3b9708589bc73e, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmDialogs.5.3.0\lib\net45\MvvmDialogs.dll</HintPath>
     </Reference>
