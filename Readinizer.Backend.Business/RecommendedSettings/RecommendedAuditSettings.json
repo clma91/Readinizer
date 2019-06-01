@@ -127,11 +127,11 @@
     {
         "SubCategoryName": "Audit Security System Extension",
         "PolicyTarget": "System",
-        "TargetSettingValue": "SuccessAndFailure"
+        "TargetSettingValue": "Success"
     },
     {
         "SubCategoryName": "Audit System Integrity",
         "PolicyTarget": "System",
-        "TargetSettingValue": "Success"
+        "TargetSettingValue": "SuccessAndFailure"
     }
 ]
