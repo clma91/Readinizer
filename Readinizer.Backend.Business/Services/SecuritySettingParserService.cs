@@ -19,11 +19,22 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int rsopPotRefId)
+        public async Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int RefId, string type)
         {
-            var rsopPot = unitOfWork.RsopPotRepository.GetByID(rsopPotRefId);
+            Rsop rsop = new Rsop();
+            if (type.Equals("RsopPot"))
+            {
+                var rsopPot = unitOfWork.RsopPotRepository.GetByID(RefId);
+                rsop = rsopPot.Rsops.FirstOrDefault();
+            }
+            else
+            {
+                rsop = unitOfWork.RsopRepository.GetByID(RefId);
+
+            }
+
             var GPOs = await unitOfWork.GpoRepository.GetAllEntities();
-            var rsop = rsopPot.Rsops.FirstOrDefault();
+            
             List<SecuritySettingsParsed> settings = new List<SecuritySettingsParsed>();
             foreach (var setting in rsop.AuditSettings)
             {

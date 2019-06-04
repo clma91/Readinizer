@@ -19,6 +19,7 @@ using MvvmDialogs;
 using Readinizer.Backend.Business.Factory;
 using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
+using System.IO;
 
 namespace Readinizer.Frontend
 {
@@ -62,9 +63,10 @@ namespace Readinizer.Frontend
             container.RegisterSingleton<IDialogService, DialogService>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
-            AppDomain.CurrentDomain.SetData("AppData", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Readinizer");
-            //AppDomain.CurrentDomain.SetData("Recommended", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "Readinizer\\RecommendedSettings");
-
+            var a = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer");
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\Readinizer"));
+         
+            
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
             ctx.Database.CreateIfNotExists();
             

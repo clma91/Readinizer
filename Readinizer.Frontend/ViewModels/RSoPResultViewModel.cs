@@ -68,7 +68,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private async void LoadSettings()
         {
-            SecuritySettings = await securitySettingParserService.ParseSecuritySettings(RefId);
+            SecuritySettings = await securitySettingParserService.ParseSecuritySettings(RefId, "RsopPot");
             RaisePropertyChanged(nameof(SecuritySettings));
         }
 

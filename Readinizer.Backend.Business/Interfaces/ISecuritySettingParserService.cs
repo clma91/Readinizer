@@ -9,6 +9,6 @@ namespace Readinizer.Backend.Business.Interfaces
 {
     public interface ISecuritySettingParserService
     {
-        Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int rsopPotRefId);
+        Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int rsopPotRefId, string type);
     }
 }

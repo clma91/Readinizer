@@ -23,14 +23,14 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="4*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
-        <StackPanel Height="30" Width="800" Grid.Row="0">
+        <StackPanel Height="40" Width="800" Grid.Row="0">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
                 <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="20"></TextBlock>
             </Label>
         </StackPanel>
-        <StackPanel Height="30" Width="800" Grid.Row="1">
+        <StackPanel Height="40" Width="800" Grid.Row="1">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
                 <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
             </Label>
@@ -102,6 +102,6 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
+        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="50, 0, 0, 20" Content="Back"/>
         </Grid>
 </UserControl>

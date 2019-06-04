@@ -90,7 +90,16 @@
     </Reference>
     <Reference Include="Microsoft.GroupPolicy.Management, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>DependendAssemblies\Microsoft.GroupPolicy.Management.dll</HintPath>
+      <HintPath>DependentAssemblies\Microsoft.GroupPolicy.Management.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.GroupPolicy.Management.Interop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>DependentAssemblies\Microsoft.GroupPolicy.Management.Interop.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>DependentAssemblies\Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
