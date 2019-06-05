@@ -21,11 +21,20 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task GenerateRsopPots()
         {
-            var rsops = await unitOfWork.RsopRepository.GetAllEntities();
-            var sortedRsopsByDomain = rsops.OrderBy(x => x.Domain.ParentId).ToList();
-            var rsopPots = new List<RsopPot>();
             index = 1;
 
+            var rsops = await unitOfWork.RsopRepository.GetAllEntities();
+            var sortedRsopsByDomain = rsops.OrderBy(x => x.Domain.ParentId).ToList();
+            var rsopPots = FillRsopPotList(sortedRsopsByDomain);
+
+            unitOfWork.RsopPotRepository.AddRange(rsopPots);
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        public List<RsopPot> FillRsopPotList(List<Rsop> sortedRsopsByDomain)
+        {
+            var rsopPots = new List<RsopPot>();
             AddRsopPot(sortedRsopsByDomain.First());
 
             foreach (var rsop in sortedRsopsByDomain.Skip(1))
@@ -43,9 +52,7 @@ namespace Readinizer.Backend.Business.Services
                 rsopPots.Add(RsopPotFactory(rsop));
             }
 
-            unitOfWork.RsopPotRepository.AddRange(rsopPots);
-
-            await unitOfWork.SaveChangesAsync();
+            return rsopPots;
         }
 
         private static RsopPot RsopPotFactory(Rsop rsop)
