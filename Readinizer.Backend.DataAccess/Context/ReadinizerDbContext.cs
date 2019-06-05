@@ -1,16 +1,12 @@
-using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Runtime.CompilerServices;
 using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.DataAccess
 {
-    using Readinizer.Backend.Domain.Models;
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
 
     public class ReadinizerDbContext : DbContext, IReadinizerDbContext
     {
