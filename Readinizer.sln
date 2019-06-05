@@ -13,16 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Readinizer.Backend.Domain",
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Readinizer.Setup", "Readinizer.Setup\Readinizer.Setup.vdproj", "{250EDEA0-0B04-4FD0-A130-FD9F7E06DCB8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReceivedRSoP", "ReceivedRSoP", "{40649E03-3F56-4E79-B422-1078506CCD5B}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RecommendedSettings", "RecommendedSettings", "{9C102E39-94D8-47FD-BA26-3C6C8E03C9FD}"
-	ProjectSection(SolutionItems) = preProject
-		RecommendedSettings\RecommendedAuditSettings.json = RecommendedSettings\RecommendedAuditSettings.json
-		RecommendedSettings\RecommendedPolicies.json = RecommendedSettings\RecommendedPolicies.json
-		RecommendedSettings\RecommendedRegistrySettings.json = RecommendedSettings\RecommendedRegistrySettings.json
-		RecommendedSettings\RecommendedSecurityOptions.json = RecommendedSettings\RecommendedSecurityOptions.json
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

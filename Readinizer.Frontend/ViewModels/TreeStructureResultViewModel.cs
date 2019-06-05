@@ -101,11 +101,12 @@ namespace Readinizer.Frontend.ViewModels
             this.dialogService = dialogService;
             this.analysisService = analysisService;
             this.rSoPPotService = rSoPPotService;
-            TreeNodes = new ObservableCollection<TreeNode>();
+            
         }
 
         public async void BuildTree()
         {
+            TreeNodes = new ObservableCollection<TreeNode>();
             await SetOusWithoutRSoPs();
             await SetUnavailableDomains();
             if (TreeNodes.Count <= 0)
@@ -134,7 +135,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
-            AddOu(ousWithoutRsoP.First());
+            AddOu(ousWithoutRsoP.FirstOrDefault());
             OUsWithoutRSoP.Clear();
 
             foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
