@@ -165,8 +165,8 @@
                 </Grid>
             </Border>
 
+            <Button x:Name="Sysmon" Grid.Row="6" Width="100" Height="50" Grid.Column="3" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,20,10">Sysmon</Button>
 
-            <Button x:Name="Sysmon" Grid.Row="6" Grid.Column="3"  Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}"  HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,20,20" >Sysmon</Button>
         </Grid>
     </ScrollViewer>
 </UserControl>

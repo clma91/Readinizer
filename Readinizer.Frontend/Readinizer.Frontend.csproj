@@ -181,7 +181,6 @@
     <Compile Include="ViewModels\SysmonResultViewModel.cs" />
     <Compile Include="ViewModels\OUResultViewModel.cs" />
     <Compile Include="ViewModels\RSoPResultViewModel.cs" />
-    <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\DomainResultViewModel.cs" />
     <Compile Include="ViewModels\StartUpViewModel.cs" />
     <Compile Include="ViewModels\SpinnerViewModel.cs" />

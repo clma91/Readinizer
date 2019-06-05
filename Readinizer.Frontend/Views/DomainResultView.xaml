@@ -114,7 +114,7 @@
                     <ListBox x:Name="GoodList" ItemsSource="{Binding Path=GoodList}" SelectedItem="{Binding Path=PotName}">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Name="TextBoxList" Text="{Binding Name}" FontSize="12"/>
+                                <TextBlock Name="TextBoxList" Text="{Binding}" FontSize="12"/>
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>

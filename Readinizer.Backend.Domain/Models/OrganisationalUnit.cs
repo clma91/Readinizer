@@ -36,6 +36,6 @@ namespace Readinizer.Backend.Domain.Models
         public virtual ICollection<Computer> Computers { get; set; }
 
         [JsonIgnore]
-        public bool HasReachableComputer { get; set; }
+        public bool? HasReachableComputer { get; set; }
     }
 }
