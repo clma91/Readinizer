@@ -55,7 +55,6 @@
                 <MenuItem Header="_Settings"/>
             </MenuItem>
             <MenuItem Header="_Export">
-                <MenuItem Header="_Export Security Settings (RSoP)" Command="{Binding ExportRSoPsCommand}" IsEnabled="{Binding CanExport}"/>
                 <MenuItem Header="_Export Grouped Security Settings (RSoP per OU)" Command="{Binding ExportRSoPPotsCommand}" IsEnabled="{Binding CanExport}"/>
             </MenuItem>
             <MenuItem Header="_Help">
