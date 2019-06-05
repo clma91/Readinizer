@@ -19,7 +19,8 @@ namespace Readinizer.Frontend.ViewModels
         private ICommand backCommand;
         public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(Back));
 
-        private List<string> SysmonActiveList { get; set; }
+        private List<string> sysmonActiveList { get; set; }
+        public List<string> SysmonActiveList => sysmonActiveList;
 
         private List<string> sysmonNotActiveList { get; set; }
         public List<string> SysmonNotActiveList => sysmonNotActiveList;
@@ -65,7 +66,7 @@ namespace Readinizer.Frontend.ViewModels
                 }
             }
 
-            SysmonActiveList = good;
+            sysmonActiveList = good;
             sysmonNotActiveList = bad;
         }
 
@@ -81,23 +82,7 @@ namespace Readinizer.Frontend.ViewModels
             return valueList;
         }
 
-        public List<KeyValuePair<string, int>> LoadPieChartData
-        {
-            get => loadPieChartData();
-
-        }
-
-        public List<string> SysmonNotActiveList
-        {
-            get => sysmonNotActiveList;
-        }
-
-        public List<string> SysmonActiveList
-        {
-            get => sysmonActiveList;
-        }
-
-        private void ShowTreeStructure()
+        private static void ShowTreeStructure()
         {
             Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
         }
