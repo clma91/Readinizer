@@ -14,37 +14,31 @@
              Background="{DynamicResource MaterialDesignPaper}"
              FontFamily="{DynamicResource MaterialDesignFont}"
              mc:Ignorable="d"
-             MinHeight="450" MinWidth="800"
+             MinHeight="700" MinWidth="1080"
              Width="Auto" Height="Auto"
              d:DataContext="{d:DesignInstance viewModels:OUResultViewModel, IsDesignTimeCreatable=True}">
 
-    <StackPanel>
-        <StackPanel Height="50" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Height="30" Width="800" Grid.Row="0">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="24"></TextBlock>
+                <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="20"></TextBlock>
             </Label>
         </StackPanel>
-        <StackPanel Height="50" Width="800">
+        <StackPanel Height="30" Width="800" Grid.Row="1">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
                 <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
             </Label>
         </StackPanel>
-        <Grid MinHeight="265" MinWidth="800" Height="Auto" Width="Auto" MaxHeight="500">
-            <DataGrid ItemsSource="{Binding AuditSettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False">
+        <Grid Grid.Row="2" MinHeight="265" Height="Auto" Width="Auto" MaxHeight="500">
+            <DataGrid ItemsSource="{Binding SecuritySettings}" AutoGenerateColumns="False" HorizontalAlignment="Center" Padding="5" CanUserAddRows="False" MinWidth="1000">
                 <DataGrid.Columns>
-                    <DataGridTemplateColumn Header="Status" IsReadOnly="True">
-                        <DataGridTemplateColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                                <Setter Property="FontSize" Value="14"></Setter>
-                            </Style>
-                        </DataGridTemplateColumn.HeaderStyle>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <materialDesign:PackIcon Kind="{Binding Icon}" VerticalAlignment="Center" Margin="20 0 0 0" Width="30" Height="30" Foreground="{Binding Color}"/>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="GPO" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="GPO" IsReadOnly="True" Width="225">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                 <Setter Property="FontSize" Value="14"></Setter>
@@ -56,7 +50,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Setting" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Setting" IsReadOnly="True" Width="325">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                 <Setter Property="FontSize" Value="14"></Setter>
@@ -68,19 +62,7 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Current Value" IsReadOnly="True">
-                        <DataGridTemplateColumn.HeaderStyle>
-                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
-                                <Setter Property="FontSize" Value="14"></Setter>
-                            </Style>
-                        </DataGridTemplateColumn.HeaderStyle>
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Value}"></TextBlock>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Target Value" IsReadOnly="True">
+                    <DataGridTemplateColumn Header="Target Value" IsReadOnly="True" Width="175">
                         <DataGridTemplateColumn.HeaderStyle>
                             <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
                                 <Setter Property="FontSize" Value="14"></Setter>
@@ -92,11 +74,34 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Current Value" IsReadOnly="True" Width="175">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="FontSize" Value="14"></Setter>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Value}"></TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Status" IsReadOnly="True" Width="Auto">
+                        <DataGridTemplateColumn.HeaderStyle>
+                            <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource MaterialDesignDataGridColumnHeader}">
+                                <Setter Property="FontSize" Value="14"></Setter>
+                            </Style>
+                        </DataGridTemplateColumn.HeaderStyle>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <materialDesign:PackIcon Kind="{Binding Icon}" VerticalAlignment="Center"  Width="30" Height="30" Foreground="{Binding Color}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <StackPanel Height="70" VerticalAlignment="Bottom">
-            <Button x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
-        </StackPanel>
-    </StackPanel>
+        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom"  HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
+        </Grid>
 </UserControl>

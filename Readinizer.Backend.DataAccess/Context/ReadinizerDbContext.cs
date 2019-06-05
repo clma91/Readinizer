@@ -1,15 +1,12 @@
+using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using System.Runtime.CompilerServices;
 using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.DataAccess
 {
-    using Readinizer.Backend.Domain.Models;
-    using System;
-    using System.Data.Entity;
-    using System.Linq;
 
     public class ReadinizerDbContext : DbContext, IReadinizerDbContext
     {
@@ -34,11 +31,14 @@ namespace Readinizer.Backend.DataAccess
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            
 
             modelBuilder.Entity<ADDomain>().ToTable(nameof(ADDomain));
             modelBuilder.Entity<ADDomain>().HasKey(x => x.ADDomainId);
-            modelBuilder.Entity<ADDomain>().HasMany(x => x.SubADDomains).WithOptional().HasForeignKey(x => x.ParentId);
+            modelBuilder.Entity<ADDomain>().HasMany(x => x.SubADDomains).WithOptional()
+                .HasForeignKey(x => new {x.ParentId});
             modelBuilder.Entity<ADDomain>().Property(x => x.Name).IsRequired();
+
 
 
             modelBuilder.Entity<Site>().ToTable(nameof(Site));
@@ -56,34 +56,40 @@ namespace Readinizer.Backend.DataAccess
 
             modelBuilder.Entity<OrganisationalUnit>().ToTable(nameof(OrganisationalUnit));
             modelBuilder.Entity<OrganisationalUnit>().HasKey(x => x.OrganisationalUnitId);
-            modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional().HasForeignKey(x => x.ParentId);
-            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits).HasForeignKey(x => new { x.ADDomainRefId });
+            modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional()
+                .HasForeignKey(x => new {x.ParentId});
+            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits)
+                .HasForeignKey(x => new {x.ADDomainRefId});
 
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
             modelBuilder.Entity<Computer>().HasKey(x => x.ComputerId);
-            modelBuilder.Entity<Computer>().HasRequired(x => x.Site).WithMany(x => x.Computers).HasForeignKey(x => new {x.SiteRefId});
-           
+            modelBuilder.Entity<Computer>().HasRequired(x => x.Site).WithMany(x => x.Computers)
+                .HasForeignKey(x => new {x.SiteRefId});
 
-           modelBuilder.Entity<OrganisationalUnit>().HasMany<Computer>(x => x.Computers).WithMany(x => x.OrganisationalUnits).Map(x =>
-            {
-                x.MapLeftKey("OrganisationalUnitRefId");
-                x.MapRightKey("ComputerRefId");
-                x.ToTable("OrganisationalUnitComputer");
-            });
+
+            modelBuilder.Entity<OrganisationalUnit>().HasMany<Computer>(x => x.Computers)
+                .WithMany(x => x.OrganisationalUnits).Map(x =>
+                {
+                    x.MapLeftKey("OrganisationalUnitRefId");
+                    x.MapRightKey("ComputerRefId");
+                    x.ToTable("OrganisationalUnitComputer");
+                });
 
 
             modelBuilder.Entity<RsopPot>().ToTable(nameof(RsopPot));
             modelBuilder.Entity<RsopPot>().HasKey(x => x.RsopPotId);
-            modelBuilder.Entity<RsopPot>().HasMany(x => x.Rsops).WithOptional().HasForeignKey(x => x.RsopPotRefId);
-            modelBuilder.Entity<RsopPot>().HasOptional(x => x.Domain).WithMany(x => x.RsopPots);
+            modelBuilder.Entity<RsopPot>().HasMany(x => x.Rsops).WithOptional().HasForeignKey(x => new {x.RsopPotRefId})
+                ;
+            modelBuilder.Entity<RsopPot>().HasOptional(x => x.Domain).WithMany(x => x.RsopPots).HasForeignKey(x => new {x.DomainRefId});
 
 
             modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));
             modelBuilder.Entity<Rsop>().HasKey(x => x.RsopId);
-            modelBuilder.Entity<Rsop>().HasOptional(x => x.Domain).WithMany(x => x.Rsops);
-            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithMany(x => x.Rsops);
-            modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithMany(x => x.Rsops);
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.Domain).WithMany(x => x.Rsops).HasForeignKey(x => new { x.DomainRefId });
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithMany(x => x.Rsops)
+                .HasForeignKey(x => new {x.OURefId});
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithMany(x => x.Rsops).HasForeignKey(x => new { x.SiteRefId });
             
 
 

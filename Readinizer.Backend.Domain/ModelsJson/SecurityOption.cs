@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
@@ -12,10 +6,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class SecurityOption
     {
+        [JsonIgnore]
         public int SecurityOptionId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }
@@ -32,14 +29,16 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("SettingNumber")]
         public string TargetSettingNumber { get; set; }
 
-        [JsonProperty("Display")]
+        [JsonProperty("TargetDisplay")]
         public Display TargetDisplay { get; set; }
-
-        public bool IsPresent { get; set; }
 
         public Display CurrentDisplay { get; set; } = new Display();
 
         public string CurrentSettingNumber { get; set; }
+
+        public bool IsPresent { get; set; }
+
+        public bool IsStatusOk => CurrentDisplay.DisplayBoolean.Equals(TargetDisplay.DisplayBoolean);
 
         public override bool Equals(object obj)
         {

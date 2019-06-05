@@ -7,6 +7,8 @@
         xmlns:views="clr-namespace:Readinizer.Frontend.Views" 
         xmlns:local="clr-namespace:Readinizer.Frontend.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
+        md:DialogServiceViews.IsRegistered="True"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
@@ -16,8 +18,8 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="Readinizer" 
-        MinWidth="820" MinHeight="480"
-        Width="Auto" Height="Auto" SizeToContent="WidthAndHeight">
+        MinWidth="1100" MinHeight="780" MaxHeight="{Binding ScreenHeight}"
+        Width="1100" Height="780">
 
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:StartUpViewModel}">
@@ -38,15 +40,19 @@
         <DataTemplate DataType="{x:Type viewModels:OUResultViewModel}">
             <views:OUResultView></views:OUResultView>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:SysmonResultViewModel}">
+            <views:SysmonResultView></views:SysmonResultView>
+        </DataTemplate>
     </Window.Resources>
 
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Close" Command="{Binding CloseCommand}"/>
+                <MenuItem Header="_New Analysis" Command="{Binding NewAnalysisCommand}"/>
             </MenuItem>
-            <MenuItem Header="_Edit">
-                <MenuItem Header="_Settings"/>
+            <MenuItem Header="_Export">
+                <MenuItem Header="_Export Grouped Security Settings (RSoP per OU)" Command="{Binding ExportRSoPPotsCommand}" IsEnabled="{Binding CanExport}"/>
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_User Manual" Command="{Binding GithubCommand}"/>

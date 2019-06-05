@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class AuditSetting
     {
+        [JsonIgnore]
         public int AuditSettingId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }
@@ -24,16 +22,19 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("PolicyTarget")]
         public string PolicyTarget { get; set; }
 
-        [JsonProperty("SettingValue")]
+        [JsonProperty("TargetSettingValue")]
         public AuditSettingValue TargetSettingValue { get; set; }
 
+        [JsonProperty("SettingValue")]
         public AuditSettingValue CurrentSettingValue { get; set; }
 
         public bool IsPresent { get; set; }
 
+        public bool IsStatusOk => CurrentSettingValue.Equals(TargetSettingValue);
+
         public override bool Equals(object obj)
         {
-            if (GpoId != null)
+            if (GpoId != null && SubcategoryName != null)
             {
                 var auditSetting = obj as AuditSetting;
 
@@ -42,7 +43,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
                     return false;
                 }
 
-                return CurrentSettingValue.Equals(auditSetting.CurrentSettingValue);
+                return SubcategoryName.Equals(auditSetting.SubcategoryName) && CurrentSettingValue.Equals(auditSetting.CurrentSettingValue);
             }
 
             return base.Equals(obj);

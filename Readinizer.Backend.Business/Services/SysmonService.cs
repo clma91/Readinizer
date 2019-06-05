@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Text;
+﻿using System.Management;
 using System.Threading.Tasks;
-using NLog.LayoutRenderers.Wrappers;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
@@ -25,22 +19,19 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task sysmonCheck(string serviceName)
         {
-        List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-        List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+        var allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+        var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
 
-            foreach (OrganisationalUnit OU in allOUs)
+        foreach (OrganisationalUnit OU in allOUs)
             {
                 foreach (var computer in OU.Computers)
                 {
-                    var domain = allDomains.Find(x => x.ADDomainId == OU.ADDomainRefId);
-
+                    var domain = OU.ADDomain;
                     
                     if (pingService.isPingable(computer.IpAddress))
                     {
-                        computer.PingSuccessfull = true;
-                        computer.isSysmonRunning =  isSysmonRunning(
-                            serviceName, System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(),
-                            computer.ComputerName, domain.Name);
+                        computer.PingSuccessful = true;
+                        computer.isSysmonRunning =  isSysmonRunning(serviceName, System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(), computer.ComputerName, domain.Name);
                     }
                 }
 
@@ -48,14 +39,13 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-
         public bool isSysmonRunning(string serviceName, string user, string computerName, string domain)
         {
-            ConnectionOptions op = new ConnectionOptions();
-            ManagementScope scope = new ManagementScope(@"\\" + computerName +"."+ domain + "\\root\\cimv2", op);
+            var op = new ConnectionOptions();
+            var scope = new ManagementScope(@"\\" + computerName +"."+ domain + "\\root\\cimv2", op);
             scope.Connect();
-            ManagementPath path = new ManagementPath("Win32_Service");
-            ManagementClass services = new ManagementClass(scope, path, null);
+            var path = new ManagementPath("Win32_Service");
+            var services = new ManagementClass(scope, path, null);
 
             foreach (var service in services.GetInstances())
             { 
@@ -66,6 +56,5 @@ namespace Readinizer.Backend.Business.Services
             }
             return false;
         }
-
     }
 }

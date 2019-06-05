@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.Converter;
@@ -12,10 +8,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Gpo
     {
+        [JsonIgnore]
         public int GpoId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         [JsonProperty("Name")]
@@ -61,5 +60,9 @@ namespace Readinizer.Backend.Domain.ModelsJson
                 }
             };
         }
+
+        public bool ShouldSerializeGpoIdentifier() => false;
+
+        public bool ShouldSerializeLink() => false;
     }
 }

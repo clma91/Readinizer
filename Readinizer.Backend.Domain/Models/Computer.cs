@@ -4,11 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Readinizer.Backend.Domain.Models
 {
     public class Computer
     {
+        [JsonIgnore]
         public int ComputerId { get; set; }
 
         public string ComputerName { get; set; }
@@ -19,8 +21,10 @@ namespace Readinizer.Backend.Domain.Models
 
         public string IpAddress { get; set; }
 
-        public bool PingSuccessfull { get; set; }
+        [JsonIgnore]
+        public bool PingSuccessful { get; set; }
 
+        [JsonIgnore]
         public int SiteRefId { get; set; }
 
         public Site Site { get; set; }

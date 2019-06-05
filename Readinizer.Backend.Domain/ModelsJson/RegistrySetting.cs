@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
@@ -11,10 +6,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class RegistrySetting
     {
+        [JsonIgnore]
         public int RegistrySettingId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }
@@ -31,9 +29,11 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("TargetValue")]
         public Value TargetValue { get; set; }
 
+        public Value CurrentValue { get; set; } = new Value();
+
         public bool IsPresent { get; set; }
 
-        public Value CurrentValue { get; set; } = new Value();
+        public bool IsStatusOk => CurrentValue.Number.Equals(TargetValue.Number);
 
         public override bool Equals(object obj)
         {

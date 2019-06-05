@@ -1,15 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Configuration;
+using System.Data.Entity;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MaterialDesignThemes.Wpf;
+using MvvmDialogs;
+using MvvmDialogs.FrameworkDialogs.SaveFile;
+using Readinizer.Backend.Business.Interfaces;
+using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
@@ -18,29 +21,53 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class ApplicationViewModel : ViewModelBase, IApplicationViewModel
     {
-        private ICommand closeCommand;
-        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => this.OnClose(), () => true));
-        private ICommand githubCommand;
-        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => this.OnGithub(), () => true));
-
-        private ViewModelBase currentViewModel;
-        public ViewModelBase CurrentViewModel
-        {
-            get { return currentViewModel; }
-            set { Set(ref currentViewModel, value); }
-        }
-
-        public ISnackbarMessageQueue SnackbarMessageQueue { get; }
-
         private readonly StartUpViewModel startUpViewModel;
         private readonly TreeStructureResultViewModel treeStructureResultViewModel;
         private readonly SpinnerViewModel spinnerViewModel;
         private readonly DomainResultViewModel domainResultViewModel;
         private readonly RSoPResultViewModel rsopResultViewModel;
         private readonly OUResultViewModel ouResultViewModel;
+        private readonly SysmonResultViewModel sysmonResultViewModel;
+        private readonly IDialogService dialogService;
+        private readonly IExportService exportService;
+
+        private ICommand closeCommand;
+        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(OnClose));
+
+        private ICommand githubCommand;
+        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(OnGithub));
+
+        private ICommand exportRSoPPotsCommand;
+        public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
+
+        private ICommand exportRSoPsCommand;
+        public ICommand ExportRSoPsCommand => exportRSoPsCommand ?? (exportRSoPsCommand = new RelayCommand(() => Export(typeof(Rsop))));
+
+        private ICommand newAnalysisCommand;
+        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(OnNewAnalysis));
+
+        private readonly IUnitOfWork unitOfWork;
+
+        private ViewModelBase currentViewModel;
+        public ViewModelBase CurrentViewModel
+        {
+            get => currentViewModel;
+            set => Set(ref currentViewModel, value);
+        }
+
+        private bool canExport;
+        public bool CanExport
+        {
+            get => canExport;
+            set => Set(ref canExport, value);
+        }
+
+        public ISnackbarMessageQueue SnackbarMessageQueue { get; }
+
+        public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
 
         [Obsolete("Only for desing data", true)]
-        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null)
+        public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
             {
@@ -48,9 +75,11 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
-                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel)
-
+        public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, 
+                                    RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel,
+                                    SysmonResultViewModel sysmonResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
+                                    IDialogService dialogService, IExportService exportService, IUnitOfWork unitOfWork)
         {
             this.startUpViewModel = startUpViewModel;
             this.treeStructureResultViewModel = treeStructureResultViewModel;
@@ -58,12 +87,34 @@ namespace Readinizer.Frontend.ViewModels
             this.domainResultViewModel = domainResultViewModel;
             this.rsopResultViewModel = rsopResultViewModel;
             this.ouResultViewModel = ouResultViewModel;
+            this.sysmonResultViewModel = sysmonResultViewModel;
+            this.dialogService = dialogService;
+            this.exportService = exportService;
+            this.unitOfWork = unitOfWork;
 
-            this.SnackbarMessageQueue = snackbarMessageQueue;
+            SnackbarMessageQueue = snackbarMessageQueue;
 
-            ShowStartUpView();
+            var computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
+            var i = computers.Find(x => x.isSysmonRunning.HasValue) != null;
+            if (computers.Count != 0)
+            {
+                if (computers.Find(x => x.isSysmonRunning.HasValue) != null)
+                {
+                    ShowTreeStructureResultView("Visible");
+                }
+                else
+                {
+                    ShowTreeStructureResultView("Hidden");
+                }
+            }
+            else
+            {
+                ShowStartUpView();
+            }
+
             Messenger.Default.Register<ChangeView>(this, ChangeView);
             Messenger.Default.Register<SnackbarMessage>(this, OnShowMessage);
+            Messenger.Default.Register<EnableExport>(this, EnableExport);
         }
 
         private void ShowStartUpView()
@@ -71,9 +122,10 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = startUpViewModel;
         }
 
-        private void ShowTreeStructureResultView()
+        private void ShowTreeStructureResultView(string visibility)
         {
             CurrentViewModel = treeStructureResultViewModel;
+            treeStructureResultViewModel.WithSysmon = visibility;
             treeStructureResultViewModel.BuildTree();
         }
 
@@ -93,12 +145,23 @@ namespace Readinizer.Frontend.ViewModels
         {
             CurrentViewModel = rsopResultViewModel;
             rsopResultViewModel.RefId = refId;
+            rsopResultViewModel.rsopPot = unitOfWork.RsopPotRepository.GetByID(refId);
+            rsopResultViewModel.Load();
         }
 
         private void ShowOuResultView(int refId)
         {
             CurrentViewModel = ouResultViewModel;
             ouResultViewModel.RefId = refId;
+            ouResultViewModel.rsop = unitOfWork.RsopRepository.GetByID(refId);
+            ouResultViewModel.Load();
+        }
+
+        private void ShowSysmonResultView()
+        {
+            CurrentViewModel = sysmonResultViewModel;
+            sysmonResultViewModel.loadComputers();
+
         }
 
         private void ChangeView(ChangeView message)
@@ -109,7 +172,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
-                ShowTreeStructureResultView();
+                ShowTreeStructureResultView(message.Visability);
             }
             else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
@@ -128,6 +191,16 @@ namespace Readinizer.Frontend.ViewModels
             {
                 ShowOuResultView(message.RefId);
             }
+            else if (message.ViewModelType == typeof(SysmonResultViewModel))
+            {
+                ShowSysmonResultView();
+            }
+        }
+
+        private void EnableExport(EnableExport message)
+        {
+            CanExport = message.ExportEnabled;
+            RaisePropertyChanged(nameof(CanExport));
         }
 
         private void OnShowMessage(SnackbarMessage message)
@@ -135,14 +208,72 @@ namespace Readinizer.Frontend.ViewModels
             SnackbarMessageQueue.Enqueue(message.Message);
         }
 
-        private void OnClose()
+        private void OnNewAnalysis()
+        {
+            ClearDb();
+            ShowStartUpView();
+        }
+
+        private async void Export(Type type)
+        {
+            var settings = new SaveFileDialogSettings
+            {
+                Title = "Save all identical audit settings",
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+                Filter = "JSON-file (*.json)|*.json|All Files (*.*)|*.*",
+                CreatePrompt = false,
+                CheckFileExists = false
+            };
+
+            bool? success = dialogService.ShowSaveFileDialog(this, settings);
+            if (success == true)
+            {
+                var exportPath = settings.FileName;
+                if (settings.CheckPathExists)
+                {
+                    var successfullyExported = await exportService.Export(type, exportPath);
+                    if (!successfullyExported)
+                    {
+                        Messenger.Default.Send(new SnackbarMessage($"Something went wrong during saving the file"));
+                    }
+                }
+                else
+                {
+                    Messenger.Default.Send(new SnackbarMessage($"The specified path '{exportPath}' does not exist"));
+                }
+            }
+        }
+
+        private static void OnClose()
         {
             Application.Current.Shutdown();
         }
 
-        private void OnGithub()
+        private static void OnGithub()
         {
             Process.Start("https://github.com/clma91/Readinizer/wiki");
+        }
+
+        private static void ClearDb()
+        {
+            var dbContext = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
+
+            dbContext.Database.Connection.Close();
+
+            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.OrganisationalUnitComputer");
+            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.SiteADDomain");
+
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.AuditSetting DBCC CHECKIDENT('READINIZER.dbo.AuditSetting', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RegistrySetting DBCC CHECKIDENT('READINIZER.dbo.RegistrySetting', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Policy DBCC CHECKIDENT('READINIZER.dbo.Policy', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.SecurityOption DBCC CHECKIDENT('READINIZER.dbo.SecurityOption', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Gpo DBCC CHECKIDENT('READINIZER.dbo.Gpo', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', NORESEED)");
         }
     }
 }

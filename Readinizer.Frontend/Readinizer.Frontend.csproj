@@ -54,6 +54,9 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
       <HintPath>..\packages\CommonServiceLocator.2.0.2\lib\net47\CommonServiceLocator.dll</HintPath>
@@ -78,6 +81,9 @@
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="MvvmDialogs, Version=5.3.0.0, Culture=neutral, PublicKeyToken=3d3b9708589bc73e, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvvmDialogs.5.3.0\lib\net45\MvvmDialogs.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.6.2\lib\net45\NLog.dll</HintPath>
@@ -147,6 +153,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\NullToInvisibleConverter.cs" />
     <Compile Include="Converters\ProgressForegroundConverter.cs" />
     <Compile Include="Interfaces\IApplicationViewModel.cs" />
     <Compile Include="Interfaces\IDomainResultViewModel.cs" />
@@ -154,19 +161,25 @@
     <Compile Include="Interfaces\ISpinnerViewModel.cs" />
     <Compile Include="Interfaces\ITreeStructureResultViewModel.cs" />
     <Compile Include="Messages\ChangeView.cs" />
+    <Compile Include="Messages\EnableExport.cs" />
+    <Compile Include="Messages\ChangeProgressText.cs" />
     <Compile Include="Messages\SnackbarMessage.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Interfaces\IRSoPResultViewModel.cs" />
     <Compile Include="Interfaces\IOUResultViewModel.cs" />
+    <Compile Include="Interfaces\ISysmonResultViewModel.cs" />
+    <Compile Include="ViewModels\SysmonResultViewModel.cs" />
     <Compile Include="ViewModels\OUResultViewModel.cs" />
     <Compile Include="ViewModels\RSoPResultViewModel.cs" />
-    <Compile Include="ViewModels\EmptyViewModel.cs" />
     <Compile Include="ViewModels\DomainResultViewModel.cs" />
     <Compile Include="ViewModels\StartUpViewModel.cs" />
     <Compile Include="ViewModels\SpinnerViewModel.cs" />
     <Compile Include="ViewModels\TreeStructureResultViewModel.cs" />
     <Compile Include="Views\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SysmonResultView.xaml.cs">
+      <DependentUpon>SysmonResultView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OUResultView.xaml.cs">
       <DependentUpon>OUResultView.xaml</DependentUpon>
@@ -193,6 +206,10 @@
     <Page Include="Views\ApplicationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SysmonResultView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\OUResultView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -237,6 +254,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="nlog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

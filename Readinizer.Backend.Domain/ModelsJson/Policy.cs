@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
@@ -11,10 +6,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
 {
     public class Policy 
     {
+        [JsonIgnore]
         public int PolicyId { get; set; }
 
+        [JsonIgnore]
         public int RsopRefId { get; set; }
 
+        [JsonIgnore]
         public Rsop Rsop { get; set; }
 
         public string GpoId { get; set; }
@@ -22,7 +20,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("Name")]
         public string Name { get; set; }
 
-        [JsonProperty("State")]
+        [JsonProperty("TargetState")]
         public string TargetState { get; set; }
 
         public string CurrentState { get; set; }
@@ -34,6 +32,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public ModuleNames ModuleNames { get; set; } = new ModuleNames();
 
         public bool IsPresent { get; set; }
+
+        public bool IsStatusOk => CurrentState.Equals(TargetState);
 
         public override bool Equals(object obj)
         {
@@ -61,5 +61,7 @@ namespace Readinizer.Backend.Domain.ModelsJson
         {
             return Name.GetHashCode() * 17;
         }
+
+        public bool ShouldSerializeModuleNames() => false;
     }
 }

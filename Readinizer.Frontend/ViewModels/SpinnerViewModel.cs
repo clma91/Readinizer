@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Frontend.Interfaces;
@@ -16,6 +10,14 @@ namespace Readinizer.Frontend.ViewModels
     public class SpinnerViewModel : ViewModelBase, ISpinnerViewModel
     {
         private readonly IADDomainService adDomainService;
+
+        private string progressText = "test";
+
+        public string ProgressText
+        {
+            get => progressText;
+            set => Set(ref progressText, value);
+        }
 
         [Obsolete("Only for design data", true)]
         public SpinnerViewModel()
@@ -29,6 +31,13 @@ namespace Readinizer.Frontend.ViewModels
         public SpinnerViewModel(IADDomainService adDomainService)
         {
             this.adDomainService = adDomainService;
+            Messenger.Default.Register<ChangeProgressText>(this, ChangeProgressText);
+        }
+
+        public void ChangeProgressText(ChangeProgressText changeProgressText)
+        {
+            ProgressText = changeProgressText.ProgressText;
+            RaisePropertyChanged(nameof(ProgressText));
         }
     }
 }

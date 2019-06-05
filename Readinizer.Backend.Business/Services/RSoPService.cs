@@ -1,18 +1,12 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Configuration;
-using System.DirectoryServices;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
 using Microsoft.GroupPolicy;
-
+using System.IO;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -32,6 +26,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task getRSoPOfReachableComputers()
         {
+            clearOldRsops();
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
@@ -43,11 +38,12 @@ namespace Readinizer.Backend.Business.Services
 
                 if(OU.Computers != null)
                 {
+                    OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
                         if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
                         {
-                            computer.PingSuccessfull = true;
+                            computer.PingSuccessful = true;
                             unitOfWork.ComputerRepository.Update(computer);
 
                             OU.HasReachableComputer = true;
@@ -61,13 +57,20 @@ namespace Readinizer.Backend.Business.Services
                         }
 
                     }
+                    await unitOfWork.SaveChangesAsync();
                 }
-                await unitOfWork.SaveChangesAsync();
+                
             }
         }
 
         public async Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName)
         {
+            if (string.IsNullOrEmpty(serviceName))
+            {
+                serviceName = "Sysmon";
+            }
+
+            clearOldRsops();
             List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
@@ -81,14 +84,15 @@ namespace Readinizer.Backend.Business.Services
 
                 if (OU.Computers != null)
                 {
+                    OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
                         if (pingService.isPingable(computer.IpAddress))
                         {
                             if (!collectedSiteIds.Contains(computer.SiteRefId))
                             {
-                                computer.PingSuccessfull = true;
-                                unitOfWork.ComputerRepository.Update(computer);
+                                computer.PingSuccessful = true;
+                                
 
                                 OU.HasReachableComputer = true;
                                 unitOfWork.OrganisationalUnitRepository.Update(OU);
@@ -103,11 +107,14 @@ namespace Readinizer.Backend.Business.Services
                             computer.isSysmonRunning = sysmonService.isSysmonRunning(serviceName, user,
                                 computer.ComputerName,
                                 domainName);
+
+                            unitOfWork.ComputerRepository.Update(computer);
                         }
                     }
+                    await unitOfWork.SaveChangesAsync();
                 }
 
-                await unitOfWork.SaveChangesAsync();
+
             }
         }
 
@@ -128,6 +135,17 @@ namespace Readinizer.Backend.Business.Services
                 Console.WriteLine(e);
                 throw;
             }
-        }   
+        }
+
+        public void clearOldRsops()
+        {
+            string[] filePaths = Directory.GetFiles(ConfigurationManager.AppSettings["ReceivedRSoP"]);
+            foreach (string filePath in filePaths)
+            {
+
+                File.Delete(filePath);
+            }
+                
+        }
     }
 }

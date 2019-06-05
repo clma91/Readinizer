@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using MaterialDesignThemes.Wpf;
+using MvvmDialogs;
 using Readinizer.Backend.Business.Factory;
 using Readinizer.Backend.DataAccess.UnityOfWork;
 using Unity;
@@ -50,20 +51,19 @@ namespace Readinizer.Frontend
             container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
             container.RegisterType<IRSoPPotService, RSoPPotService>();
+            container.RegisterType<ISysmonResultViewModel, SysmonResultViewModel>();
+            container.RegisterType<IExportService, ExportService>();
+            container.RegisterType<ISecuritySettingParserService, SecuritySettingParserService>();
 
             container.RegisterType<ITreeNodesFactory, TreeNodesFactory>();
 
             container.RegisterSingleton<IReadinizerDbContext, ReadinizerDbContext>();
             container.RegisterSingleton<IUnitOfWork, UnitOfWork>();
+            container.RegisterSingleton<IDialogService, DialogService>();
 
             container.RegisterSingleton<ISnackbarMessageQueue, SnackbarMessageQueue>();
 
             var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            if (ctx.Database.Exists())
-            {
-                ctx.Database.Delete();
-            }
-
             ctx.Database.CreateIfNotExists();
 
             var applicationView = container.Resolve<ApplicationView>();
@@ -84,9 +84,7 @@ namespace Readinizer.Frontend
         {
             base.OnExit(e);
 
-            var ctx = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
-            ctx.Database.Connection.Close();
-            ctx.Database.Delete();
+
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class SecuirtySettingsParser
+    public class SecuritySettingsParsed
     {
         public string Icon { get; set; }
 
@@ -17,5 +17,7 @@ namespace Readinizer.Backend.Domain.Models
         public string Value { get; set; }
 
         public string Target { get; set; }
+
+        public string GPO { get; set; }
     }
 }

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -15,7 +10,8 @@ namespace Readinizer.Frontend.Converters
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             double progress = (double)value;
-            Brush foreground = Brushes.Red;
+            Brush foreground = Brushes.Green;
+            Brush background = Brushes.Red;
 
             if (progress > 90d)
             {

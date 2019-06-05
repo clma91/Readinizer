@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
-using System.IO;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
-using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Services
 {
     public class RSoPPotService : IRSoPPotService
     {
         private readonly IUnitOfWork unitOfWork;
+        private static int index;
 
         public RSoPPotService(IUnitOfWork unitOfWork)
         {
@@ -27,60 +21,107 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task GenerateRsopPots()
         {
-            var rsops = await unitOfWork.RSoPRepository.GetAllEntities();
+            var rsops = await unitOfWork.RsopRepository.GetAllEntities();
+            var sortedRsopsByDomain = rsops.OrderBy(x => x.Domain.ParentId).ToList();
             var rsopPots = new List<RsopPot>();
+            index = 1;
 
-            AddRsopPot(rsops.First());
+            AddRsopPot(sortedRsopsByDomain.First());
 
-            foreach (var rsop in rsops.Skip(1))
+            foreach (var rsop in sortedRsopsByDomain.Skip(1))
             {
-                bool found = false;
+                var foundPot = RsopPotsEqual(rsopPots, rsop);
 
-                foreach (var pot in rsopPots)
-                {
-                    var currentRsop = pot.Rsops.FirstOrDefault();
-                    if (currentRsop == null) continue;
-
-                    var auditSettingsEqual = SettingsEqual(currentRsop.AuditSettings, rsop.AuditSettings);
-                    if (!auditSettingsEqual) continue;
-
-                    var policiesEqual = SettingsEqual(currentRsop.Policies, rsop.Policies);
-                    if (!policiesEqual) continue;
-
-                    var registrySettingsEqual = SettingsEqual(currentRsop.RegistrySettings, rsop.RegistrySettings);
-                    if (!registrySettingsEqual) continue;
-
-                    var securityOptionsEqual = SettingsEqual(currentRsop.SecurityOptions, rsop.SecurityOptions);
-                    if (!securityOptionsEqual) continue;
-
-                    var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
-                    if (!domainsEqual) continue;
-
-                    pot.Rsops.Add(rsop);
-                    found = true;
-                    break;
-                }
-
-                if (!found)
+                if (foundPot == null)
                 {
                     AddRsopPot(rsop);
                 }
-
             }
 
             void AddRsopPot(Rsop rsop)
             {
-                rsopPots.Add(new RsopPot
-                {
-                    Name = GetRandomRsopName(),
-                    Domain = rsop.Domain,
-                    Rsops = new List<Rsop> { rsop }
-                });
+                rsopPots.Add(RsopPotFactory(rsop));
             }
 
-            unitOfWork.RSoPPotRepository.AddRange(rsopPots);
+            unitOfWork.RsopPotRepository.AddRange(rsopPots);
 
             await unitOfWork.SaveChangesAsync();
+        }
+
+        private static RsopPot RsopPotFactory(Rsop rsop)
+        {
+            return new RsopPot
+            {
+                Name = index++.ToString() + ". Group of identical security settings",
+                DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture),
+                Domain = rsop.Domain,
+                Rsops = new List<Rsop> { rsop }
+            };
+        }
+
+        public async Task UpdateRsopPots(List<Rsop> rsops)
+        {
+            var rsopPots = await unitOfWork.RsopPotRepository.GetAllEntities();
+
+            foreach (var rsop in rsops)
+            {
+                var foundPot = RsopPotsEqual(rsopPots, rsop);
+
+                if (foundPot != null)
+                {
+                    foundPot.DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture);
+                    unitOfWork.RsopPotRepository.Update(foundPot);
+                }
+                else if (!rsopPots.Any(x => RsopAndRsopPotsOuEqual(rsop, x.Rsops.First())))
+                {
+                    foundPot = RsopPotFactory(rsop);
+                    rsopPots.Add(foundPot);
+                    unitOfWork.RsopPotRepository.Add(foundPot);
+                }
+            }
+
+            await unitOfWork.SaveChangesAsync();
+        }
+
+        private static RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop rsop)
+        {
+            RsopPot foundPot = null;
+
+            foreach (var pot in rsopPots)
+            {
+                var currentRsop = pot.Rsops.FirstOrDefault();
+                if (currentRsop == null) continue;
+
+                var auditSettingsEqual = SettingsEqual(currentRsop.AuditSettings, rsop.AuditSettings);
+                if (!auditSettingsEqual) continue;
+
+                var policiesEqual = SettingsEqual(currentRsop.Policies, rsop.Policies);
+                if (!policiesEqual) continue;
+
+                var registrySettingsEqual = SettingsEqual(currentRsop.RegistrySettings, rsop.RegistrySettings);
+                if (!registrySettingsEqual) continue;
+
+                var securityOptionsEqual = SettingsEqual(currentRsop.SecurityOptions, rsop.SecurityOptions);
+                if (!securityOptionsEqual) continue;
+
+                var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
+                if (!domainsEqual) continue;
+
+                if (RsopAndRsopPotsOuEqual(rsop, currentRsop)) continue;
+
+                pot.Rsops.Add(rsop);
+                foundPot = pot;
+                break;
+            }
+
+            return foundPot;
+        }
+
+        private static bool RsopAndRsopPotsOuEqual(Rsop rsop, Rsop currentRsop)
+        {
+            var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
+            if (organisationalUnitsEqual) return true;
+            return false;
         }
 
         private static bool SettingsEqual<T>(ICollection<T> currentSettings, ICollection<T> otherSettings)
@@ -104,20 +145,6 @@ namespace Readinizer.Backend.Business.Services
             }
 
             return true;
-        }
-        
-        private static string GetRandomRsopName()
-        {
-            var animalNames = JsonConvert.DeserializeObject<List<RandomName>>(File.ReadAllText(ConfigurationManager.AppSettings["AnimalNames"]));
-            var adjectives = JsonConvert.DeserializeObject<List<RandomName>>(File.ReadAllText(ConfigurationManager.AppSettings["Adjectives"]));
-
-            var randomKeyAdjectives = new Random(DateTime.Now.Millisecond).Next(0, adjectives.Count);
-            var randomKeyAnimals = new Random(DateTime.Now.Millisecond).Next(0, animalNames.Count);
-            var adjective = adjectives.ElementAt(randomKeyAdjectives);
-            var animalName = animalNames.ElementAt(randomKeyAnimals);
-            var rsopName = adjective.Value + " " + animalName.Value;
-
-            return rsopName;
         }
     }
 }
