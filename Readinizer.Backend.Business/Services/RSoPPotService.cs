@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
-using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Services
 {

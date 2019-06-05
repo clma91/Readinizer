@@ -2,10 +2,7 @@
 using System.Collections.Generic;
 using System.DirectoryServices;
 using System.DirectoryServices.ActiveDirectory;
-using System.Linq;
 using System.Net;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 using NetTools;
 using Readinizer.Backend.Business.Interfaces;

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Text;
+﻿using System.Management;
 using System.Threading.Tasks;
-using NLog.LayoutRenderers.Wrappers;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
