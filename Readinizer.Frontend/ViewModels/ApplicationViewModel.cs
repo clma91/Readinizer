@@ -2,8 +2,6 @@
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;

@@ -10,7 +10,6 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MvvmDialogs;
 using MvvmDialogs.FrameworkDialogs.OpenFile;
-using MvvmDialogs.FrameworkDialogs.SaveFile;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;

@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Controls.DataVisualization.Charting;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Xml.Schema;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
