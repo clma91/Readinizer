@@ -38,6 +38,7 @@ namespace Readinizer.Backend.Business.Services
 
                 if(OU.Computers != null)
                 {
+                    OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
                         if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
@@ -56,8 +57,9 @@ namespace Readinizer.Backend.Business.Services
                         }
 
                     }
+                    await unitOfWork.SaveChangesAsync();
                 }
-                await unitOfWork.SaveChangesAsync();
+                
             }
         }
 
@@ -82,6 +84,7 @@ namespace Readinizer.Backend.Business.Services
 
                 if (OU.Computers != null)
                 {
+                    OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
                         if (pingService.isPingable(computer.IpAddress))
@@ -108,9 +111,10 @@ namespace Readinizer.Backend.Business.Services
                             unitOfWork.ComputerRepository.Update(computer);
                         }
                     }
+                    await unitOfWork.SaveChangesAsync();
                 }
 
-                await unitOfWork.SaveChangesAsync();
+
             }
         }
 

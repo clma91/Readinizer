@@ -133,7 +133,7 @@ namespace Readinizer.Frontend.ViewModels
         private async Task SetOusWithoutRSoPs()
         {
             var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => !x.HasReachableComputer);
+            var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
             AddOu(ousWithoutRsoP.First());
             OUsWithoutRSoP.Clear();
 

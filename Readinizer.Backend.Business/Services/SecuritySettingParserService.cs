@@ -17,11 +17,21 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int rsopPotRefId)
+        public async Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int refId, string type)
         {
-            var rsopPot = unitOfWork.RsopPotRepository.GetByID(rsopPotRefId);
+            Rsop rsop = new Rsop();
+            if (type.Equals("RSoPPot"))
+            {
+
+                var rsopPot = unitOfWork.RsopPotRepository.GetByID(refId);
+                rsop = rsopPot.Rsops.FirstOrDefault();
+            }
+            else
+            {
+                rsop = unitOfWork.RsopRepository.GetByID(refId);
+            }
+
             var GPOs = await unitOfWork.GpoRepository.GetAllEntities();
-            var rsop = rsopPot.Rsops.FirstOrDefault();
             List<SecuritySettingsParsed> settings = new List<SecuritySettingsParsed>();
             foreach (var setting in rsop.AuditSettings)
             {
@@ -94,7 +104,7 @@ namespace Readinizer.Backend.Business.Services
                 parsedSetting.Icon = "Check";
                 parsedSetting.Color = "Green";
             }
-            else if (parsedSetting.Value.Equals("NotDefined"))
+            else if (parsedSetting.Value.Equals("NotDefined") || parsedSetting.Value.Equals("Undefined"))
             {
                 parsedSetting.Icon = "Exclamation";
                 parsedSetting.Color = "Orange";

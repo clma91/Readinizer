@@ -54,12 +54,12 @@ namespace Readinizer.Frontend.ViewModels
             var good = new List<string>();
             foreach (var computer in Computers)
             {
-                if (computer.isSysmonRunning != null && computer.isSysmonRunning.Value)
+                if (computer.isSysmonRunning.Equals(true))
                 {
                     good.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
                     
                 }
-                else
+                else if (computer.isSysmonRunning.Equals(false))
                 {
                     bad.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
                 }
@@ -81,7 +81,23 @@ namespace Readinizer.Frontend.ViewModels
             return valueList;
         }
 
-        private static void ShowTreeStructure()
+        public List<KeyValuePair<string, int>> LoadPieChartData
+        {
+            get => loadPieChartData();
+
+        }
+
+        public List<string> SysmonNotActiveList
+        {
+            get => sysmonNotActiveList;
+        }
+
+        public List<string> SysmonActiveList
+        {
+            get => sysmonActiveList;
+        }
+
+        private void ShowTreeStructure()
         {
             Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
         }
