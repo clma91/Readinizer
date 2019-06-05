@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
-using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Services
 {
     public class RSoPPotService : IRSoPPotService
     {
         private readonly IUnitOfWork unitOfWork;
-        private static int index = 1;
+        private static int index;
 
         public RSoPPotService(IUnitOfWork unitOfWork)
         {
@@ -32,6 +24,7 @@ namespace Readinizer.Backend.Business.Services
             var rsops = await unitOfWork.RsopRepository.GetAllEntities();
             var sortedRsopsByDomain = rsops.OrderBy(x => x.Domain.ParentId).ToList();
             var rsopPots = new List<RsopPot>();
+            index = 1;
 
             AddRsopPot(sortedRsopsByDomain.First());
 

@@ -1,22 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
-using System.Xml.Linq;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using MaterialDesignThemes.Wpf;
 using Readinizer.Backend.Business.Interfaces;
-using Readinizer.Backend.Business.Services;
-using Readinizer.Backend.DataAccess;
-using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
 using Readinizer.Frontend.Messages;
 using SnackbarMessage = Readinizer.Frontend.Messages.SnackbarMessage;
@@ -31,44 +19,37 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ISiteService siteService;
         private readonly IRSoPService rSoPService;
         private readonly IAnalysisService analysisService;
-        private readonly ISysmonService sysmonService;
         private readonly IRSoPPotService rSoPPotService;
 
         private ICommand analyseCommand;
-        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(() => this.Analyse()));
+        public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(Analyse));
 
         private bool subdomainsChecked;
         public bool SubdomainsChecked
         {
             get => subdomainsChecked;
-            set
-            {
-                Set(ref subdomainsChecked, value);
-            }
+            set => Set(ref subdomainsChecked, value);
         }
 
         private bool sysmonChecked;
         public bool SysmonChecked
         {
             get => sysmonChecked; 
-            set
-            {
-                Set(ref sysmonChecked, value);
-            }
+            set => Set(ref sysmonChecked, value);
         }
 
         private string sysmonName;
         public string SysmonName
         {
             get => sysmonName;
-            set { Set(ref sysmonName, value); }
+            set => Set(ref sysmonName, value);
         }
 
         private string domainName;
         public string DomainName
         {
             get => domainName;
-            set { Set(ref domainName, value); }
+            set => Set(ref domainName, value);
         }
 
 
@@ -90,7 +71,6 @@ namespace Readinizer.Frontend.ViewModels
             this.organisationalUnitService = organisationalUnitService;
             this.computerService = computerService;
             this.rSoPService = rSoPService;
-            this.sysmonService = sysmonService;
             this.analysisService = analysisService;
             this.rSoPPotService = rSoPPotService;
         }
@@ -99,7 +79,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             if (string.IsNullOrEmpty(domainName) || adDomainService.IsDomainInForest(domainName))
             {
-                string sysmonVisability = "Hidden";
+                var sysmonVisibility = "Hidden";
                 try
                 {
                     ShowSpinnerView();
@@ -116,17 +96,17 @@ namespace Readinizer.Frontend.ViewModels
                     {
                         ChangeProgressText("Looking for RSoPs and check if Sysmon is running...");
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
-                        sysmonVisability = "Visible";
+                        sysmonVisibility = "Visible";
                     }
                     else
                     {
-                        ChangeProgressText("Looking for RSoPs...");
+                        ChangeProgressText("Collecting RSoPs...");
                         await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
                     }
                     ChangeProgressText("Analysing collected RSoPs...");
                     await Task.Run(() => analysisService.Analyse(null));
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
-                    ShowTreeStructureResult(sysmonVisability);
+                    ShowTreeStructureResult(sysmonVisibility);
                 }
                 catch (Exception e)
                 {
@@ -145,17 +125,17 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeProgressText(progressText));
         }
 
-        private void ShowTreeStructureResult(string visability)
+        private static void ShowTreeStructureResult(string visability)
         {
             Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel), visability));
         }
 
-        private void ShowSpinnerView()
+        private static void ShowSpinnerView()
         {
             Messenger.Default.Send(new ChangeView(typeof(SpinnerViewModel)));
         }
 
-        private void ShowStartView()
+        private static void ShowStartView()
         {
             Messenger.Default.Send(new ChangeView(typeof(StartUpViewModel)));
         }
@@ -164,6 +144,5 @@ namespace Readinizer.Frontend.ViewModels
         {
             Messenger.Default.Send(new ChangeView(typeof(DomainResultViewModel), refId));
         }
-
     }
 }
