@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Controls.DataVisualization.Charting;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Xml.Schema;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Frontend.Interfaces;
@@ -22,9 +16,24 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IUnitOfWork unitOfWork;
 
-
         private ICommand backCommand;
-        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(() => this.Back()));
+        public ICommand BackCommand => backCommand ?? (backCommand = new RelayCommand(Back));
+
+        private List<string> sysmonActiveList { get; set; }
+        public List<string> SysmonActiveList => sysmonActiveList;
+
+        private List<string> sysmonNotActiveList { get; set; }
+        public List<string> SysmonNotActiveList => sysmonNotActiveList;
+
+        public List<Computer> Computers { get; set; }
+
+        public void loadComputers()
+        {
+            Computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
+            fillLists();
+        }
+
+        public List<KeyValuePair<string, int>> PieChartData => LoadPieChartData();
 
         [Obsolete("Only for design data", true)]
         public SysmonResultViewModel()
@@ -40,22 +49,10 @@ namespace Readinizer.Frontend.ViewModels
             this.unitOfWork = unitOfWork; 
         }
 
-        private List<string> sysmonActiveList { get; set; }
-
-        private List<string> sysmonNotActiveList { get; set; }
-
-        public List<Computer> Computers { get; set; }
-
-        public void loadComputers()
-        {
-            Computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
-            fillLists();
-        }
-
         private void fillLists()
         {
-            List<string> bad = new List<string>();
-            List<string> good = new List<string>();
+            var bad = new List<string>();
+            var good = new List<string>();
             foreach (var computer in Computers)
             {
                 if (computer.isSysmonRunning.Equals(true))
@@ -73,40 +70,24 @@ namespace Readinizer.Frontend.ViewModels
             sysmonNotActiveList = bad;
         }
 
-        private List<KeyValuePair<string, int>> loadPieChartData()
+        private List<KeyValuePair<string, int>> LoadPieChartData()
         {
-            int runningCounter = sysmonActiveList.Count;
-            int notRunningCounter = sysmonNotActiveList.Count;
+            var runningCounter = SysmonActiveList.Count;
+            var notRunningCounter = sysmonNotActiveList.Count;
 
-            List<KeyValuePair<string, int>> valueList = new List<KeyValuePair<string, int>>();
+            var valueList = new List<KeyValuePair<string, int>>();
             valueList.Add(new KeyValuePair<string, int>("Sysmon is running", runningCounter));
             valueList.Add(new KeyValuePair<string, int>("Sysmon is not running", notRunningCounter));
 
             return valueList;
         }
 
-        public List<KeyValuePair<string, int>> LoadPieChartData
-        {
-            get => loadPieChartData();
-
-        }
-
-        public List<string> SysmonNotActiveList
-        {
-            get => sysmonNotActiveList;
-        }
-
-        public List<string> SysmonActiveList
-        {
-            get => sysmonActiveList;
-        }
-
-        private void ShowTreeStructure()
+        private static void ShowTreeStructure()
         {
             Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel)));
         }
 
-        private void Back()
+        private static void Back()
         {
             ShowTreeStructure();
         }

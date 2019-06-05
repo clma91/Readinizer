@@ -69,7 +69,7 @@
                     </Style>
                 </DVC:Chart.Style>
                 <DVC:Chart.Series>
-                    <DVC:PieSeries ItemsSource="{Binding Path=LoadPieChartData}"
+                    <DVC:PieSeries ItemsSource="{Binding Path=PieChartData}"
                                        IndependentValueBinding="{Binding Path=Key}" 
                                        DependentValueBinding="{Binding Path=Value}">
                         <DVC:PieSeries.Palette>

@@ -2,8 +2,6 @@
 using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
-using System.Reflection.Emit;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
@@ -23,20 +21,32 @@ namespace Readinizer.Frontend.ViewModels
 {
     public class ApplicationViewModel : ViewModelBase, IApplicationViewModel
     {
+        private readonly StartUpViewModel startUpViewModel;
+        private readonly TreeStructureResultViewModel treeStructureResultViewModel;
+        private readonly SpinnerViewModel spinnerViewModel;
+        private readonly DomainResultViewModel domainResultViewModel;
+        private readonly RSoPResultViewModel rsopResultViewModel;
+        private readonly OUResultViewModel ouResultViewModel;
+        private readonly SysmonResultViewModel sysmonResultViewModel;
+        private readonly IDialogService dialogService;
+        private readonly IExportService exportService;
+
         private ICommand closeCommand;
-        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(() => OnClose()));
+        public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(OnClose));
+
         private ICommand githubCommand;
-        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(() => OnGithub()));
+        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(OnGithub));
+
         private ICommand exportRSoPPotsCommand;
         public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
+
         private ICommand exportRSoPsCommand;
         public ICommand ExportRSoPsCommand => exportRSoPsCommand ?? (exportRSoPsCommand = new RelayCommand(() => Export(typeof(Rsop))));
+
         private ICommand newAnalysisCommand;
-        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(() => OnNewAnalysis()));
+        public ICommand NewAnalysisCommand => newAnalysisCommand ?? (newAnalysisCommand = new RelayCommand(OnNewAnalysis));
 
-        private IUnitOfWork unitOfWork;
-
-
+        private readonly IUnitOfWork unitOfWork;
 
         private ViewModelBase currentViewModel;
         public ViewModelBase CurrentViewModel
@@ -54,15 +64,6 @@ namespace Readinizer.Frontend.ViewModels
 
         public ISnackbarMessageQueue SnackbarMessageQueue { get; }
 
-        private readonly StartUpViewModel startUpViewModel;
-        private readonly TreeStructureResultViewModel treeStructureResultViewModel;
-        private readonly SpinnerViewModel spinnerViewModel;
-        private readonly DomainResultViewModel domainResultViewModel;
-        private readonly RSoPResultViewModel rsopResultViewModel;
-        private readonly OUResultViewModel ouResultViewModel;
-        private readonly SysmonResultViewModel sysmonResultViewModel;
-        private readonly IDialogService dialogService;
-        private readonly IExportService exportService;
         public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
 
         [Obsolete("Only for desing data", true)]
@@ -75,9 +76,9 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public ApplicationViewModel(StartUpViewModel startUpViewModel, TreeStructureResultViewModel treeStructureResultViewModel, 
-                                    ISnackbarMessageQueue snackbarMessageQueue, SpinnerViewModel spinnerViewModel, 
-                                    DomainResultViewModel domainResultViewModel, RSoPResultViewModel rsopResultViewModel, 
-                                    OUResultViewModel ouResultViewModel, SysmonResultViewModel sysmonResultViewModel,
+                                    SpinnerViewModel spinnerViewModel, DomainResultViewModel domainResultViewModel, 
+                                    RSoPResultViewModel rsopResultViewModel, OUResultViewModel ouResultViewModel,
+                                    SysmonResultViewModel sysmonResultViewModel, ISnackbarMessageQueue snackbarMessageQueue,
                                     IDialogService dialogService, IExportService exportService, IUnitOfWork unitOfWork)
         {
             this.startUpViewModel = startUpViewModel;
@@ -91,7 +92,7 @@ namespace Readinizer.Frontend.ViewModels
             this.exportService = exportService;
             this.unitOfWork = unitOfWork;
 
-            this.SnackbarMessageQueue = snackbarMessageQueue;
+            SnackbarMessageQueue = snackbarMessageQueue;
 
             var computers = unitOfWork.ComputerRepository.GetAllEntities().Result;
             var i = computers.Find(x => x.isSysmonRunning.HasValue) != null;
@@ -122,12 +123,11 @@ namespace Readinizer.Frontend.ViewModels
             CurrentViewModel = startUpViewModel;
         }
 
-        private void ShowTreeStructureResultView(string visability)
+        private void ShowTreeStructureResultView(string visibility)
         {
             CurrentViewModel = treeStructureResultViewModel;
-            treeStructureResultViewModel.WithSysmon = visability;
+            treeStructureResultViewModel.WithSysmon = visibility;
             treeStructureResultViewModel.BuildTree();
-            
         }
 
         private void ShowSpinnerView()
@@ -209,22 +209,11 @@ namespace Readinizer.Frontend.ViewModels
             SnackbarMessageQueue.Enqueue(message.Message);
         }
 
-        private void OnClose()
-        {
-            Application.Current.Shutdown();
-        }
-
-        private void OnGithub()
-        {
-            Process.Start("https://github.com/clma91/Readinizer/wiki");
-        }
-
         private void OnNewAnalysis()
         {
             ClearDb();
             ShowStartUpView();
         }
-
 
         private async void Export(Type type)
         {
@@ -256,7 +245,17 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        private void ClearDb()
+        private static void OnClose()
+        {
+            Application.Current.Shutdown();
+        }
+
+        private static void OnGithub()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/wiki");
+        }
+
+        private static void ClearDb()
         {
             var dbContext = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
 
@@ -270,17 +269,12 @@ namespace Readinizer.Frontend.ViewModels
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Policy DBCC CHECKIDENT('READINIZER.dbo.Policy', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.SecurityOption DBCC CHECKIDENT('READINIZER.dbo.SecurityOption', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Gpo DBCC CHECKIDENT('READINIZER.dbo.Gpo', NORESEED)");
-
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', NORESEED)");
-            
-            
-
-            
         }
     }
 }

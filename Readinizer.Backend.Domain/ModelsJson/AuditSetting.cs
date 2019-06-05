@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Domain.ModelsJson
@@ -34,6 +29,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public AuditSettingValue CurrentSettingValue { get; set; }
 
         public bool IsPresent { get; set; }
+
+        public bool IsStatusOk => CurrentSettingValue.Equals(TargetSettingValue);
 
         public override bool Equals(object obj)
         {

@@ -10,7 +10,6 @@ using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using MvvmDialogs;
 using MvvmDialogs.FrameworkDialogs.OpenFile;
-using MvvmDialogs.FrameworkDialogs.SaveFile;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
@@ -26,7 +25,16 @@ namespace Readinizer.Frontend.ViewModels
         private readonly IDialogService dialogService;
         private readonly IAnalysisService analysisService;
         private readonly IRSoPPotService rSoPPotService;
-        
+
+        private ICommand sysmonCommand;
+        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(Sysmon));
+
+        private ICommand importRSoPsCommand;
+        public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(ImportRSoPs));
+
+        private ICommand detailCommand;
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
+
         private ADDomain rootDomain;
         public ADDomain RootDomain
         {
@@ -55,23 +63,14 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref unavailableDomains, value);
         }
 
-        private string selecteDomain;
+        private string selectDomain;
         public string SelectedDomain
         {
-            get => selecteDomain;
-            set => Set(ref selecteDomain, value);
+            get => selectDomain;
+            set => Set(ref selectDomain, value);
         }
 
         public string WithSysmon { get; set; }
-
-        private ICommand sysmonCommand;
-        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(() => Sysmon()));
-
-        private ICommand importRSoPsCommand;
-        public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(() => ImportRSoPs()));
-        
-        private ICommand detailCommand;
-        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
         
         private void ShowDetail(Dictionary<string, int> param)
         {
@@ -102,11 +101,12 @@ namespace Readinizer.Frontend.ViewModels
             this.dialogService = dialogService;
             this.analysisService = analysisService;
             this.rSoPPotService = rSoPPotService;
-            TreeNodes = new ObservableCollection<TreeNode>();
+            
         }
 
         public async void BuildTree()
         {
+            TreeNodes = new ObservableCollection<TreeNode>();
             await SetOusWithoutRSoPs();
             await SetUnavailableDomains();
             if (TreeNodes.Count <= 0)
@@ -135,7 +135,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
-            AddOu(ousWithoutRsoP.First());
+            AddOu(ousWithoutRsoP.FirstOrDefault());
             OUsWithoutRSoP.Clear();
 
             foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
@@ -165,7 +165,7 @@ namespace Readinizer.Frontend.ViewModels
             RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
 
-        private void Sysmon()
+        private static void Sysmon()
         {
             Messenger.Default.Send(new ChangeView(typeof(SysmonResultViewModel)));
         }

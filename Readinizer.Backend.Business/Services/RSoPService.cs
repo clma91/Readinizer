@@ -1,12 +1,6 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Configuration;
-using System.DirectoryServices;
-using System.Linq;
-using System.Management;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;

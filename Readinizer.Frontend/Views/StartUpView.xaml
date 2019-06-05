@@ -26,7 +26,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="100"/>
             <RowDefinition/>
             <RowDefinition Height="90"/>
         </Grid.RowDefinitions>
@@ -36,21 +36,11 @@
             <Label  HorizontalAlignment="Left" VerticalAlignment="Center">Domainname:</Label>
         </StackPanel>
 
-        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+        <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"
+                 ToolTip="Enter a specific Domainname (relying in your AD-Forest) which should be analysed."></TextBox>
 
         <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
             <StackPanel VerticalAlignment="Center">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
-                    
-                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left" IsChecked="True" IsHitTestVisible="False" Opacity="0.5"/>
-                    
-                </Grid>
-
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -79,7 +69,7 @@
             </StackPanel>
         </Border>
 
-        <Button x:Name="Analyse" Grid.Row="2" Grid.Column="4" Width="100" Height="50" Command="{Binding AnalyseCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="50, 0, 50, 20">
+        <Button x:Name="Analyse" Grid.Row="2" Grid.Column="3" Width="100" Height="50" Command="{Binding AnalyseCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="50, 0, 50, 20">
             <TextBlock TextAlignment="Center">Analyse<LineBreak/>Readiness</TextBlock>
         </Button>
     </Grid>

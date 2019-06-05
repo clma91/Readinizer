@@ -246,7 +246,6 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentState)
                     .DefaultIfEmpty("Disabled")
                     .FirstOrDefault();
-                // TODO: Further Process -> Get Module Names
                 x.GpoId = policies.Where(y => y.Name.Equals(x.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
