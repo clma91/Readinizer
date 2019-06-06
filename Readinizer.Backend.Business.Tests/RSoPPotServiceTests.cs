@@ -1,7 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.DataAccess.UnityOfWork;
+using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Tests
 {
@@ -11,29 +13,131 @@ namespace Readinizer.Backend.Business.Tests
         public static RSoPPotService rsopPotService { get; set; } = new RSoPPotService(new UnitOfWork());
 
         [TestMethod()]
-        public void FillRsopPotListTest()
+        public void FillRsopPotList_NotEquallySettings_DifferentOus_Test()
         {
-            var sortedRsopsByDomain = Rsops.OrderBy(x => x.Domain.ParentId).ToList();
+            var sortedRsopsByDomain = RsopsNotEqualDifferentOus.OrderBy(x => x.Domain.ParentId).ToList();
             var rsopPots = rsopPotService.FillRsopPotList(sortedRsopsByDomain);
             Assert.AreEqual(2, rsopPots.Count);
         }
 
         [TestMethod()]
-        public void RsopPotFactoryTest()
+        public void FillRsopPotList_EquallySettings_DifferentOus_Test()
         {
-            Assert.Fail();
+            var sortedRsopsByDomain = RsopsEqualDifferentOus.OrderBy(x => x.Domain.ParentId).ToList();
+            var rsopPots = rsopPotService.FillRsopPotList(sortedRsopsByDomain);
+            Assert.AreEqual(1, rsopPots.Count);
         }
 
         [TestMethod()]
-        public void RsopPotsEqualTest()
+        public void FillRsopPotList_NotEquallySettings_SameOus_Test()
         {
-            Assert.Fail();
+            var sortedRsopsByDomain = RsopsNotEqualSameOus.OrderBy(x => x.Domain.ParentId).ToList();
+            var rsopPots = rsopPotService.FillRsopPotList(sortedRsopsByDomain);
+            Assert.AreEqual(2, rsopPots.Count);
         }
 
         [TestMethod()]
-        public void SettingsEqualTest()
+        public void FillRsopPotList_EquallySettings_SameOus_Test()
         {
-            Assert.Fail();
+            var sortedRsopsByDomain = RsopsEqualSameOus.OrderBy(x => x.Domain.ParentId).ToList();
+            var rsopPots = rsopPotService.FillRsopPotList(sortedRsopsByDomain);
+            Assert.AreEqual(2, rsopPots.Count);
+        }
+
+        [TestMethod()]
+        public void RsopPotsEqual_DifferentRsops_SameOu_Test()
+        {
+            var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, BadRsopRedinizerOu) != null;
+            Assert.IsFalse(rsopPotsAreEqual);
+        }
+
+        [TestMethod()]
+        public void RsopPotsEqual_SameRsops_SameOu_Test()
+        {
+            var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, GoodRsopRedinizerOu) != null;
+            Assert.IsFalse(rsopPotsAreEqual);
+        }
+
+        [TestMethod()]
+        public void RsopPotsEqual_SameRsops_DifferentOus_Test()
+        {
+            var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, GoodRsopSalesOu) != null;
+            Assert.IsTrue(rsopPotsAreEqual);
+        }
+
+        [TestMethod()]
+        public void RsopPotsEqual_DifferentRsops_DifferentOus_Test()
+        {
+            var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, BadRsopSalesOu) != null;
+            Assert.IsFalse(rsopPotsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_SameAuditSettings_Test()
+        {
+            var auditSettingsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.AuditSettings, GoodRsopSalesOu.AuditSettings);
+            Assert.IsTrue(auditSettingsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_SamePolicies_Test()
+        {
+            var policiesAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.Policies, GoodRsopSalesOu.Policies);
+            Assert.IsTrue(policiesAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_SameSecurityOptions_Test()
+        {
+            var securityOptionsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.SecurityOptions, GoodRsopSalesOu.SecurityOptions);
+            Assert.IsTrue(securityOptionsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_SameRegistrySettings_Test()
+        {
+            var registrySettingsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.RegistrySettings, GoodRsopSalesOu.RegistrySettings);
+            Assert.IsTrue(registrySettingsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_DifferentAuditSettings_Test()
+        {
+            var auditSettingsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.AuditSettings, BadRsopSalesOu.AuditSettings);
+            Assert.IsFalse(auditSettingsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_DifferentPolicies_Test()
+        {
+            var policiesAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.Policies, BadRsopSalesOu.Policies);
+            Assert.IsFalse(policiesAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_DifferentSecurityOptions_Test()
+        {
+            var securityOptionsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.SecurityOptions, BadRsopSalesOu.SecurityOptions);
+            Assert.IsFalse(securityOptionsAreEqual);
+        }
+
+        [TestMethod()]
+        public void SettingsEqual_DifferentRegistrySettings_Test()
+        {
+            var registrySettingsAreEqual =
+                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.RegistrySettings, BadRsopSalesOu.RegistrySettings);
+            Assert.IsFalse(registrySettingsAreEqual);
         }
     }
 }

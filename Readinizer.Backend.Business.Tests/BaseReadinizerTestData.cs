@@ -1,255 +1,195 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Tests
 {
-    public class BaseReadinizerTestData
+    public class BaseReadinizerTestData : BaseReadinizerTestSettingData
     {
-        public static List<Rsop> Rsops = new List<Rsop>
+        public static Rsop GoodRsopRedinizerOu = new Rsop
         {
-            new Rsop
+            Gpos = new List<Gpo>
             {
-                Gpos = new List<Gpo>
-                {
-                    new Gpo
-                    {
-                        Name = "Readinizer GPO",
-                        Enabled = "true",
-                        GpoIdentifier = new Identifier
-                        {
-                            Id = "1"
-                        },
-                        Link = new List<Link>
-                        {
-                            new Link
-                            {
-                                SOMPath = ""
-                            }
-                        },
-                    }
-                },
-                Domain = new ADDomain
-                {
-                    Name = "readinizer.ch",
-                    IsAvailable = true,
-                    IsForestRoot = true,
-                    IsTreeRoot = false,
-                    ParentId = null,
-                },
-                AuditSettings = new List<AuditSetting>
-                {
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Kerberos Authentication Service",
-                        PolicyTarget = "Account Logon",
-                        TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-                        CurrentSettingValue = AuditSettingValue.NoAuditing,
-                        IsPresent = true,
-                        GpoId = "1"
-                    },
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Process Creation",
-                        PolicyTarget = "Detailed Tracking",
-                        TargetSettingValue = AuditSettingValue.Success,
-                        CurrentSettingValue = AuditSettingValue.Failure,
-                        IsPresent = true,
-                        GpoId = "1"
-                    },
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Logoff",
-                        PolicyTarget = "Logon/Logoff",
-                        TargetSettingValue = AuditSettingValue.Success,
-                        CurrentSettingValue = AuditSettingValue.NoAuditing,
-                        IsPresent = false,
-                        GpoId = "2"
-                    }
-                },
-                RegistrySettings = new List<RegistrySetting>
-                {
-                    new RegistrySetting
-                    {
-                        Name = "LSA Protection",
-                        Path = "Computer Configuration\\Policies\\Administrative Templates\\SCM: Pass the Hash Mitigations",
-                        KeyPath = "SYSTEM\\CurrentControlSet\\Control\\Lsa",
-                        TargetValue = new Value {
-                            Name = "RunAsPPL",
-                            Number = "1"
-                        },
-                        CurrentValue = new Value {
-                            Name = "RunAsPPL",
-                            Number = "1"
-                        },
-                        IsPresent = true,
-                    }
-                },
-                Policies = new List<Policy>
-                {
-                    new Policy
-                    {
-                        Name = "Include command line in process creation events",
-                        TargetState = "Enabled",
-                        CurrentState = "Enabled",
-                        Category = "System/Audit Process Creation",
-                        IsPresent = true,
-                    },
-                    new Policy
-                    {
-                        Name = "Turn on Module Logging",
-                        TargetState = "Enabled",
-                        CurrentState = "Enabled",
-                        Category = "Windows Components/Windows PowerShell",
-                        IsPresent = true,
-                        ModuleNames = new ModuleNames {
-                            State = "Enabled",
-                            ValueElementData = "*"
-                        }
-                    }
-                },
-                SecurityOptions = new List<SecurityOption>
-                {
-                    new SecurityOption
-                    {
-                        Description = "Force Audit Policy",
-                        Path = "Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options",
-                        KeyName = "MACHINE\\System\\CurrentControlSet\\Control\\Lsa\\SCENoApplyLegacyAuditPolicy",
-                        TargetSettingNumber = "1",
-                        CurrentSettingNumber = "1",
-                        TargetDisplay = new Display {
-                            Name = "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings",
-                            DisplayBoolean = "true"
-                        },
-                        CurrentDisplay = new Display
-                        {
-                            Name = "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings",
-                            DisplayBoolean = "true"
-                        }
-                    }
-                }
+                ReadinizerGoodGpo
             },
-            new Rsop
+            Domain = ReadinizerDomain,
+            OrganisationalUnit = ReadinizerOu,
+            AuditSettings = new List<AuditSetting>
             {
-                Gpos = new List<Gpo>
-                {
-                    new Gpo
-                    {
-                        Name = "Readinizer Wrong GPO",
-                        Enabled = "true",
-                        GpoIdentifier = new Identifier
-                        {
-                            Id = "1"
-                        },
-                        Link = new List<Link>
-                        {
-                            new Link
-                            {
-                                SOMPath = ""
-                            }
-                        },
-                    }
-                },
-                Domain = new ADDomain
-                {
-                    Name = "readinizer.ch",
-                    IsAvailable = true,
-                    IsForestRoot = true,
-                    IsTreeRoot = false,
-                    ParentId = null,
-                },
-                AuditSettings = new List<AuditSetting>
-                {
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Kerberos Authentication Service",
-                        PolicyTarget = "Account Logon",
-                        TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-                        CurrentSettingValue = AuditSettingValue.NoAuditing,
-                        IsPresent = false,
-                        GpoId = ""
-                    },
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Process Creation",
-                        PolicyTarget = "Detailed Tracking",
-                        TargetSettingValue = AuditSettingValue.Success,
-                        CurrentSettingValue = AuditSettingValue.NoAuditing,
-                        IsPresent = false,
-                        GpoId = ""
-                    },
-                    new AuditSetting
-                    {
-                        SubcategoryName = "Audit Logoff",
-                        PolicyTarget = "Logon/Logoff",
-                        TargetSettingValue = AuditSettingValue.Success,
-                        CurrentSettingValue = AuditSettingValue.NoAuditing,
-                        IsPresent = false,
-                        GpoId = ""
-                    }
-                },
-                RegistrySettings = new List<RegistrySetting>
-                {
-                    new RegistrySetting
-                    {
-                        Name = "LSA Protection",
-                        Path = "Computer Configuration\\Policies\\Administrative Templates\\SCM: Pass the Hash Mitigations",
-                        KeyPath = "SYSTEM\\CurrentControlSet\\Control\\Lsa",
-                        TargetValue = new Value {
-                            Name = "RunAsPPL",
-                            Number = "1"
-                        },
-                        CurrentValue = new Value {
-                            Element = new Element(),
-                            Name = "Undefined",
-                            Number = "Undefined"
-                        },
-                        IsPresent = false,
-                    }
-                },
-                Policies = new List<Policy>
-                {
-                    new Policy
-                    {
-                        Name = "Include command line in process creation events",
-                        TargetState = "Enabled",
-                        CurrentState = "Disabled",
-                        Category = "System/Audit Process Creation",
-                        IsPresent = false,
-                    },
-                    new Policy
-                    {
-                        Name = "Turn on Module Logging",
-                        TargetState = "Enabled",
-                        CurrentState = "Disabled",
-                        Category = "Windows Components/Windows PowerShell",
-                        IsPresent = true,
-                        ModuleNames = null
-                    }
-                },
-                SecurityOptions = new List<SecurityOption>
-                {
-                    new SecurityOption
-                    {
-                        Description = "Force Audit Policy",
-                        Path = "Computer Configuration\\Policies\\Windows Settings\\Security Settings\\Local Policies\\Security Options",
-                        KeyName = "MACHINE\\System\\CurrentControlSet\\Control\\Lsa\\SCENoApplyLegacyAuditPolicy",
-                        TargetSettingNumber = "1",
-                        CurrentSettingNumber = "",
-                        TargetDisplay = new Display {
-                            Name = "Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings",
-                            DisplayBoolean = "true"
-                        },
-                        CurrentDisplay = new Display
-                        {
-                            Name = "Undefined",
-                            DisplayBoolean = "Undefined"
-                        },
-                        IsPresent = false
-                    }
-                }
+                KerberosAuthServiceSuccessAndFailure,
+                LogoffSuccess,
+                ProcessCreationSuccess
+            },
+            RegistrySettings = new List<RegistrySetting>
+            {
+                LsaProtectionEnabled
+            },
+            Policies = new List<Policy>
+            {
+                IncludeCommandLineEnabled,
+                ModuleLoggingEnabled
+            },
+            SecurityOptions = new List<SecurityOption>
+            {
+                ForceAuditPolicyEnabled
             }
         };
-    }
+
+        public static Rsop BadRsopRedinizerOu = new Rsop
+        {
+            Gpos = new List<Gpo>
+            {
+                ReadinizerGoodGpo
+            },
+            Domain = ReadinizerDomain,
+            OrganisationalUnit = ReadinizerOu,
+            AuditSettings = new List<AuditSetting>
+            {
+                KerberosAuthServiceFailure,
+                LogoffFailure,
+                ProcessCreationNoAuditing
+            },
+            RegistrySettings = new List<RegistrySetting>
+            {
+                LsaProtectionNotEnabled
+            },
+            Policies = new List<Policy>
+            {
+                IncludeCommandLineNotEnabled,
+                ModuleLoggingNotEnabled
+            },
+            SecurityOptions = new List<SecurityOption>
+            {
+                ForceAuditPolicyNotEnabled
+            }
+        };
+
+        public static Rsop GoodRsopSalesOu = new Rsop
+        {
+            Gpos = new List<Gpo>
+            {
+                ReadinizerGoodGpo
+            },
+            Domain = ReadinizerDomain,
+            OrganisationalUnit = ReadinizerSalesOu,
+            AuditSettings = new List<AuditSetting>
+            {
+                KerberosAuthServiceSuccessAndFailure,
+                LogoffSuccess,
+                ProcessCreationSuccess
+            },
+            RegistrySettings = new List<RegistrySetting>
+            {
+                LsaProtectionEnabled
+            },
+            Policies = new List<Policy>
+            {
+                IncludeCommandLineEnabled,
+                ModuleLoggingEnabled
+            },
+            SecurityOptions = new List<SecurityOption>
+            {
+                ForceAuditPolicyEnabled
+            }
+        };
+
+        public static Rsop BadRsopSalesOu = new Rsop
+        {
+            Gpos = new List<Gpo>
+            {
+                ReadinizerBadGpo
+            },
+            Domain = ReadinizerDomain,
+            OrganisationalUnit = ReadinizerSalesOu,
+            AuditSettings = new List<AuditSetting>
+            {
+                KerberosAuthServiceFailure,
+                ProcessCreationNoAuditing,
+                LogoffFailure
+            },
+            RegistrySettings = new List<RegistrySetting>
+            {
+                LsaProtectionNotEnabled
+            },
+            Policies = new List<Policy>
+            {
+                IncludeCommandLineNotEnabled,
+                ModuleLoggingNotEnabled
+            },
+            SecurityOptions = new List<SecurityOption>
+            {
+                ForceAuditPolicyNotEnabled
+            }
+        };
+
+        public static List<Rsop> RsopsNotEqualDifferentOus = new List<Rsop>
+        {
+            GoodRsopRedinizerOu,
+            BadRsopSalesOu
+        };
+
+        public static List<Rsop> RsopsNotEqualSameOus = new List<Rsop>
+        {
+            GoodRsopRedinizerOu,
+            BadRsopRedinizerOu
+        };
+
+        public static List<Rsop> RsopsEqualDifferentOus = new List<Rsop>
+        {
+            GoodRsopRedinizerOu,
+            GoodRsopSalesOu
+        };
+
+        public static List<Rsop> RsopsEqualSameOus = new List<Rsop>
+        {
+            GoodRsopRedinizerOu,
+            GoodRsopRedinizerOu
+        };
+
+        public static RsopPot RsopPotGoodReadinizerOu = new RsopPot
+        {
+            Rsops = new List<Rsop>
+            {
+                GoodRsopRedinizerOu
+            },
+            Name = "1",
+            DateTime = "6.6.19",
+            Domain = ReadinizerDomain,
+        };
+
+        public static List<AuditSetting> RecommendedAuditSettings = new List<AuditSetting>
+        {
+            KerberosAuthServiceSuccessAndFailure,
+            KerberosServiceTicketOpSuccessAndFailure,
+            ComputerAccountManagementSuccessAndFailure,
+            OtherAccountManagementEventsSuccessAndFailure,
+            SecurityGroupManagementSuccessAndFailure,
+            UserAccountManagementSuccessAndFailure,
+            DirectoryServiceChangesSuccess,
+            ProcessCreationSuccess,
+            ProcessTerminationSuccess,
+            AccountLockoutFailure,
+            GroupMembershipSuccess,
+            LogoffSuccess,
+            LogonSuccessAndFailure,
+            OtherLogonLogoffEventsSuccessAndFailure,
+            SpecialLogonSuccess,
+            FileShareSuccessAndFailure,
+            FileSystemSuccessAndFailure,
+            HandleManipulationSuccess,
+            KernelObjectSuccessAndFailure,
+            OtherObjectAccessEventsSuccessAndFailure,
+            RegistrySuccessAndFailure,
+            SAMSuccessAndFailure,
+            AuditPolicyChangeSuccessAndFailure,
+            MPSSVCRuleLevelPolicyChangeSuccess,
+            NonSensitivePrivilegeUseSuccessAndFailure,
+            SensitivePrivilegeUseSuccessAndFailure,
+            SecuritySystemExtensionSuccessAndFailure,
+            SystemIntegritySuccessAndFailure,
+        };
+    }   
 }

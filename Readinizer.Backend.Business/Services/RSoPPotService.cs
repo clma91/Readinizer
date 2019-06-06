@@ -90,7 +90,7 @@ namespace Readinizer.Backend.Business.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        private static RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop rsop)
+        public RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop rsop)
         {
             RsopPot foundPot = null;
 
@@ -131,7 +131,7 @@ namespace Readinizer.Backend.Business.Services
             return false;
         }
 
-        private static bool SettingsEqual<T>(ICollection<T> currentSettings, ICollection<T> otherSettings)
+        public bool SettingsEqual<T>(ICollection<T> currentSettings, ICollection<T> otherSettings)
         {
             if (currentSettings == null || otherSettings == null)
             {

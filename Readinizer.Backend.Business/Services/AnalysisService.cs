@@ -95,7 +95,7 @@ namespace Readinizer.Backend.Business.Services
         /// </summary>
         /// <param name="doc">Loaded XML as a XmlDocument</param>
         /// <returns>The cleaned JSON</returns>
-        private static JObject XmlToJson(XmlNode doc)
+        public static JObject XmlToJson(XmlNode doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
             var namespaceRegex = new Regex("q[0-9]:");
@@ -129,7 +129,7 @@ namespace Readinizer.Backend.Business.Services
             return site;
         }
 
-        private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
+        public List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
             var recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], new List<AuditSetting>());
 
@@ -158,7 +158,7 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
+        public List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
             var recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], new List<SecurityOption>());
 
@@ -195,7 +195,7 @@ namespace Readinizer.Backend.Business.Services
             }).ToList();
         }
 
-        private static List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
+        public List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
         {
             var recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], new List<RegistrySetting>());
 
@@ -225,7 +225,7 @@ namespace Readinizer.Backend.Business.Services
             }).ToList();
         }
 
-        private static List<Policy> AnalysePolicies(JToken rsop)
+        public List<Policy> AnalysePolicies(JToken rsop)
         {
             var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
 
