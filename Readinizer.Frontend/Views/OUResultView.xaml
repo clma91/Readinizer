@@ -23,13 +23,19 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="4*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <StackPanel Height="30" Width="800" Grid.Row="0">
-            <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                <TextBlock TextDecorations="Underline" Text="{Binding Ou}" FontSize="20"></TextBlock>
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" FontSize="20" Margin="0,5,0,0" FontWeight="DemiBold">Organisational Unit:</Label>
+            <Label Grid.Column="1" Margin="0,5,0,0">
+                <TextBlock Text="{Binding Ou}" FontSize="20"></TextBlock>
             </Label>
-        </StackPanel>
+        </Grid>
         <StackPanel Height="30" Width="800" Grid.Row="1">
             <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
                 <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
