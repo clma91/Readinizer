@@ -26,7 +26,7 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="70"/>
+            <RowDefinition Height="100"/>
             <RowDefinition/>
             <RowDefinition Height="90"/>
         </Grid.RowDefinitions>
@@ -41,17 +41,6 @@
 
         <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
             <StackPanel VerticalAlignment="Center">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <Label Margin="25 10 0 10" Grid.Column="0">This Domain</Label>
-                    
-                    <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}" Grid.Column="1" HorizontalAlignment="Left" IsChecked="True" IsHitTestVisible="False" Opacity="0.5"/>
-                    
-                </Grid>
-
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
