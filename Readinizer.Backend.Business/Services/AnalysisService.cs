@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -9,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
+using Readinizer.Backend.Domain.Exceptions;
 using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
@@ -42,7 +44,14 @@ namespace Readinizer.Backend.Business.Services
             foreach (var xml in rsopXml)
             {
                 var doc = new XmlDocument();
-                doc.Load(xml.FullName);
+                try
+                {
+                    doc.Load(xml.FullName);
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidXmlException("Your provided Xml-File is not an valid" ,e.Message) ;
+                }
                 var rsopJson = XmlToJson(doc);
 
                 var allRsopGpos = GetAllRsopGpos(rsopJson);
@@ -95,7 +104,7 @@ namespace Readinizer.Backend.Business.Services
         /// </summary>
         /// <param name="doc">Loaded XML as a XmlDocument</param>
         /// <returns>The cleaned JSON</returns>
-        private static JObject XmlToJson(XmlNode doc)
+        public JObject XmlToJson(XmlNode doc)
         {
             var jsonText = JsonConvert.SerializeXmlNode(doc);
             var namespaceRegex = new Regex("q[0-9]:");
@@ -129,7 +138,7 @@ namespace Readinizer.Backend.Business.Services
             return site;
         }
 
-        private static List<AuditSetting> AnalyseAuditSettings(JToken rsop)
+        public List<AuditSetting> AnalyseAuditSettings(JToken rsop)
         {
             var recommendedAuditSettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedAuditSettings"], new List<AuditSetting>());
 
@@ -158,7 +167,7 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        private static List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
+        public List<SecurityOption> AnalyseSecurityOptions(JToken rsop)
         {
             var recommendedSecurityOptions = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedSecurityOptions"], new List<SecurityOption>());
 
@@ -195,7 +204,7 @@ namespace Readinizer.Backend.Business.Services
             }).ToList();
         }
 
-        private static List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
+        public List<RegistrySetting> AnalyseRegistrySetting(JToken rsop)
         {
             var recommendedRegistrySettings = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedRegistrySettings"], new List<RegistrySetting>());
 
@@ -225,8 +234,9 @@ namespace Readinizer.Backend.Business.Services
             }).ToList();
         }
 
-        private static List<Policy> AnalysePolicies(JToken rsop)
+        public List<Policy> AnalysePolicies(JToken rsop)
         {
+            var test = ConfigurationManager.AppSettings["RecommendedPolicySettings"];
             var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
 
             var jsonPolicies = rsop.SelectToken("$..Policy");
