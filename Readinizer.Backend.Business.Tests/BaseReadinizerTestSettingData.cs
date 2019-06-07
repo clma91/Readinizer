@@ -28,30 +28,30 @@ namespace Readinizer.Backend.Business.Tests
             IsPresent = true,
             GpoId = "1"
         };
-        public static AuditSetting ComputerAccountManagementSuccessAndFailure = new AuditSetting
+        public static AuditSetting ComputerAccountManagementSuccess = new AuditSetting
         {
             SubcategoryName = "Audit Computer Account Management",
             PolicyTarget = "Account Management",
-            TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-            CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
             GpoId = "1"
         };
-        public static AuditSetting OtherAccountManagementEventsSuccessAndFailure = new AuditSetting
+        public static AuditSetting OtherAccountManagementEventsSuccess = new AuditSetting
         {
             SubcategoryName = "Audit Other Account Management Events",
             PolicyTarget = "Account Management",
-            TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-            CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
             GpoId = "1"
         };
-        public static AuditSetting SecurityGroupManagementSuccessAndFailure = new AuditSetting
+        public static AuditSetting SecurityGroupManagementSuccess = new AuditSetting
         {
             SubcategoryName = "Audit Security Group Management",
             PolicyTarget = "Account Management",
-            TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-            CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
             GpoId = "1"
         };
@@ -61,15 +61,6 @@ namespace Readinizer.Backend.Business.Tests
             PolicyTarget = "Account Management",
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
-            IsPresent = true,
-            GpoId = "1"
-        };
-        public static AuditSetting DirectoryServiceChangesSuccess = new AuditSetting
-        {
-            SubcategoryName = "Audit Directory Service Changes",
-            PolicyTarget = "DS Access",
-            TargetSettingValue = AuditSettingValue.Success,
-            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
             GpoId = "1"
         };
@@ -116,7 +107,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.Success,
             CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting LogonSuccessAndFailure = new AuditSetting
         {
@@ -125,7 +116,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting OtherLogonLogoffEventsSuccessAndFailure = new AuditSetting
         {
@@ -134,16 +125,16 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting SpecialLogonSuccess = new AuditSetting
         {
-            SubcategoryName = "Audit Other Logon/Logoff Events",
+            SubcategoryName = "Audit Special Logon",
             PolicyTarget = "Logon/Logoff",
             TargetSettingValue = AuditSettingValue.Success,
             CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting FileShareSuccessAndFailure = new AuditSetting
         {
@@ -152,7 +143,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting FileSystemSuccessAndFailure = new AuditSetting
         {
@@ -161,7 +152,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting HandleManipulationSuccess = new AuditSetting
         {
@@ -170,7 +161,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.Success,
             CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting KernelObjectSuccessAndFailure = new AuditSetting
         {
@@ -179,7 +170,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting OtherObjectAccessEventsSuccessAndFailure = new AuditSetting
         {
@@ -188,7 +179,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting RegistrySuccessAndFailure = new AuditSetting
         {
@@ -197,7 +188,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting SAMSuccessAndFailure = new AuditSetting
         {
@@ -206,16 +197,16 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
-        public static AuditSetting AuditPolicyChangeSuccessAndFailure = new AuditSetting
+        public static AuditSetting AuditPolicyChangeSuccess = new AuditSetting
         {
             SubcategoryName = "Audit Audit Policy Change",
             PolicyTarget = "Policy Change",
-            TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-            CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting MPSSVCRuleLevelPolicyChangeSuccess = new AuditSetting
         {
@@ -224,7 +215,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.Success,
             CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting NonSensitivePrivilegeUseSuccessAndFailure = new AuditSetting
         {
@@ -233,7 +224,7 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting SensitivePrivilegeUseSuccessAndFailure = new AuditSetting
         {
@@ -242,16 +233,16 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
-        public static AuditSetting SecuritySystemExtensionSuccessAndFailure = new AuditSetting
+        public static AuditSetting SecuritySystemExtensionSuccess = new AuditSetting
         {
             SubcategoryName = "Audit Security System Extension",
             PolicyTarget = "System",
-            TargetSettingValue = AuditSettingValue.SuccessAndFailure,
-            CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
         };
         public static AuditSetting SystemIntegritySuccessAndFailure = new AuditSetting
         {
@@ -260,7 +251,16 @@ namespace Readinizer.Backend.Business.Tests
             TargetSettingValue = AuditSettingValue.SuccessAndFailure,
             CurrentSettingValue = AuditSettingValue.SuccessAndFailure,
             IsPresent = true,
-            GpoId = "2"
+            GpoId = "1"
+        };
+        public static AuditSetting DirectoryServiceChangesSuccess = new AuditSetting
+        {
+            SubcategoryName = "Audit Directory Service Changes",
+            PolicyTarget = "DS Access",
+            TargetSettingValue = AuditSettingValue.Success,
+            CurrentSettingValue = AuditSettingValue.Success,
+            IsPresent = true,
+            GpoId = "NoGpoId"
         };
 
         public static AuditSetting KerberosAuthServiceFailure = new AuditSetting
@@ -332,6 +332,25 @@ namespace Readinizer.Backend.Business.Tests
             GpoId = "2"
         };
 
+        public static RegistrySetting LsassEnabled = new RegistrySetting
+        {
+            Name = "Lsass.exe audit mode",
+            Path = "Computer Configuration\\Policies\\Administrative Templates\\SCM: Pass the Hash Mitigations",
+            KeyPath = "Software\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\LSASS.exe",
+            TargetValue = new Value
+            {
+                Name = "AuditLevel",
+                Number = "8"
+            },
+            CurrentValue = new Value
+            {
+                Name = "AuditLevel",
+                Number = "8"
+            },
+            IsPresent = true,
+            GpoId = "1"
+        };
+
         public static Policy IncludeCommandLineEnabled = new Policy
         {
             Name = "Include command line in process creation events",
@@ -380,6 +399,16 @@ namespace Readinizer.Backend.Business.Tests
                 ValueElementData = "undefined"
             },
             GpoId = "2"
+        };
+
+        public static Policy ScriptBlockLoggingEnabled = new Policy
+        {
+            Name = "Turn on PowerShell Script Block Logging",
+            TargetState = "Enabled",
+            CurrentState = "Enabled",
+            Category = "Windows Components/Windows PowerShell",
+            IsPresent = true,
+            GpoId = "1"
         };
 
         public static SecurityOption ForceAuditPolicyEnabled = new SecurityOption

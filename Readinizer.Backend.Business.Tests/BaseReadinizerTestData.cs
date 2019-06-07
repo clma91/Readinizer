@@ -9,6 +9,87 @@ namespace Readinizer.Backend.Business.Tests
 {
     public class BaseReadinizerTestData : BaseReadinizerTestSettingData
     {
+        public static Gpo ReadinizerGoodGpo = new Gpo
+        {
+            Name = "Readinizer Good GPO",
+            Enabled = "true",
+            GpoIdentifier = new Identifier
+            {
+                Id = "1"
+            },
+            Link = new List<Link>
+            {
+                new Link
+                {
+                    SOMPath = ""
+                }
+            },
+        };
+
+        public static Gpo ReadinizerBadGpo = new Gpo
+        {
+            Name = "Readinizer Bad GPO",
+            Enabled = "true",
+            GpoIdentifier = new Identifier
+            {
+                Id = "2"
+            },
+            Link = new List<Link>
+            {
+                new Link
+                {
+                    SOMPath = ""
+                }
+            },
+        };
+
+        public static ADDomain ReadinizerDomain = new ADDomain
+        {
+            Name = "readinizer.ch",
+            IsAvailable = true,
+            IsForestRoot = true,
+            IsTreeRoot = false,
+            ParentId = null,
+        };
+
+        public static OrganisationalUnit ReadinizerOu = new OrganisationalUnit
+        {
+            Name = "Readinizer Ou",
+            ADDomain = ReadinizerDomain,
+            Computers = new List<Computer>
+            {
+                new Computer
+                {
+                    ComputerName = "ReadinizerWS01",
+                    IpAddress = "10.0.0.9",
+                    IsDomainController = false,
+                    isSysmonRunning = true,
+                    PingSuccessful = true,
+                }
+            },
+            HasReachableComputer = true,
+            LdapPath = "test\\path",
+        };
+
+        public static OrganisationalUnit ReadinizerSalesOu = new OrganisationalUnit
+        {
+            Name = "Readinizer Sales Ou",
+            ADDomain = ReadinizerDomain,
+            Computers = new List<Computer>
+            {
+                new Computer
+                {
+                    ComputerName = "ReadinizerWS02",
+                    IpAddress = "10.0.1.9",
+                    IsDomainController = false,
+                    isSysmonRunning = true,
+                    PingSuccessful = true,
+                }
+            },
+            HasReachableComputer = true,
+            LdapPath = "test\\path",
+        };
+
         public static Rsop GoodRsopRedinizerOu = new Rsop
         {
             Gpos = new List<Gpo>
@@ -164,11 +245,10 @@ namespace Readinizer.Backend.Business.Tests
         {
             KerberosAuthServiceSuccessAndFailure,
             KerberosServiceTicketOpSuccessAndFailure,
-            ComputerAccountManagementSuccessAndFailure,
-            OtherAccountManagementEventsSuccessAndFailure,
-            SecurityGroupManagementSuccessAndFailure,
+            ComputerAccountManagementSuccess,
+            OtherAccountManagementEventsSuccess,
+            SecurityGroupManagementSuccess,
             UserAccountManagementSuccessAndFailure,
-            DirectoryServiceChangesSuccess,
             ProcessCreationSuccess,
             ProcessTerminationSuccess,
             AccountLockoutFailure,
@@ -184,12 +264,31 @@ namespace Readinizer.Backend.Business.Tests
             OtherObjectAccessEventsSuccessAndFailure,
             RegistrySuccessAndFailure,
             SAMSuccessAndFailure,
-            AuditPolicyChangeSuccessAndFailure,
+            AuditPolicyChangeSuccess,
             MPSSVCRuleLevelPolicyChangeSuccess,
             NonSensitivePrivilegeUseSuccessAndFailure,
             SensitivePrivilegeUseSuccessAndFailure,
-            SecuritySystemExtensionSuccessAndFailure,
+            SecuritySystemExtensionSuccess,
             SystemIntegritySuccessAndFailure,
+            DirectoryServiceChangesSuccess
+        };
+
+        public static List<Policy> RecommendedPolicies = new List<Policy>
+        {
+            IncludeCommandLineEnabled,
+            ModuleLoggingEnabled,
+            ScriptBlockLoggingEnabled
+        };
+
+        public static List<RegistrySetting> RecommendedRegistrySettings = new List<RegistrySetting>
+        {
+            LsassEnabled,
+            LsaProtectionEnabled
+        };
+
+        public static List<SecurityOption> RecommendedSecurityOptions = new List<SecurityOption>
+        {
+            ForceAuditPolicyEnabled
         };
     }   
 }
