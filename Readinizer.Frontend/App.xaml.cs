@@ -50,7 +50,7 @@ namespace Readinizer.Frontend
             container.RegisterType<ISysmonService, SysmonService>();
             container.RegisterType<IPingService, PingService>();
             container.RegisterType<IAnalysisService, AnalysisService>();
-            container.RegisterType<IRSoPPotService, RSoPPotService>();
+            container.RegisterType<IRSoPPotService, RsopPotService>();
             container.RegisterType<ISysmonResultViewModel, SysmonResultViewModel>();
             container.RegisterType<IExportService, ExportService>();
             container.RegisterType<ISecuritySettingParserService, SecuritySettingParserService>();

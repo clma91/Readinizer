@@ -10,7 +10,7 @@ namespace Readinizer.Backend.Business.Tests
     [TestClass()]
     public class RsoPPotServiceTests : BaseReadinizerTestData
     {
-        public static RSoPPotService rsopPotService { get; set; } = new RSoPPotService(new UnitOfWork());
+        public static RsopPotService rsopPotService { get; set; } = new RsopPotService(new UnitOfWork());
 
         [TestMethod()]
         public void FillRsopPotList_NotEquallySettings_DifferentOus_Test()
