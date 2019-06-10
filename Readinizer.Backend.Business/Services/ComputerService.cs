@@ -24,23 +24,26 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task GetComputers()
         {
-            List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
-            List<Site> sites = await unitOfWork.SiteRepository.GetAllEntities();
+            var allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
+            var sites = await unitOfWork.SiteRepository.GetAllEntities();
+            var DCnames = getDcNames();
 
-            List<string> DCnames = getDcNames();
-
-            foreach (OrganisationalUnit OU in allOUs)
+            foreach (OrganizationalUnit OU in allOUs)
             {
-                DirectoryEntry entry = new DirectoryEntry(OU.LdapPath);
-                DirectorySearcher searcher = new DirectorySearcher(entry);
-                searcher.Filter = ("(objectClass=computer)");
-                searcher.SearchScope = SearchScope.OneLevel;
+                var entry = new DirectoryEntry(OU.LdapPath);
+                var searcher = new DirectorySearcher(entry)
+                {
+                    Filter = ("(objectClass=computer)"), SearchScope = SearchScope.OneLevel
+                };
 
                 foreach (SearchResult searchResult in searcher.FindAll())
                 {
-                    Computer foundMember = new Computer{ OrganisationalUnits = new List<OrganisationalUnit>() };
-                    foundMember.ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length);
+                    var foundMember = new Computer
+                    {
+                        OrganisationalUnits = new List<OrganizationalUnit>(),
+                        ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length)
+                    };
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
                     foundMember.OrganisationalUnits.Add(OU);
@@ -52,9 +55,9 @@ namespace Readinizer.Backend.Business.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        List<string> getDcNames()
+        private static List<string> getDcNames()
         {
-            List<string> DCs = new List<string>();
+            var DCs = new List<string>();
             
             foreach (System.DirectoryServices.ActiveDirectory.Domain domain in Forest.GetCurrentForest().Domains)
             {
@@ -62,9 +65,9 @@ namespace Readinizer.Backend.Business.Services
                 {
                     foreach (DomainController dc in domain.DomainControllers)
                     {
-                        string dcname = dc.Name.Remove((dc.Name.Length - (dc.Domain.Name.Length + 1)),
+                        var dcName = dc.Name.Remove((dc.Name.Length - (dc.Domain.Name.Length + 1)),
                             dc.Domain.Name.Length + 1);
-                        DCs.Add(dcname);
+                        DCs.Add(dcName);
                     }
                 }
                 catch (Exception)
@@ -77,13 +80,13 @@ namespace Readinizer.Backend.Business.Services
             return DCs;
         }
 
-        string getIP(Computer foundMember, OrganisationalUnit OU, List<Domain.Models.ADDomain> allDomains)
+        private static string getIP(Computer foundMember, OrganizationalUnit OU, List<ADDomain> allDomains)
         {
-            foreach (ADDomain domain in allDomains)
+            foreach (var domain in allDomains)
             {
                 if (domain.ADDomainId.Equals(OU.ADDomainRefId))
                 {
-                    foreach (IPAddress address in Dns.GetHostEntry(foundMember.ComputerName + "." + domain.Name)
+                    foreach (var address in Dns.GetHostEntry(foundMember.ComputerName + "." + domain.Name)
                         .AddressList)
                     {
                         if (!address.IsIPv6LinkLocal)

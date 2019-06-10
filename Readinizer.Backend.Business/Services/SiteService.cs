@@ -43,7 +43,7 @@ namespace Readinizer.Backend.Business.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        private List<Site> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<Domain.Models.ADDomain> allDomains)
+        private static List<Site> MapToDomainModel(List<AD.ActiveDirectorySite> sites, List<ADDomain> allDomains)
         {
             var adSites = new List<Site>();
 

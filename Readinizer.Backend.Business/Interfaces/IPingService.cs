@@ -2,6 +2,6 @@
 {
     public interface IPingService
     {
-        bool isPingable(string ipAddress);
+        bool IsPingable(string ipAddress);
     }
 }

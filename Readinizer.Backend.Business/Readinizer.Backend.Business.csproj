@@ -125,10 +125,10 @@
     <Compile Include="Interfaces\IPingService.cs" />
     <Compile Include="Interfaces\ISecuritySettingParserService.cs" />
     <Compile Include="Interfaces\ISysmonService.cs" />
-    <Compile Include="Interfaces\IRSoPPotService.cs" />
+    <Compile Include="Interfaces\IRsopPotService.cs" />
     <Compile Include="Interfaces\ITreeNodesFactory.cs" />
-    <Compile Include="Interfaces\IOrganisationalUnitService.cs" />
-    <Compile Include="Interfaces\IRSoPService.cs" />
+    <Compile Include="Interfaces\IOrganizationalUnitService.cs" />
+    <Compile Include="Interfaces\IRsopService.cs" />
     <Compile Include="Interfaces\IADDomainService.cs" />
     <Compile Include="Interfaces\ISiteService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -138,11 +138,11 @@
     <Compile Include="Services\SecuritySettingParserService.cs" />
     <Compile Include="Services\SysmonService.cs" />
     <Compile Include="Services\AnalysisService.cs" />
-    <Compile Include="Services\OrganisationalUnitService.cs" />
+    <Compile Include="Services\OrganizationalUnitService.cs" />
     <Compile Include="Services\ComputerService.cs" />
     <Compile Include="Services\RsopPotService.cs" />
     <Compile Include="Services\SiteService.cs" />
-    <Compile Include="Services\RSoPService.cs" />
+    <Compile Include="Services\RsopService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Readinizer.Backend.DataAccess\Readinizer.Backend.DataAccess.csproj">

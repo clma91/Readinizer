@@ -1,14 +1,10 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Xml;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Services;
-using Readinizer.Backend.DataAccess.UnityOfWork;
+using Readinizer.Backend.DataAccess.UnitOfWork;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Business.Tests
 {

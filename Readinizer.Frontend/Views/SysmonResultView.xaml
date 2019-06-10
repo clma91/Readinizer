@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Readinizer.Frontend.Views"
         xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:DVCP="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
@@ -51,7 +49,7 @@
                                 <ControlTemplate TargetType="DVC:Chart">
                                     <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" Padding="0">
                                         <Grid>
-                                            <Grid Grid.Row="1" Margin="0,5,0,5">
+                                            <Grid Margin="0,5,0,5">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="5*" />
                                                     <ColumnDefinition Width="4*" />
@@ -126,6 +124,6 @@
                 </ListBox>
             </Grid>
         </Grid>
-        <Button Grid.Row="4" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
+        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
     </Grid>
 </UserControl>

@@ -85,7 +85,7 @@
     <Compile Include="Models\SecurityOption.cs" />
     <Compile Include="ModelsJson\HelperClasses\Value.cs" />
     <Compile Include="Models\ADDomain.cs" />
-    <Compile Include="Models\OrganisationalUnit.cs" />
+    <Compile Include="Models\OrganizationalUnit.cs" />
     <Compile Include="Models\Computer.cs" />
     <Compile Include="Models\Rsop.cs" />
     <Compile Include="Models\RsopPot.cs" />

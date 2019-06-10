@@ -113,13 +113,13 @@ namespace Readinizer.Backend.Business.Services
             return rsop;
         }
 
-        private OrganisationalUnit GetOrganisationalUnitOfRsop(JToken rsop)
+        private OrganizationalUnit GetOrganisationalUnitOfRsop(JToken rsop)
         {
-            var jsonComputerResultsSOM = rsop.SelectToken("$..ComputerResults.SOM");
+            var jsonComputerResultsSom = rsop.SelectToken("$..ComputerResults.SOM");
             var jsonComputerResultsDomain = rsop.SelectToken("$..ComputerResults.Domain");
-            var computerResultsSOM = jsonComputerResultsSOM.Value<string>();
+            var computerResultsSom = jsonComputerResultsSom.Value<string>();
             var domainName = jsonComputerResultsDomain.Value<string>();
-            var ouName = computerResultsSOM.Split('/').Last();
+            var ouName = computerResultsSom.Split('/').Last();
             var organisationalUnit = unitOfWork.SpecificOrganisationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
 
             if (organisationalUnit != null && (bool)!organisationalUnit.HasReachableComputer)
@@ -183,8 +183,7 @@ namespace Readinizer.Backend.Business.Services
             return recommendedSecurityOptions.Select(x =>
             {
                 x.IsPresent = presentSecurityOptions.Contains(x);
-                x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay != null && y.CurrentDisplay.DisplayBoolean != null &&
-                                                                             y.KeyName.Equals(x.KeyName))
+                x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay?.DisplayBoolean != null && y.KeyName.Equals(x.KeyName))
                     .Select(z => z.CurrentDisplay.DisplayBoolean)
                     .DefaultIfEmpty("NotDefined")
                     .FirstOrDefault();
@@ -231,7 +230,6 @@ namespace Readinizer.Backend.Business.Services
 
         public List<Policy> AnalysePolicies(JToken rsop)
         {
-            var test = ConfigurationManager.AppSettings["RecommendedPolicySettings"];
             var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
 
             var jsonPolicies = rsop.SelectToken("$..Policy");

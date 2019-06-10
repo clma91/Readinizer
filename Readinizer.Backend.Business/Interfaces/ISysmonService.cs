@@ -2,7 +2,6 @@
 {
     public interface ISysmonService
     {
-        bool isSysmonRunning(string serviceName, string user, string computername, string domain);
-
+        bool IsSysmonRunning(string serviceName, string user, string computername, string domain);
     }
 }

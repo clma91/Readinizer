@@ -64,9 +64,9 @@ namespace Readinizer.Frontend.ViewModels
 
         public ISnackbarMessageQueue SnackbarMessageQueue { get; }
 
-        public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
+        public readonly double ScreenHeight = SystemParameters.PrimaryScreenHeight * 0.8;
 
-        [Obsolete("Only for desing data", true)]
+        [Obsolete("Only for design data", true)]
         public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
@@ -172,7 +172,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
-                ShowTreeStructureResultView(message.Visability);
+                ShowTreeStructureResultView(message.Visibility);
             }
             else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
@@ -234,7 +234,7 @@ namespace Readinizer.Frontend.ViewModels
                     var successfullyExported = await exportService.Export(type, exportPath);
                     if (!successfullyExported)
                     {
-                        Messenger.Default.Send(new SnackbarMessage($"Something went wrong during saving the file"));
+                        Messenger.Default.Send(new SnackbarMessage("Something went wrong during saving the file"));
                     }
                 }
                 else

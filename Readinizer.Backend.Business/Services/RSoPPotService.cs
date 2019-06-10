@@ -9,7 +9,7 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class RsopPotService : IRSoPPotService
+    public class RsopPotService : IRsopPotService
     {
         private readonly IUnitOfWork unitOfWork;
         private static int index;
@@ -137,12 +137,12 @@ namespace Readinizer.Backend.Business.Services
                 return (currentSettings == null && otherSettings == null);
             }
 
-            if (currentSettings.Count() != otherSettings.Count())
+            if (currentSettings.Count != otherSettings.Count)
             {
                 return false;
             }
 
-            for (var i = 0; i < currentSettings.Count(); i++)
+            for (var i = 0; i < currentSettings.Count; i++)
             {
                 if (!currentSettings.ElementAt(i).Equals(otherSettings.ElementAt(i)))
                 {

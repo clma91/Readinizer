@@ -38,7 +38,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public SysmonResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -75,9 +75,11 @@ namespace Readinizer.Frontend.ViewModels
             var runningCounter = SysmonActiveList.Count;
             var notRunningCounter = sysmonNotActiveList.Count;
 
-            var valueList = new List<KeyValuePair<string, int>>();
-            valueList.Add(new KeyValuePair<string, int>("Sysmon is running", runningCounter));
-            valueList.Add(new KeyValuePair<string, int>("Sysmon is not running", notRunningCounter));
+            var valueList = new List<KeyValuePair<string, int>>
+            {
+                new KeyValuePair<string, int>("Sysmon is running", runningCounter),
+                new KeyValuePair<string, int>("Sysmon is not running", notRunningCounter)
+            };
 
             return valueList;
         }

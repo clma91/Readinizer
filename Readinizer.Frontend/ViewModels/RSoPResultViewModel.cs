@@ -57,7 +57,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public RSoPResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -78,10 +78,10 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> loadOUs()
         {
             var rsops = rsopPot.Rsops;
-            return rsops.Select(rsop => rsop.OrganisationalUnit.Name).ToList();
+            return rsops.Select(x => x.OrganisationalUnit.Name).ToList();
         }
 
-        private async Task<List<OrganisationalUnit>> GetOusAsync()
+        private async Task<List<OrganizationalUnit>> GetOusAsync()
         {
             var ous = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             return ous;

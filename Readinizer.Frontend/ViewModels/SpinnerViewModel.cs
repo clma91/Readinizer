@@ -11,8 +11,7 @@ namespace Readinizer.Frontend.ViewModels
     {
         private readonly IADDomainService adDomainService;
 
-        private string progressText = "test";
-
+        private string progressText;
         public string ProgressText
         {
             get => progressText;

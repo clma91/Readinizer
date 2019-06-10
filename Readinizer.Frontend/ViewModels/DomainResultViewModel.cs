@@ -96,9 +96,11 @@ namespace Readinizer.Frontend.ViewModels
             var goodPots = GoodList.Count;
             var badPots = BadList.Count;
 
-            var valueList = new List<KeyValuePair<string, int>>();
-            valueList.Add(new KeyValuePair<string, int>("Correct", goodPots));
-            valueList.Add(new KeyValuePair<string, int>("Not Correct", badPots));
+            var valueList = new List<KeyValuePair<string, int>>
+            {
+                new KeyValuePair<string, int>("Correct", goodPots),
+                new KeyValuePair<string, int>("Not Correct", badPots)
+            };
 
             return valueList;
         }

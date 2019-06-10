@@ -2,7 +2,7 @@
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IOrganisationalUnitService
+    public interface IOrganizationalUnitService
     {
         Task GetAllOrganisationalUnits();
     }

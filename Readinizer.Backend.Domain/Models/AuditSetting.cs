@@ -31,9 +31,7 @@ namespace Readinizer.Backend.Domain.Models
         {
             if (GpoIdentifier != null && SubcategoryName != null)
             {
-                var auditSetting = obj as AuditSetting;
-
-                if (auditSetting == null)
+                if (!(obj is AuditSetting auditSetting))
                 {
                     return false;
                 }

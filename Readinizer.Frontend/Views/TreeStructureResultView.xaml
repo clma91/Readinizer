@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:local="clr-namespace:Readinizer.Frontend.Views"
              xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:Domain="clr-namespace:Readinizer.Backend.Domain.Models;assembly=Readinizer.Backend.Domain"
@@ -51,7 +50,7 @@
                     <TextBlock TextDecorations="Underline" FontSize="20">Forest Structure</TextBlock>
                 </Label>
 
-                <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+                <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
 
                     <TreeView x:Name="TreeView" Margin="10 0 10 10" ItemsSource="{Binding TreeNodes}" HorizontalContentAlignment="Stretch" >
                         <TreeView.Resources>
@@ -173,6 +172,6 @@
             </Grid>
         </ScrollViewer>
 
-        <Button x:Name="Sysmon" Grid.Row="1" Width="100" Height="50" Grid.Column="3" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,50,20">Sysmon</Button>
+        <Button x:Name="Sysmon" Grid.Row="1" Width="100" Height="50" Visibility="{Binding WithSysmon}" Command="{Binding SysmonCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,0,50,20">Sysmon</Button>
     </Grid>
 </UserControl>

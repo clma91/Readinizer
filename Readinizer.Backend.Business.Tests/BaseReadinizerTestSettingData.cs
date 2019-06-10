@@ -1,5 +1,4 @@
 ﻿using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Tests

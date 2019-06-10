@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Readinizer.Backend.DataAccess.Context;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 
-namespace Readinizer.Backend.DataAccess.UnityOfWork
+namespace Readinizer.Backend.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        private ReadinizerDbContext context = new ReadinizerDbContext();
+        private readonly ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;
-        private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
+        private GenericRepository<OrganizationalUnit> organisationalUnitRepository;
         private OrganisationalUnitRepository specificOrganisationalUnitRepository;
         private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
@@ -33,13 +33,13 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
             }
         }
 
-        public GenericRepository<OrganisationalUnit> OrganisationalUnitRepository
+        public GenericRepository<OrganizationalUnit> OrganisationalUnitRepository
         {
             get
             {
                 if (organisationalUnitRepository == null)
                 {
-                    organisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
+                    organisationalUnitRepository = new GenericRepository<OrganizationalUnit>(context);
                 }
 
                 return organisationalUnitRepository;

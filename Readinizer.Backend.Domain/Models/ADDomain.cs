@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Readinizer.Backend.Domain.Models
@@ -29,7 +23,7 @@ namespace Readinizer.Backend.Domain.Models
         public virtual List<ADDomain> SubADDomains { get; set; }
 
         [JsonIgnore]
-        public virtual List<OrganisationalUnit> OrganisationalUnits { get; set; }
+        public virtual List<OrganizationalUnit> OrganisationalUnits { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Site> Sites { get; set; }

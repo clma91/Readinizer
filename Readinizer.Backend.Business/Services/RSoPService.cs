@@ -10,13 +10,13 @@ using System.IO;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class RSoPService : IRSoPService
+    public class RsopService : IRsopService
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly ISysmonService sysmonService;
         private readonly IPingService pingService;
 
-        public RSoPService(IUnitOfWork unitOfWork, ISysmonService sysmonService, IPingService pingService)
+        public RsopService(IUnitOfWork unitOfWork, ISysmonService sysmonService, IPingService pingService)
         {
             this.unitOfWork = unitOfWork;
             this.sysmonService = sysmonService;
@@ -24,13 +24,13 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        public async Task getRSoPOfReachableComputers()
+        public async Task GetRsopOfReachableComputers()
         {
             clearOldRsops();
-            List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<OrganizationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
-            foreach (OrganisationalUnit OU in allOUs)
+            foreach (OrganizationalUnit OU in allOUs)
             {
                 collectedSiteIds.Clear();
 
@@ -41,7 +41,7 @@ namespace Readinizer.Backend.Business.Services
                     OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
-                        if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.isPingable(computer.IpAddress))
+                        if (!collectedSiteIds.Contains(computer.SiteRefId) && pingService.IsPingable(computer.IpAddress))
                         {
                             computer.PingSuccessful = true;
                             unitOfWork.ComputerRepository.Update(computer);
@@ -63,7 +63,7 @@ namespace Readinizer.Backend.Business.Services
             }
         }
 
-        public async Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName)
+        public async Task GetRsopOfReachableComputersAndCheckSysmon(string serviceName)
         {
             if (string.IsNullOrEmpty(serviceName))
             {
@@ -71,11 +71,11 @@ namespace Readinizer.Backend.Business.Services
             }
 
             clearOldRsops();
-            List<OrganisationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<OrganizationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
             string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-            foreach (OrganisationalUnit OU in allOUs)
+            foreach (OrganizationalUnit OU in allOUs)
             {
                 collectedSiteIds.Clear();
 
@@ -87,7 +87,7 @@ namespace Readinizer.Backend.Business.Services
                     OU.HasReachableComputer = false;
                     foreach (var computer in OU.Computers)
                     {
-                        if (pingService.isPingable(computer.IpAddress))
+                        if (pingService.IsPingable(computer.IpAddress))
                         {
                             if (!collectedSiteIds.Contains(computer.SiteRefId))
                             {
@@ -104,7 +104,7 @@ namespace Readinizer.Backend.Business.Services
                                                                 user);
                             }
 
-                            computer.isSysmonRunning = sysmonService.isSysmonRunning(serviceName, user,
+                            computer.isSysmonRunning = sysmonService.IsSysmonRunning(serviceName, user,
                                 computer.ComputerName,
                                 domainName);
 
@@ -119,14 +119,16 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        public void getRSoP(string computerpath, int ouId, int siteId, string user)
+        public void getRSoP(string computerPath, int ouId, int siteId, string user)
         {
             try
             {
-                GPRsop gpRsop = new GPRsop(RsopMode.Logging, "");
-                gpRsop.LoggingMode = LoggingMode.Computer;
-                gpRsop.LoggingComputer = computerpath;
-                gpRsop.LoggingUser = user;
+                var gpRsop = new GPRsop(RsopMode.Logging, "")
+                {
+                    LoggingMode = LoggingMode.Computer,
+                    LoggingComputer = computerPath,
+                    LoggingUser = user
+                };
                 gpRsop.CreateQueryResults();
                 gpRsop.GenerateReportToFile(ReportType.Xml, ConfigurationManager.AppSettings["ReceivedRSoP"] + "\\" + "Ou_" + ouId + "-Site_" + siteId + ".xml");
             }

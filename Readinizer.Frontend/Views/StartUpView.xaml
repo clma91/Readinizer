@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Readinizer.Frontend.Views"
         xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -37,9 +36,9 @@
         </StackPanel>
 
         <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="20 0 20 0" Text="{Binding Path=DomainName, UpdateSourceTrigger=PropertyChanged}"
-                 ToolTip="Enter a specific Domainname (relying in your AD-Forest) which should be analysed."></TextBox>
+                 ToolTip="Enter a specific Domainname (relying in your AD-Forest) which should be analyzed."></TextBox>
 
-        <Border Grid.Row="1" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Margin="10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}" BorderThickness="0.5">
             <StackPanel VerticalAlignment="Center">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -70,7 +69,7 @@
         </Border>
 
         <Button x:Name="Analyse" Grid.Row="2" Grid.Column="3" Width="100" Height="50" Command="{Binding AnalyseCommand}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="50, 0, 50, 20">
-            <TextBlock TextAlignment="Center">Analyse<LineBreak/>Readiness</TextBlock>
+            <TextBlock TextAlignment="Center">Analyze<LineBreak/>Readiness</TextBlock>
         </Button>
     </Grid>
 
