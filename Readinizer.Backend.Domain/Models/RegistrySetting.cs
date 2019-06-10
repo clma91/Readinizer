@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
-namespace Readinizer.Backend.Domain.ModelsJson
+namespace Readinizer.Backend.Domain.Models
 {
-    public class RegistrySetting
+    public class RegistrySetting : GpoSetting
     {
         [JsonIgnore]
         public int RegistrySettingId { get; set; }
@@ -15,13 +14,8 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonIgnore]
         public Rsop Rsop { get; set; }
 
-        public string GpoId { get; set; }
-
         [JsonProperty("Name")]
         public string Name { get; set; }
-
-        [JsonProperty("Path")]
-        public string Path { get; set; }
 
         [JsonProperty("KeyPath")]
         public string KeyPath { get; set; }
@@ -31,13 +25,11 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         public Value CurrentValue { get; set; } = new Value();
 
-        public bool IsPresent { get; set; }
-
-        public bool IsStatusOk => CurrentValue.Number.Equals(TargetValue.Number);
+        public override bool IsStatusOk => CurrentValue.Number.Equals(TargetValue.Number);
 
         public override bool Equals(object obj)
         {
-            if (GpoId != null)
+            if (GpoIdentifier != null)
             {
                 var registrySetting = obj as RegistrySetting;
 

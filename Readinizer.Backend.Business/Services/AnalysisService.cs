@@ -156,9 +156,9 @@ namespace Readinizer.Backend.Business.Services
                 x.IsPresent = presentAuditSettings.Contains(x);
                 x.CurrentSettingValue = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
                     .Select(z => z.CurrentSettingValue)
-                    .DefaultIfEmpty(AuditSettingValue.NoAuditing)
+                    .DefaultIfEmpty(AuditSetting.AuditSettingValue.NoAuditing)
                     .FirstOrDefault();
-                x.GpoId = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
+                x.GpoIdentifier = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();
@@ -183,11 +183,6 @@ namespace Readinizer.Backend.Business.Services
             return recommendedSecurityOptions.Select(x =>
             {
                 x.IsPresent = presentSecurityOptions.Contains(x);
-                x.CurrentSettingNumber = securityOptions.Where(y => y.CurrentSettingNumber == x.TargetSettingNumber)
-                    .Select(z => z.CurrentSettingNumber)
-                    .DefaultIfEmpty("NotDefined")
-                    .FirstOrDefault();
-
                 x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay != null && y.CurrentDisplay.DisplayBoolean != null &&
                                                                              y.KeyName.Equals(x.KeyName))
                     .Select(z => z.CurrentDisplay.DisplayBoolean)
@@ -195,7 +190,7 @@ namespace Readinizer.Backend.Business.Services
                     .FirstOrDefault();
                 x.CurrentDisplay.Name = x.TargetDisplay.Name;
 
-                x.GpoId = securityOptions.Where(y => y.CurrentSettingNumber.Equals(x.CurrentSettingNumber))
+                x.GpoIdentifier = securityOptions.Where(y => y.CurrentDisplay != null)
                 .Select(z => z.Gpo.GpoIdentifier.Id)
                 .DefaultIfEmpty("NoGpoId")
                 .FirstOrDefault();
@@ -225,7 +220,7 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentValue)
                     .DefaultIfEmpty(new Value())
                     .FirstOrDefault();
-                w.GpoId = registrySettings.Where(x => x.CurrentValue != null)
+                w.GpoIdentifier = registrySettings.Where(x => x.CurrentValue != null)
                     .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
@@ -255,7 +250,7 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentState)
                     .DefaultIfEmpty("Disabled")
                     .FirstOrDefault();
-                x.GpoId = policies.Where(y => y.Name.Equals(x.Name))
+                x.GpoIdentifier = policies.Where(y => y.Name.Equals(x.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();

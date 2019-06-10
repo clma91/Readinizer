@@ -59,7 +59,7 @@ namespace Readinizer.Backend.Business.Services
         {
             return new RsopPot
             {
-                Name = index++.ToString() + ". Group of identical security settings",
+                Name = index++ + ". Group of identical security settings",
                 DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture),
                 Domain = rsop.Domain,
                 Rsops = new List<Rsop> { rsop }

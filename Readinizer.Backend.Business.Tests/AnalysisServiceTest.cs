@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json.Linq;
 using Readinizer.Backend.Business.Services;
 using Readinizer.Backend.DataAccess.UnityOfWork;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Business.Tests

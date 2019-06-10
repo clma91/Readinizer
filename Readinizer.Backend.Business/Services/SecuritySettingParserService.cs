@@ -36,7 +36,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var setting in rsop.AuditSettings)
             {
                 var parsedSetting = SecuritySettingFactory(setting.SubcategoryName, setting.CurrentSettingValue.ToString(), setting.TargetSettingValue.ToString());
-                var gopId = setting.GpoId;
+                var gopId = setting.GpoIdentifier;
 
                 ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
@@ -46,7 +46,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var setting in rsop.Policies)
             {
                 var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentState, setting.TargetState);
-                var gopId = setting.GpoId;
+                var gopId = setting.GpoIdentifier;
 
                 ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
@@ -57,7 +57,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var setting in rsop.RegistrySettings)
             {
                 var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentValue.Name, setting.TargetValue.Name);
-                var gopId = setting.GpoId;
+                var gopId = setting.GpoIdentifier;
 
                 ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
@@ -67,7 +67,7 @@ namespace Readinizer.Backend.Business.Services
             foreach (var setting in rsop.SecurityOptions)
             {
                 var parsedSetting = SecuritySettingFactory(setting.Description, setting.CurrentDisplay.DisplayBoolean, setting.TargetDisplay.DisplayBoolean);
-                var gopId = setting.GpoId;
+                var gopId = setting.GpoIdentifier;
 
                 ParseSecuritySetting(gopId, parsedSetting, GPOs);
 

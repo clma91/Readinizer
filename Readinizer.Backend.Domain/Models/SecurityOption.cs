@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
-namespace Readinizer.Backend.Domain.ModelsJson
+namespace Readinizer.Backend.Domain.Models
 {
-    public class SecurityOption
+    public class SecurityOption : GpoSetting
     {
         [JsonIgnore]
         public int SecurityOptionId { get; set; }
@@ -15,8 +14,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonIgnore]
         public Rsop Rsop { get; set; }
 
-        public string GpoId { get; set; }
-
         [JsonProperty("Description")]
         public string Description { get; set; }
 
@@ -26,19 +23,12 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("KeyName")]
         public string KeyName { get; set; }
 
-        [JsonProperty("SettingNumber")]
-        public string TargetSettingNumber { get; set; }
-
         [JsonProperty("TargetDisplay")]
         public Display TargetDisplay { get; set; }
 
         public Display CurrentDisplay { get; set; } = new Display();
 
-        public string CurrentSettingNumber { get; set; }
-
-        public bool IsPresent { get; set; }
-
-        public bool IsStatusOk => CurrentDisplay.DisplayBoolean.Equals(TargetDisplay.DisplayBoolean);
+        public override bool IsStatusOk => CurrentDisplay.DisplayBoolean.Equals(TargetDisplay.DisplayBoolean);
 
         public override bool Equals(object obj)
         {

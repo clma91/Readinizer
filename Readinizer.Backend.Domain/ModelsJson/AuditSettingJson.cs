@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Domain.ModelsJson
 {
@@ -21,14 +22,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public string PolicyTarget { get; set; }
 
         [JsonProperty("SettingValue")]
-        public AuditSettingValue CurrentSettingValue { get; set; }
-    }
-
-    public enum AuditSettingValue
-    {
-        NoAuditing,
-        Success,
-        Failure,
-        SuccessAndFailure
+        public AuditSetting.AuditSettingValue CurrentSettingValue { get; set; }
     }
 }
