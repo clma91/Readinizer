@@ -71,8 +71,8 @@
                                             </Expander.Header>
 
                                             <StackPanel Orientation="Vertical" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="30 0 0 0" AllowDrop="False">
-                                                <TextBlock Margin="0 0 0 5" Text="Organisational Units" />
-                                                <ListView x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganisationalUnits}">
+                                                <TextBlock Margin="0 0 0 5" Text="Organizational Units" />
+                                                <ListView x:Name="ListOfOus" Margin="10 0 0 0" ItemsSource="{Binding OrganizationalUnits}">
                                                     <ListView.ItemTemplate>
                                                         <DataTemplate>
                                                             <StackPanel Orientation="Horizontal">
@@ -104,7 +104,7 @@
 
 
                 <Label Grid.Row="2" Grid.Column="0" Margin="10 0 0 0" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">
-                    <TextBlock FontSize="16">Unanalyzed Organisational Units:</TextBlock>
+                    <TextBlock FontSize="16">Unanalyzed Organizational Units:</TextBlock>
                 </Label>
                 <Label Grid.Row="2" Grid.Column="3" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0" Visibility="{Binding OUsWithoutRSoP, Converter={StaticResource NullToInvisibleConverter}}">Import</Label>
                 <Border Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="4" Margin="20 10 20 10" BorderBrush="{DynamicResource PrimaryHueDarkForegroundBrush}"

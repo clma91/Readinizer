@@ -69,7 +69,7 @@ namespace Readinizer.Backend.Business.Services
                 var rsop = new Rsop
                 {
                     Domain = organisationalUnit.ADDomain,
-                    OrganisationalUnit = organisationalUnit,
+                    OrganizationalUnit = organisationalUnit,
                     Site = site,
                     AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
                     Policies = policies.OrderBy(x => x.Name).ToList(),
@@ -120,12 +120,12 @@ namespace Readinizer.Backend.Business.Services
             var computerResultsSom = jsonComputerResultsSom.Value<string>();
             var domainName = jsonComputerResultsDomain.Value<string>();
             var ouName = computerResultsSom.Split('/').Last();
-            var organisationalUnit = unitOfWork.SpecificOrganisationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
+            var organisationalUnit = unitOfWork.SpecificOrganizationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
 
             if (organisationalUnit != null && (bool)!organisationalUnit.HasReachableComputer)
             {
                     organisationalUnit.HasReachableComputer = true;
-                    unitOfWork.OrganisationalUnitRepository.Update(organisationalUnit);
+                    unitOfWork.OrganizationalUnitRepository.Update(organisationalUnit);
             }
             return organisationalUnit;
         }

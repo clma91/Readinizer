@@ -14,7 +14,7 @@ namespace Readinizer.Frontend.ViewModels
     public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IOrganizationalUnitService organisationalUnitService;
+        private readonly IOrganizationalUnitService organizationalUnitService;
         private readonly IComputerService computerService;
         private readonly ISiteService siteService;
         private readonly IRsopService rSoPService;
@@ -62,13 +62,13 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganizationalUnitService organisationalUnitService, 
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganizationalUnitService organizationalUnitService, 
                                 IComputerService computerService, IRsopService rSoPService, IAnalysisService analysisService,
                                 IRsopPotService rSoPPotService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
-            this.organisationalUnitService = organisationalUnitService;
+            this.organizationalUnitService = organizationalUnitService;
             this.computerService = computerService;
             this.rSoPService = rSoPService;
             this.analysisService = analysisService;
@@ -87,8 +87,8 @@ namespace Readinizer.Frontend.ViewModels
                     await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
                     ChangeProgressText("Looking for Sites...");
                     await Task.Run(() => siteService.SearchAllSites());
-                    ChangeProgressText("Looking for Organisational Units...");
-                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    ChangeProgressText("Looking for Organizational Units...");
+                    await Task.Run(() => organizationalUnitService.GetAllOrganizationalUnits());
                     ChangeProgressText("Looking for Computers...");
                     await Task.Run(() => computerService.GetComputers());
                     

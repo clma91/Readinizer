@@ -6,7 +6,7 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     public interface IReadinizerDbContext
     {
         DbSet<ADDomain> ADDomains { get; set; }
-        DbSet<OrganizationalUnit> OrganisationalUnits { get; set; }
+        DbSet<OrganizationalUnit> OrganizationalUnits { get; set; }
         DbSet<Computer> Computers { get; set; }
         DbSet<Site> Sites { get; set; }
         DbSet<Rsop> RSoPs { get; set; }

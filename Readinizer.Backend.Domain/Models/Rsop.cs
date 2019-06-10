@@ -20,7 +20,7 @@ namespace Readinizer.Backend.Domain.Models
         public int? OURefId { get; set; }
 
         [JsonIgnore]
-        public virtual OrganizationalUnit OrganisationalUnit { get; set; }
+        public virtual OrganizationalUnit OrganizationalUnit { get; set; }
 
         [JsonIgnore]
         public int? SiteRefId { get; set; }

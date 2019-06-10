@@ -133,20 +133,20 @@ namespace Readinizer.Frontend.ViewModels
 
         private async Task SetOusWithoutRSoPs()
         {
-            var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
+            var organizationalUnits = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
+            var ousWithoutRsoP = organizationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
             AddOu(ousWithoutRsoP.FirstOrDefault());
             OUsWithoutRSoP.Clear();
 
-            foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
+            foreach (var organizationalUnit in ousWithoutRsoP.Skip(1))
             {
                 bool found = false;
 
                 foreach (var sortedOu in OUsWithoutRSoP)
                 {
-                    if (sortedOu.ToList().Exists(x => x.ADDomain.Name.Equals(organisationalUnit.ADDomain.Name)))
+                    if (sortedOu.ToList().Exists(x => x.ADDomain.Name.Equals(organizationalUnit.ADDomain.Name)))
                     {
-                        sortedOu.Add(organisationalUnit);
+                        sortedOu.Add(organizationalUnit);
                         found = true;
                         break;
                     }
@@ -154,7 +154,7 @@ namespace Readinizer.Frontend.ViewModels
 
                 if (!found)
                 {
-                    AddOu(organisationalUnit);
+                    AddOu(organizationalUnit);
                 }
             }
 
@@ -174,7 +174,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             var settings = new OpenFileDialogSettings
             {
-                Title = "Import RSoPs of unanalyzed Organisational Units",
+                Title = "Import RSoPs of unanalyzed Organizational Units",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Filter = "XML-file (*.xml)|*.xml|All Files (*.*)|*.*",
                 Multiselect = true

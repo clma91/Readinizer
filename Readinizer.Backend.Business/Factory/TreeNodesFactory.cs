@@ -109,7 +109,7 @@ namespace Readinizer.Backend.Business.Factory
                 TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
                 Identifier = rsopPot.DateTime,
                 AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
-                OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                OrganizationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganizationalUnit).ToList(),
                 Rsop = rsopPot.Rsops.FirstOrDefault()
             };
         }

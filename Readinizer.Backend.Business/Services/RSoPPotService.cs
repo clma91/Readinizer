@@ -126,7 +126,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static bool RsopAndRsopPotsOuEqual(Rsop rsop, Rsop currentRsop)
         {
-            var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
+            var organisationalUnitsEqual = currentRsop.OrganizationalUnit.Name.Equals(rsop.OrganizationalUnit.Name);
             return organisationalUnitsEqual;
         }
 

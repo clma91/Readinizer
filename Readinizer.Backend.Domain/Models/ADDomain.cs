@@ -23,7 +23,7 @@ namespace Readinizer.Backend.Domain.Models
         public virtual List<ADDomain> SubADDomains { get; set; }
 
         [JsonIgnore]
-        public virtual List<OrganizationalUnit> OrganisationalUnits { get; set; }
+        public virtual List<OrganizationalUnit> OrganizationalUnits { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Site> Sites { get; set; }

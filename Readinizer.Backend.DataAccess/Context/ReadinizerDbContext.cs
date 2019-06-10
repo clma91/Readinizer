@@ -15,7 +15,7 @@ namespace Readinizer.Backend.DataAccess.Context
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
-        public virtual DbSet<OrganizationalUnit> OrganisationalUnits { get; set; }
+        public virtual DbSet<OrganizationalUnit> OrganizationalUnits { get; set; }
         public virtual DbSet<Computer> Computers { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         public virtual DbSet<Rsop> RSoPs { get; set; }
@@ -54,10 +54,10 @@ namespace Readinizer.Backend.DataAccess.Context
 
 
             modelBuilder.Entity<OrganizationalUnit>().ToTable(nameof(OrganizationalUnit));
-            modelBuilder.Entity<OrganizationalUnit>().HasKey(x => x.OrganisationalUnitId);
-            modelBuilder.Entity<OrganizationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional()
+            modelBuilder.Entity<OrganizationalUnit>().HasKey(x => x.OrganizationalUnitsId);
+            modelBuilder.Entity<OrganizationalUnit>().HasMany(x => x.SubOrganizationalUnits).WithOptional()
                 .HasForeignKey(x => new {x.ParentId});
-            modelBuilder.Entity<OrganizationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits)
+            modelBuilder.Entity<OrganizationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganizationalUnits)
                 .HasForeignKey(x => new {x.ADDomainRefId});
 
 
@@ -68,11 +68,11 @@ namespace Readinizer.Backend.DataAccess.Context
 
 
             modelBuilder.Entity<OrganizationalUnit>().HasMany(x => x.Computers)
-                .WithMany(x => x.OrganisationalUnits).Map(x =>
+                .WithMany(x => x.OrganizationalUnits).Map(x =>
                 {
-                    x.MapLeftKey("OrganisationalUnitRefId");
+                    x.MapLeftKey("OrganizationalUnitId");
                     x.MapRightKey("ComputerRefId");
-                    x.ToTable("OrganisationalUnitComputer");
+                    x.ToTable("OrganizationalUnitComputer");
                 });
 
 
@@ -86,7 +86,7 @@ namespace Readinizer.Backend.DataAccess.Context
             modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));
             modelBuilder.Entity<Rsop>().HasKey(x => x.RsopId);
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Domain).WithMany(x => x.Rsops).HasForeignKey(x => new { x.DomainRefId });
-            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithMany(x => x.Rsops)
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganizationalUnit).WithMany(x => x.Rsops)
                 .HasForeignKey(x => new {x.OURefId});
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithMany(x => x.Rsops).HasForeignKey(x => new { x.SiteRefId });
             

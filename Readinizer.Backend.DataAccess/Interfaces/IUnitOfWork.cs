@@ -7,8 +7,8 @@ namespace Readinizer.Backend.DataAccess.Interfaces
     public interface IUnitOfWork
     {
         GenericRepository<ADDomain> ADDomainRepository { get; }
-        GenericRepository<OrganizationalUnit> OrganisationalUnitRepository { get; }
-        OrganisationalUnitRepository SpecificOrganisationalUnitRepository { get; }
+        GenericRepository<OrganizationalUnit> OrganizationalUnitRepository { get; }
+        OrganizationalUnitRepository SpecificOrganizationalUnitRepository { get; }
         GenericRepository<Computer> ComputerRepository { get; }
         GenericRepository<Site> SiteRepository { get; }
         SiteRepository SpecificSiteRepository { get; }

@@ -94,7 +94,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerOu,
+            OrganizationalUnit = ReadinizerOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceSuccessAndFailure,
@@ -123,7 +123,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerOu,
+            OrganizationalUnit = ReadinizerOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceFailure,
@@ -152,7 +152,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerSalesOu,
+            OrganizationalUnit = ReadinizerSalesOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceSuccessAndFailure,
@@ -181,7 +181,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerBadGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerSalesOu,
+            OrganizationalUnit = ReadinizerSalesOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceFailure,

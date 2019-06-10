@@ -24,7 +24,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task GetComputers()
         {
-            var allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            var allOUs = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             var sites = await unitOfWork.SiteRepository.GetAllEntities();
             var DCnames = getDcNames();
@@ -41,12 +41,12 @@ namespace Readinizer.Backend.Business.Services
                 {
                     var foundMember = new Computer
                     {
-                        OrganisationalUnits = new List<OrganizationalUnit>(),
+                        OrganizationalUnits = new List<OrganizationalUnit>(),
                         ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length)
                     };
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
                     foundMember.IpAddress = getIP(foundMember, OU, allDomains);
-                    foundMember.OrganisationalUnits.Add(OU);
+                    foundMember.OrganizationalUnits.Add(OU);
                     foundMember.SiteRefId = getSite(foundMember, sites);
 
                     unitOfWork.ComputerRepository.Add(foundMember);

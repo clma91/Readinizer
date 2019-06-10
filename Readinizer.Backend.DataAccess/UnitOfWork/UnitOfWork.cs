@@ -11,8 +11,8 @@ namespace Readinizer.Backend.DataAccess.UnitOfWork
     {
         private readonly ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;
-        private GenericRepository<OrganizationalUnit> organisationalUnitRepository;
-        private OrganisationalUnitRepository specificOrganisationalUnitRepository;
+        private GenericRepository<OrganizationalUnit> organizationalUnitRepository;
+        private OrganizationalUnitRepository specificOrganizationalUnitRepository;
         private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
         private SiteRepository specificSiteRepository;
@@ -33,29 +33,29 @@ namespace Readinizer.Backend.DataAccess.UnitOfWork
             }
         }
 
-        public GenericRepository<OrganizationalUnit> OrganisationalUnitRepository
+        public GenericRepository<OrganizationalUnit> OrganizationalUnitRepository
         {
             get
             {
-                if (organisationalUnitRepository == null)
+                if (organizationalUnitRepository == null)
                 {
-                    organisationalUnitRepository = new GenericRepository<OrganizationalUnit>(context);
+                    organizationalUnitRepository = new GenericRepository<OrganizationalUnit>(context);
                 }
 
-                return organisationalUnitRepository;
+                return organizationalUnitRepository;
             }
         }
 
-        public OrganisationalUnitRepository SpecificOrganisationalUnitRepository
+        public OrganizationalUnitRepository SpecificOrganizationalUnitRepository
         {
             get
             {
-                if (specificOrganisationalUnitRepository == null)
+                if (specificOrganizationalUnitRepository == null)
                 {
-                    specificOrganisationalUnitRepository = new OrganisationalUnitRepository(context);
+                    specificOrganizationalUnitRepository = new OrganizationalUnitRepository(context);
                 }
 
-                return specificOrganisationalUnitRepository;
+                return specificOrganizationalUnitRepository;
             }
         }
 

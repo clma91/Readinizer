@@ -27,7 +27,7 @@ namespace Readinizer.Backend.Business.Services
         public async Task GetRsopOfReachableComputers()
         {
             clearOldRsops();
-            List<OrganizationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<OrganizationalUnit> allOUs = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
             foreach (OrganizationalUnit OU in allOUs)
@@ -47,12 +47,12 @@ namespace Readinizer.Backend.Business.Services
                             unitOfWork.ComputerRepository.Update(computer);
 
                             OU.HasReachableComputer = true;
-                            unitOfWork.OrganisationalUnitRepository.Update(OU);
+                            unitOfWork.OrganizationalUnitRepository.Update(OU);
 
                             collectedSiteIds.Add(computer.SiteRefId);
 
                             getRSoP(computer.ComputerName + "." + domain.Name,
-                                OU.OrganisationalUnitId, computer.SiteRefId,
+                                OU.OrganizationalUnitsId, computer.SiteRefId,
                                 System.Security.Principal.WindowsIdentity.GetCurrent().Name);
                         }
 
@@ -71,7 +71,7 @@ namespace Readinizer.Backend.Business.Services
             }
 
             clearOldRsops();
-            List<OrganizationalUnit> allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            List<OrganizationalUnit> allOUs = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             List<int> collectedSiteIds = new List<int>();
             string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
@@ -95,12 +95,12 @@ namespace Readinizer.Backend.Business.Services
                                 
 
                                 OU.HasReachableComputer = true;
-                                unitOfWork.OrganisationalUnitRepository.Update(OU);
+                                unitOfWork.OrganizationalUnitRepository.Update(OU);
 
                                 collectedSiteIds.Add(computer.SiteRefId);
 
                                 getRSoP(computer.ComputerName + "." + domainName,
-                                                                OU.OrganisationalUnitId, computer.SiteRefId,
+                                                                OU.OrganizationalUnitsId, computer.SiteRefId,
                                                                 user);
                             }
 

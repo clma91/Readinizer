@@ -57,12 +57,12 @@ namespace Readinizer.Frontend.ViewModels
             {
                 if (computer.isSysmonRunning.Equals(true))
                 {
-                    good.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
+                    good.Add(computer.ComputerName + "." + computer.OrganizationalUnits.FirstOrDefault().ADDomain.Name);
                     
                 }
                 else if (computer.isSysmonRunning.Equals(false))
                 {
-                    bad.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
+                    bad.Add(computer.ComputerName + "." + computer.OrganizationalUnits.FirstOrDefault().ADDomain.Name);
                 }
             }
 

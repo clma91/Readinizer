@@ -16,7 +16,7 @@ namespace Readinizer.Backend.Business.Services
             this.unitOfWork = unitOfWork;
         }
 
-        public async Task GetAllOrganisationalUnits()
+        public async Task GetAllOrganizationalUnits()
         {
             var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
             
@@ -39,7 +39,7 @@ namespace Readinizer.Backend.Business.Services
                             LdapPath = searchResult.Path,
                             ADDomainRefId = domain.ADDomainId,
                         };
-                        foundOU.SubOrganisationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
+                        foundOU.SubOrganizationalUnits = GetChildOUs(foundOU.LdapPath, foundOU);
 
                         foundOUs.Add(foundOU);
                     }
@@ -61,7 +61,7 @@ namespace Readinizer.Backend.Business.Services
                         foundOUs.Add(foundContainer);
                     }
 
-                    unitOfWork.OrganisationalUnitRepository.AddRange(foundOUs);
+                    unitOfWork.OrganizationalUnitRepository.AddRange(foundOUs);
                 }
             }
             await unitOfWork.SaveChangesAsync();
@@ -85,11 +85,11 @@ namespace Readinizer.Backend.Business.Services
                     LdapPath = childResult.Path,
                     ADDomainRefId = parentOU.ADDomainRefId
                 };
-                childOU.SubOrganisationalUnits = GetChildOUs(childOU.LdapPath, childOU);
+                childOU.SubOrganizationalUnits = GetChildOUs(childOU.LdapPath, childOU);
 
                 childOUs.Add(childOU);
 
-                unitOfWork.OrganisationalUnitRepository.Add(childOU);
+                unitOfWork.OrganizationalUnitRepository.Add(childOU);
             }
 
             return childOUs;

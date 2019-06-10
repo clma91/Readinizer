@@ -19,7 +19,7 @@ namespace Readinizer.Backend.Domain.Models
 
         public List<TreeNode> ChildNodes { get; set; } = new List<TreeNode>();
 
-        public List<OrganizationalUnit> OrganisationalUnits { get; set; }
+        public List<OrganizationalUnit> OrganizationalUnits { get; set; }
 
         public Rsop Rsop { get; set; }
     }

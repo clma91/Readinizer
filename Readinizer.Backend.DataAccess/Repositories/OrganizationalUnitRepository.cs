@@ -4,9 +4,9 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.DataAccess.Repositories
 {
-    public class OrganisationalUnitRepository : GenericRepository<OrganizationalUnit>
+    public class OrganizationalUnitRepository : GenericRepository<OrganizationalUnit>
     {
-        public OrganisationalUnitRepository(ReadinizerDbContext context) : base(context)
+        public OrganizationalUnitRepository(ReadinizerDbContext context) : base(context)
         {
         }
 
