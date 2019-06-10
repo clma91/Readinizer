@@ -37,7 +37,7 @@ namespace Readinizer.Frontend.ViewModels
             {
                 rsop = value;
                 var rsopList = rsopPot.Rsops.ToList();
-                var rsopID = rsopList.Find(x => x.OrganisationalUnit.Name.Equals(rsop)).RsopId;
+                var rsopID = rsopList.Find(x => x.OrganizationalUnit.Name.Equals(rsop)).RsopId;
                 ShowOUView(rsopID);
                 rsop = null;
             }
@@ -57,7 +57,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public RSoPResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -78,12 +78,12 @@ namespace Readinizer.Frontend.ViewModels
         private List<string> loadOUs()
         {
             var rsops = rsopPot.Rsops;
-            return rsops.Select(rsop => rsop.OrganisationalUnit.Name).ToList();
+            return rsops.Select(x => x.OrganizationalUnit.Name).ToList();
         }
 
-        private async Task<List<OrganisationalUnit>> GetOusAsync()
+        private async Task<List<OrganizationalUnit>> GetOusAsync()
         {
-            var ous = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
+            var ous = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             return ous;
         }
 

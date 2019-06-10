@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Readinizer.Frontend.Views"
         xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"  
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:DVCP="clr-namespace:System.Windows.Controls.DataVisualization.Charting.Primitives;assembly=System.Windows.Controls.DataVisualization.Toolkit"
@@ -23,14 +21,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40"/>
+            <RowDefinition Height="1.5*"/>
             <RowDefinition Height="2*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
-        <StackPanel Height="30" Width="800" Grid.Row="0">
-                <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                    <TextBlock TextDecorations="Underline" Text="{Binding Path=DomainName}" FontSize="20"></TextBlock>
-                </Label>
-        </StackPanel>
+        <Grid Grid.Row="0" HorizontalAlignment="Center">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="0" FontSize="20" Margin="0,5,0,0" FontWeight="DemiBold">Domain: </Label>
+            <Label Grid.Column="1" Margin="0,5,0,0">
+                <TextBlock Text="{Binding Path=DomainName}" FontSize="20"></TextBlock>
+            </Label>
+        </Grid>
         <StackPanel Grid.Row="1" Height="250" Width="800" HorizontalAlignment="Center">
                 <DVC:Chart Name="Chart" MinWidth="400" MinHeight="250">
                     <DVC:Chart.PlotAreaStyle>
@@ -41,7 +46,9 @@
                         <Style TargetType="DV:Legend">
                             <Setter Property="BorderThickness" Value="0"></Setter>
                             <Setter Property="Width" Value="Auto"></Setter>
-                        </Style>
+                            <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+                            <Setter Property="Title" Value="Audit Settings"></Setter>
+                    </Style>
                     </DVC:Chart.LegendStyle>
                     <DVC:Chart.Style>
                         <Style TargetType="DVC:Chart">
@@ -50,9 +57,8 @@
                                     <ControlTemplate TargetType="DVC:Chart">
                                         <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0" Padding="0">
                                             <Grid>
-                                                <Grid Grid.Row="1" Margin="0,5,0,5">
+                                                <Grid Margin="0,5,0,5">
                                                     <Grid.ColumnDefinitions>
-                                                        
                                                         <ColumnDefinition Width="5*" />
                                                         <ColumnDefinition Width="4*" />
                                                     </Grid.ColumnDefinitions>
@@ -90,7 +96,7 @@
                     </DVC:Chart.Series>
                 </DVC:Chart>
         </StackPanel>
-        <StackPanel Grid.Row="3" MinHeight="150" MinWidth="800" Height="Auto" Width="Auto">
+        <StackPanel Grid.Row="2" MinHeight="150" MinWidth="800" Height="Auto" Width="Auto">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1*" />
@@ -104,7 +110,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Center">
                     <Label>
-                        <TextBlock Text="Group of Identical Secuirty Settings:" TextDecorations="Underline" Margin="0,10,0,20"></TextBlock>
+                        <TextBlock Text="Group of Identical Security Settings:" TextDecorations="Underline" Margin="0,10,0,20"></TextBlock>
                     </Label>
                 </StackPanel>
                 <StackPanel  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center">
@@ -133,6 +139,6 @@
                 </StackPanel>
             </Grid>
         </StackPanel>
-        <Button Grid.Row="4" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
+        <Button Grid.Row="3" x:Name="Back" Width="100" Height="50" Command="{Binding BackCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="50, 20, 0, 20" Content="Back"/>
     </Grid>
 </UserControl>

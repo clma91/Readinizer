@@ -2,11 +2,11 @@
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IRSoPService
+    public interface IRsopService
     {
 
-        Task getRSoPOfReachableComputers();
+        Task GetRsopOfReachableComputers();
 
-        Task getRSoPOfReachableComputersAndCheckSysmon(string serviceName);
+        Task GetRsopOfReachableComputersAndCheckSysmon(string serviceName);
     }
 }

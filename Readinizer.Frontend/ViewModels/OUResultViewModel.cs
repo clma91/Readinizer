@@ -24,7 +24,7 @@ namespace Readinizer.Frontend.ViewModels
 
         public Rsop rsop { get; set; }
 
-        public string Ou => rsop.OrganisationalUnit.Name;
+        public string Ou => rsop.OrganizationalUnit.Name;
 
         private List<SecuritySettingsParsed> securitySettings;
         public List<SecuritySettingsParsed> SecuritySettings

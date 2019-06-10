@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels" 
         xmlns:views="clr-namespace:Readinizer.Frontend.Views" 
-        xmlns:local="clr-namespace:Readinizer.Frontend.Views"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:md="https://github.com/fantasticfiasco/mvvm-dialogs"
         md:DialogServiceViews.IsRegistered="True"
@@ -35,7 +34,7 @@
             <views:DomainResultView></views:DomainResultView>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:RSoPResultViewModel}">
-            <views:RSoPResultView></views:RSoPResultView>
+            <views:RsopResultView></views:RsopResultView>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:OUResultViewModel}">
             <views:OUResultView></views:OUResultView>
@@ -58,7 +57,7 @@
                 <MenuItem Header="_User Manual" Command="{Binding GithubCommand}"/>
                 <MenuItem Header="_Central Logging"/>
                 <MenuItem Header="_Sysmon"/>
-                <MenuItem Header="_Optimised GPO"/>
+                <MenuItem Header="_Optimized GPO"/>
                 <MenuItem Header="_About"/>
             </MenuItem>
         </Menu>

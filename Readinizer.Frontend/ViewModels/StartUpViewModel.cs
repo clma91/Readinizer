@@ -14,12 +14,12 @@ namespace Readinizer.Frontend.ViewModels
     public class StartUpViewModel : ViewModelBase, IStartUpViewModel
     {
         private readonly IADDomainService adDomainService;
-        private readonly IOrganisationalUnitService organisationalUnitService;
+        private readonly IOrganizationalUnitService organizationalUnitService;
         private readonly IComputerService computerService;
         private readonly ISiteService siteService;
-        private readonly IRSoPService rSoPService;
+        private readonly IRsopService rSoPService;
         private readonly IAnalysisService analysisService;
-        private readonly IRSoPPotService rSoPPotService;
+        private readonly IRsopPotService rSoPPotService;
 
         private ICommand analyseCommand;
         public ICommand AnalyseCommand => analyseCommand ?? (analyseCommand = new RelayCommand(Analyse));
@@ -62,13 +62,13 @@ namespace Readinizer.Frontend.ViewModels
             }
         }
 
-        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganisationalUnitService organisationalUnitService, 
-                                IComputerService computerService, IRSoPService rSoPService, IAnalysisService analysisService,
-                                IRSoPPotService rSoPPotService)
+        public StartUpViewModel(IADDomainService adDomainService, ISiteService siteService, IOrganizationalUnitService organizationalUnitService, 
+                                IComputerService computerService, IRsopService rSoPService, IAnalysisService analysisService,
+                                IRsopPotService rSoPPotService)
         {
             this.adDomainService = adDomainService;
             this.siteService = siteService;
-            this.organisationalUnitService = organisationalUnitService;
+            this.organizationalUnitService = organizationalUnitService;
             this.computerService = computerService;
             this.rSoPService = rSoPService;
             this.analysisService = analysisService;
@@ -87,23 +87,23 @@ namespace Readinizer.Frontend.ViewModels
                     await Task.Run(() => adDomainService.SearchDomains(domainName, SubdomainsChecked));
                     ChangeProgressText("Looking for Sites...");
                     await Task.Run(() => siteService.SearchAllSites());
-                    ChangeProgressText("Looking for Organisation Units...");
-                    await Task.Run(() => organisationalUnitService.GetAllOrganisationalUnits());
+                    ChangeProgressText("Looking for Organizational Units...");
+                    await Task.Run(() => organizationalUnitService.GetAllOrganizationalUnits());
                     ChangeProgressText("Looking for Computers...");
                     await Task.Run(() => computerService.GetComputers());
                     
                     if (sysmonChecked)
                     {
                         ChangeProgressText("Looking for RSoPs and check if Sysmon is running...");
-                        await Task.Run(() => rSoPService.getRSoPOfReachableComputersAndCheckSysmon(sysmonName));
+                        await Task.Run(() => rSoPService.GetRsopOfReachableComputersAndCheckSysmon(sysmonName));
                         sysmonVisibility = "Visible";
                     }
                     else
                     {
                         ChangeProgressText("Collecting RSoPs...");
-                        await Task.Run(() => rSoPService.getRSoPOfReachableComputers());
+                        await Task.Run(() => rSoPService.GetRsopOfReachableComputers());
                     }
-                    ChangeProgressText("Analysing collected RSoPs...");
+                    ChangeProgressText("Analyzing collected RSoPs...");
                     await Task.Run(() => analysisService.Analyse(null));
                     await Task.Run(() => rSoPPotService.GenerateRsopPots());
                     ShowTreeStructureResult(sysmonVisibility);
@@ -125,9 +125,9 @@ namespace Readinizer.Frontend.ViewModels
             Messenger.Default.Send(new ChangeProgressText(progressText));
         }
 
-        private static void ShowTreeStructureResult(string visability)
+        private static void ShowTreeStructureResult(string visibility)
         {
-            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel), visability));
+            Messenger.Default.Send(new ChangeView(typeof(TreeStructureResultViewModel), visibility));
         }
 
         private static void ShowSpinnerView()

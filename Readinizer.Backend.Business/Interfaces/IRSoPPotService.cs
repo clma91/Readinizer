@@ -4,7 +4,7 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Interfaces
 {
-    public interface IRSoPPotService
+    public interface IRsopPotService
     {
         Task GenerateRsopPots();
 

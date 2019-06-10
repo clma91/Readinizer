@@ -38,7 +38,7 @@ namespace Readinizer.Frontend.ViewModels
         [Obsolete("Only for design data", true)]
         public SysmonResultViewModel()
         {
-            if (!this.IsInDesignMode)
+            if (!IsInDesignMode)
             {
                 throw new Exception("Use only for design mode");
             }
@@ -57,12 +57,12 @@ namespace Readinizer.Frontend.ViewModels
             {
                 if (computer.isSysmonRunning.Equals(true))
                 {
-                    good.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
+                    good.Add(computer.ComputerName + "." + computer.OrganizationalUnits.FirstOrDefault().ADDomain.Name);
                     
                 }
                 else if (computer.isSysmonRunning.Equals(false))
                 {
-                    bad.Add(computer.ComputerName + "." + computer.OrganisationalUnits.FirstOrDefault().ADDomain.Name);
+                    bad.Add(computer.ComputerName + "." + computer.OrganizationalUnits.FirstOrDefault().ADDomain.Name);
                 }
             }
 
@@ -75,9 +75,11 @@ namespace Readinizer.Frontend.ViewModels
             var runningCounter = SysmonActiveList.Count;
             var notRunningCounter = sysmonNotActiveList.Count;
 
-            var valueList = new List<KeyValuePair<string, int>>();
-            valueList.Add(new KeyValuePair<string, int>("Sysmon is running", runningCounter));
-            valueList.Add(new KeyValuePair<string, int>("Sysmon is not running", notRunningCounter));
+            var valueList = new List<KeyValuePair<string, int>>
+            {
+                new KeyValuePair<string, int>("Sysmon is running", runningCounter),
+                new KeyValuePair<string, int>("Sysmon is not running", notRunningCounter)
+            };
 
             return valueList;
         }

@@ -64,9 +64,9 @@ namespace Readinizer.Frontend.ViewModels
 
         public ISnackbarMessageQueue SnackbarMessageQueue { get; }
 
-        public readonly double ScreenHeight = System.Windows.SystemParameters.PrimaryScreenHeight * 0.8;
+        public readonly double ScreenHeight = SystemParameters.PrimaryScreenHeight * 0.8;
 
-        [Obsolete("Only for desing data", true)]
+        [Obsolete("Only for design data", true)]
         public ApplicationViewModel() : this(new StartUpViewModel(), null, null, null, null, null, null, null, null, null, null)
         {
             if (!IsInDesignMode)
@@ -172,7 +172,7 @@ namespace Readinizer.Frontend.ViewModels
             }
             else if (message.ViewModelType == typeof(TreeStructureResultViewModel))
             {
-                ShowTreeStructureResultView(message.Visability);
+                ShowTreeStructureResultView(message.Visibility);
             }
             else if (message.ViewModelType == typeof(SpinnerViewModel))
             {
@@ -234,7 +234,7 @@ namespace Readinizer.Frontend.ViewModels
                     var successfullyExported = await exportService.Export(type, exportPath);
                     if (!successfullyExported)
                     {
-                        Messenger.Default.Send(new SnackbarMessage($"Something went wrong during saving the file"));
+                        Messenger.Default.Send(new SnackbarMessage("Something went wrong during saving the file"));
                     }
                 }
                 else
@@ -260,7 +260,7 @@ namespace Readinizer.Frontend.ViewModels
 
             dbContext.Database.Connection.Close();
 
-            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.OrganisationalUnitComputer");
+            dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.OrganizationalUnitComputer");
             dbContext.Database.ExecuteSqlCommand("TRUNCATE TABLE dbo.SiteADDomain");
 
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.AuditSetting DBCC CHECKIDENT('READINIZER.dbo.AuditSetting', NORESEED)");
@@ -271,7 +271,7 @@ namespace Readinizer.Frontend.ViewModels
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Rsop DBCC CHECKIDENT('READINIZER.dbo.Rsop', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.RsopPot DBCC CHECKIDENT('READINIZER.dbo.RsopPot', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Computer DBCC CHECKIDENT('READINIZER.dbo.Computer', NORESEED)");
-            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganisationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganisationalUnit', NORESEED)");
+            dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.OrganizationalUnit DBCC CHECKIDENT('READINIZER.dbo.OrganizationalUnit', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.Site DBCC CHECKIDENT('READINIZER.dbo.Site', NORESEED)");
             dbContext.Database.ExecuteSqlCommand("DELETE FROM dbo.ADDomain DBCC CHECKIDENT('READINIZER.dbo.ADDomain', NORESEED)");
         }

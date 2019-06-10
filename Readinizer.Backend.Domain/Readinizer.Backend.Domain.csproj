@@ -64,11 +64,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Exceptions\InvalidAuthenticationException.cs" />
+    <Compile Include="Exceptions\InvalidXmlException.cs" />
     <Compile Include="ModelsJson\AuditSettingJson.cs" />
-    <Compile Include="ModelsJson\AuditSetting.cs" />
+    <Compile Include="Models\AuditSetting.cs" />
     <Compile Include="ModelsJson\Converter\SingleValueArrayConverter.cs" />
     <Compile Include="ModelsJson\HelperClasses\Display.cs" />
-    <Compile Include="ModelsJson\Gpo.cs" />
+    <Compile Include="Models\Gpo.cs" />
     <Compile Include="ModelsJson\HelperClasses\Element.cs" />
     <Compile Include="ModelsJson\HelperClasses\Identifier.cs" />
     <Compile Include="ModelsJson\HelperClasses\Link.cs" />
@@ -76,14 +77,15 @@
     <Compile Include="ModelsJson\HelperClasses\ModuleNames.cs" />
     <Compile Include="ModelsJson\HelperClasses\Path.cs" />
     <Compile Include="ModelsJson\PolicyJson.cs" />
-    <Compile Include="ModelsJson\Policy.cs" />
+    <Compile Include="Models\GpoSetting.cs" />
+    <Compile Include="Models\Policy.cs" />
     <Compile Include="ModelsJson\RegistrySettingJson.cs" />
-    <Compile Include="ModelsJson\RegistrySetting.cs" />
+    <Compile Include="Models\RegistrySetting.cs" />
     <Compile Include="ModelsJson\SecurityOptionJson.cs" />
-    <Compile Include="ModelsJson\SecurityOption.cs" />
+    <Compile Include="Models\SecurityOption.cs" />
     <Compile Include="ModelsJson\HelperClasses\Value.cs" />
     <Compile Include="Models\ADDomain.cs" />
-    <Compile Include="Models\OrganisationalUnit.cs" />
+    <Compile Include="Models\OrganizationalUnit.cs" />
     <Compile Include="Models\Computer.cs" />
     <Compile Include="Models\Rsop.cs" />
     <Compile Include="Models\RsopPot.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

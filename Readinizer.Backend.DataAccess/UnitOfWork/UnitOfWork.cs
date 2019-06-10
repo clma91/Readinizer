@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Readinizer.Backend.DataAccess.Context;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.DataAccess.Repositories;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 
-namespace Readinizer.Backend.DataAccess.UnityOfWork
+namespace Readinizer.Backend.DataAccess.UnitOfWork
 {
     public class UnitOfWork : IDisposable, IUnitOfWork
     {
-        private ReadinizerDbContext context = new ReadinizerDbContext();
+        private readonly ReadinizerDbContext context = new ReadinizerDbContext();
         private GenericRepository<ADDomain> adDomainRepository;
-        private GenericRepository<OrganisationalUnit> organisationalUnitRepository;
-        private OrganisationalUnitRepository specificOrganisationalUnitRepository;
+        private GenericRepository<OrganizationalUnit> organizationalUnitRepository;
+        private OrganizationalUnitRepository specificOrganizationalUnitRepository;
         private GenericRepository<Computer> computerRepository;
         private GenericRepository<Site> siteRepository;
         private SiteRepository specificSiteRepository;
@@ -33,29 +33,29 @@ namespace Readinizer.Backend.DataAccess.UnityOfWork
             }
         }
 
-        public GenericRepository<OrganisationalUnit> OrganisationalUnitRepository
+        public GenericRepository<OrganizationalUnit> OrganizationalUnitRepository
         {
             get
             {
-                if (organisationalUnitRepository == null)
+                if (organizationalUnitRepository == null)
                 {
-                    organisationalUnitRepository = new GenericRepository<OrganisationalUnit>(context);
+                    organizationalUnitRepository = new GenericRepository<OrganizationalUnit>(context);
                 }
 
-                return organisationalUnitRepository;
+                return organizationalUnitRepository;
             }
         }
 
-        public OrganisationalUnitRepository SpecificOrganisationalUnitRepository
+        public OrganizationalUnitRepository SpecificOrganizationalUnitRepository
         {
             get
             {
-                if (specificOrganisationalUnitRepository == null)
+                if (specificOrganizationalUnitRepository == null)
                 {
-                    specificOrganisationalUnitRepository = new OrganisationalUnitRepository(context);
+                    specificOrganizationalUnitRepository = new OrganizationalUnitRepository(context);
                 }
 
-                return specificOrganisationalUnitRepository;
+                return specificOrganizationalUnitRepository;
             }
         }
 
