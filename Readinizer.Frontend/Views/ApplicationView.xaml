@@ -17,6 +17,7 @@
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
         Title="Readinizer" 
+        Icon="../Favicon/favicon.ico"
         MinWidth="1100" MinHeight="780" MaxHeight="{Binding ScreenHeight}"
         Width="1100" Height="780">
 
@@ -54,11 +55,10 @@
                 <MenuItem Header="_Export Grouped Security Settings (RSoP per OU)" Command="{Binding ExportRSoPPotsCommand}" IsEnabled="{Binding CanExport}"/>
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_User Manual" Command="{Binding GithubCommand}"/>
-                <MenuItem Header="_Central Logging"/>
-                <MenuItem Header="_Sysmon"/>
-                <MenuItem Header="_Optimized GPO"/>
-                <MenuItem Header="_About"/>
+                <MenuItem Header="_User Manual" Command="{Binding UserManualCommand}"/>
+                <MenuItem Header="_Central Logging" Command="{Binding CentralLoggingCommand}"/>
+                <MenuItem Header="_Sysmon" Command="{Binding SysmonCommand}"/>
+                <MenuItem Header="_Optimized GPO" Command="{Binding OptimizedGPOCommand}"/>
             </MenuItem>
         </Menu>
         <materialDesign:Snackbar x:Name="Snackbar" DockPanel.Dock="Bottom" HorizontalAlignment="Center" MessageQueue="{Binding SnackbarMessageQueue}" />

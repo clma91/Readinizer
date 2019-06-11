@@ -34,8 +34,17 @@ namespace Readinizer.Frontend.ViewModels
         private ICommand closeCommand;
         public ICommand CloseCommand => closeCommand ?? (closeCommand = new RelayCommand(OnClose));
 
-        private ICommand githubCommand;
-        public ICommand GithubCommand => githubCommand ?? (githubCommand = new RelayCommand(OnGithub));
+        private ICommand userManualCommand;
+        public ICommand UserManualCommand => userManualCommand ?? (userManualCommand = new RelayCommand(OnUserManual));
+
+        private ICommand centralLoggingCommand;
+        public ICommand CentralLoggingCommand => centralLoggingCommand ?? (centralLoggingCommand = new RelayCommand(OnCentralLogging));
+
+        private ICommand sysmonCommand;
+        public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(OnSysmon));
+
+        private ICommand optimizedGPOCommand;
+        public ICommand OptimizedGPOCommand => optimizedGPOCommand ?? (optimizedGPOCommand = new RelayCommand(OnOptimizedGPO));
 
         private ICommand exportRSoPPotsCommand;
         public ICommand ExportRSoPPotsCommand => exportRSoPPotsCommand ?? (exportRSoPPotsCommand = new RelayCommand(() => Export(typeof(RsopPot))));
@@ -249,11 +258,26 @@ namespace Readinizer.Frontend.ViewModels
             Application.Current.Shutdown();
         }
 
-        private static void OnGithub()
+        private static void OnUserManual()
         {
-            Process.Start("https://github.com/clma91/Readinizer/wiki");
+            Process.Start("https://github.com/clma91/Readinizer/wiki/User-Manual");
         }
 
+        private static void OnCentralLogging()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/wiki/Windows-Event-Forwarding-deploying-fleet-wide");
+        }
+
+        private static void OnSysmon()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/wiki/Install-Sysmon-through-GPO");
+        }
+
+        private static void OnOptimizedGPO()
+        {
+            Process.Start("https://github.com/clma91/Readinizer/releases");
+        }
+  
         private static void ClearDb()
         {
             var dbContext = new DbContext(ConfigurationManager.ConnectionStrings["ReadinizerDbContext"].ConnectionString);
