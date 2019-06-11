@@ -7,7 +7,7 @@
     <ProjectGuid>{7577781A-BA20-4485-83BF-511A753068D1}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Readinizer.Frontend</RootNamespace>
-    <AssemblyName>Readinizer.Frontend</AssemblyName>
+    <AssemblyName>Readinizer</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -56,6 +56,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Favicon\favicon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommonServiceLocator, Version=2.0.2.0, Culture=neutral, PublicKeyToken=489b6accfaf20ef0, processorArchitecture=MSIL">
@@ -289,6 +292,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ReceivedRSoP\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Favicon\favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
