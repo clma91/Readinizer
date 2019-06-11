@@ -6,16 +6,16 @@ namespace Readinizer.Backend.Business.Services
 {
     public class PingService : IPingService
     {
-        public bool isPingable(string ipAddress)
+        public bool IsPingable(string ipAddress)
         {
-            bool isPingable;
+            var isPingable = false;
             Ping pinger = null;
 
             try
             {
                 pinger = new Ping();
                 var reply = pinger.Send(ipAddress, 500);
-                isPingable = reply.Status == IPStatus.Success;
+                if (reply != null) isPingable = reply.Status == IPStatus.Success;
             }
             catch (PingException)
             {

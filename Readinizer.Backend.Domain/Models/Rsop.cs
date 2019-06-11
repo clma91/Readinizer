@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Domain.Models
 {
@@ -23,7 +20,7 @@ namespace Readinizer.Backend.Domain.Models
         public int? OURefId { get; set; }
 
         [JsonIgnore]
-        public virtual OrganisationalUnit OrganisationalUnit { get; set; }
+        public virtual OrganizationalUnit OrganizationalUnit { get; set; }
 
         [JsonIgnore]
         public int? SiteRefId { get; set; }

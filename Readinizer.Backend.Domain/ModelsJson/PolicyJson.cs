@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Domain.ModelsJson

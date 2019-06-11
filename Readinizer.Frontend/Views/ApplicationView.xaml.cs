@@ -1,18 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Readinizer.Backend.DataAccess;
+﻿using System.Windows;
 using Readinizer.Frontend.ViewModels;
 
 namespace Readinizer.Frontend.Views
@@ -25,7 +11,7 @@ namespace Readinizer.Frontend.Views
         public ApplicationView(ApplicationViewModel applicationViewModel)
         {
             InitializeComponent();
-            this.DataContext = applicationViewModel;
+            DataContext = applicationViewModel;
         }
     }
 }

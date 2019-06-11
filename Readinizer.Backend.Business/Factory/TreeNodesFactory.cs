@@ -54,17 +54,14 @@ namespace Readinizer.Backend.Business.Factory
                     if (domain.IsAvailable)
                     {
                         var rsopPots = GetRsopPotsOfDomain(domain);
-                        domain.DomainPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage)); ;
+                        domain.DomainPercentage = rsopPots.Min(x => x.Rsops.Min(y => y.RsopPercentage));
                         unitOfWork.ADDomainRepository.Update(domain);
 
                         var child = NewDomainNode(domain);
-                        if (rsopPots != null)
+                        foreach (var rsopPot in rsopPots)
                         {
-                            foreach (var rsopPot in rsopPots)
-                            {
-                                var rsopPotOfDomain = NewRsopPotNode(rsopPot);
-                                child.ChildNodes.Add(rsopPotOfDomain);
-                            }
+                            var rsopPotOfDomain = NewRsopPotNode(rsopPot);
+                            child.ChildNodes.Add(rsopPotOfDomain);
                         }
 
                         root.ChildNodes.Add(child);
@@ -112,7 +109,7 @@ namespace Readinizer.Backend.Business.Factory
                 TypeRefIdDictionary = new Dictionary<string, int> { { "RSoPPot", rsopPot.RsopPotId } },
                 Identifier = rsopPot.DateTime,
                 AnalysisPercentage = rsopPot.Rsops.First().RsopPercentage,
-                OrganisationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganisationalUnit).ToList(),
+                OrganizationalUnits = rsopPot.Rsops.Select(rsop => rsop.OrganizationalUnit).ToList(),
                 Rsop = rsopPot.Rsops.FirstOrDefault()
             };
         }

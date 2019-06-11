@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using Readinizer.Backend.DataAccess.Context;
 using Readinizer.Backend.DataAccess.Interfaces;
 
 namespace Readinizer.Backend.DataAccess.Repositories
@@ -14,7 +15,7 @@ namespace Readinizer.Backend.DataAccess.Repositories
         public GenericRepository(ReadinizerDbContext context)
         {
             this.context = context;
-            this.dbSet = context.Set<TEntity>();
+            dbSet = context.Set<TEntity>();
         }
 
         public virtual TEntity GetByID(object id)
@@ -24,7 +25,7 @@ namespace Readinizer.Backend.DataAccess.Repositories
 
         public virtual Task<List<TEntity>> GetAllEntities()
         {
-            return dbSet.ToListAsync<TEntity>();
+            return dbSet.ToListAsync();
         }
 
         public virtual void Add(TEntity entity)

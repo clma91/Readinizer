@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Collections.Generic;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
 namespace Readinizer.Backend.Business.Tests
@@ -52,7 +49,7 @@ namespace Readinizer.Backend.Business.Tests
             ParentId = null,
         };
 
-        public static OrganisationalUnit ReadinizerOu = new OrganisationalUnit
+        public static OrganizationalUnit ReadinizerOu = new OrganizationalUnit
         {
             Name = "Readinizer Ou",
             ADDomain = ReadinizerDomain,
@@ -71,7 +68,7 @@ namespace Readinizer.Backend.Business.Tests
             LdapPath = "test\\path",
         };
 
-        public static OrganisationalUnit ReadinizerSalesOu = new OrganisationalUnit
+        public static OrganizationalUnit ReadinizerSalesOu = new OrganizationalUnit
         {
             Name = "Readinizer Sales Ou",
             ADDomain = ReadinizerDomain,
@@ -90,14 +87,14 @@ namespace Readinizer.Backend.Business.Tests
             LdapPath = "test\\path",
         };
 
-        public static Rsop GoodRsopRedinizerOu = new Rsop
+        public static Rsop GoodRsopReadinizerOu = new Rsop
         {
             Gpos = new List<Gpo>
             {
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerOu,
+            OrganizationalUnit = ReadinizerOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceSuccessAndFailure,
@@ -119,14 +116,14 @@ namespace Readinizer.Backend.Business.Tests
             }
         };
 
-        public static Rsop BadRsopRedinizerOu = new Rsop
+        public static Rsop BadRsopReadinizerOu = new Rsop
         {
             Gpos = new List<Gpo>
             {
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerOu,
+            OrganizationalUnit = ReadinizerOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceFailure,
@@ -155,7 +152,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerGoodGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerSalesOu,
+            OrganizationalUnit = ReadinizerSalesOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceSuccessAndFailure,
@@ -184,7 +181,7 @@ namespace Readinizer.Backend.Business.Tests
                 ReadinizerBadGpo
             },
             Domain = ReadinizerDomain,
-            OrganisationalUnit = ReadinizerSalesOu,
+            OrganizationalUnit = ReadinizerSalesOu,
             AuditSettings = new List<AuditSetting>
             {
                 KerberosAuthServiceFailure,
@@ -208,33 +205,33 @@ namespace Readinizer.Backend.Business.Tests
 
         public static List<Rsop> RsopsNotEqualDifferentOus = new List<Rsop>
         {
-            GoodRsopRedinizerOu,
+            GoodRsopReadinizerOu,
             BadRsopSalesOu
         };
 
         public static List<Rsop> RsopsNotEqualSameOus = new List<Rsop>
         {
-            GoodRsopRedinizerOu,
-            BadRsopRedinizerOu
+            GoodRsopReadinizerOu,
+            BadRsopReadinizerOu
         };
 
         public static List<Rsop> RsopsEqualDifferentOus = new List<Rsop>
         {
-            GoodRsopRedinizerOu,
+            GoodRsopReadinizerOu,
             GoodRsopSalesOu
         };
 
         public static List<Rsop> RsopsEqualSameOus = new List<Rsop>
         {
-            GoodRsopRedinizerOu,
-            GoodRsopRedinizerOu
+            GoodRsopReadinizerOu,
+            GoodRsopReadinizerOu
         };
 
         public static RsopPot RsopPotGoodReadinizerOu = new RsopPot
         {
             Rsops = new List<Rsop>
             {
-                GoodRsopRedinizerOu
+                GoodRsopReadinizerOu
             },
             Name = "1",
             DateTime = "6.6.19",

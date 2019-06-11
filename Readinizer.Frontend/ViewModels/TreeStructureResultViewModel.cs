@@ -24,7 +24,7 @@ namespace Readinizer.Frontend.ViewModels
         private readonly ITreeNodesFactory treeNodesFactory;
         private readonly IDialogService dialogService;
         private readonly IAnalysisService analysisService;
-        private readonly IRSoPPotService rSoPPotService;
+        private readonly IRsopPotService rSoPPotService;
 
         private ICommand sysmonCommand;
         public ICommand SysmonCommand => sysmonCommand ?? (sysmonCommand = new RelayCommand(Sysmon));
@@ -33,7 +33,7 @@ namespace Readinizer.Frontend.ViewModels
         public ICommand ImportRSoPsCommand => importRSoPsCommand ?? (importRSoPsCommand = new RelayCommand(ImportRSoPs));
 
         private ICommand detailCommand;
-        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(param => ShowDetail(param)));
+        public ICommand DetailCommand => detailCommand ?? (detailCommand = new RelayCommand<Dictionary<string, int>>(ShowDetail));
 
         private ADDomain rootDomain;
         public ADDomain RootDomain
@@ -49,10 +49,10 @@ namespace Readinizer.Frontend.ViewModels
             set => Set(ref treeNodes, value);
         }
 
-        private ObservableCollection<ObservableCollection<OrganisationalUnit>> ouWithoutRSoP;
-        public ObservableCollection<ObservableCollection<OrganisationalUnit>> OUsWithoutRSoP
+        private ObservableCollection<ObservableCollection<OrganizationalUnit>> ouWithoutRSoP;
+        public ObservableCollection<ObservableCollection<OrganizationalUnit>> OUsWithoutRSoP
         {
-            get => ouWithoutRSoP ?? (ouWithoutRSoP = new ObservableCollection<ObservableCollection<OrganisationalUnit>>());
+            get => ouWithoutRSoP ?? (ouWithoutRSoP = new ObservableCollection<ObservableCollection<OrganizationalUnit>>());
             set => Set(ref ouWithoutRSoP, value);
         }
 
@@ -72,7 +72,7 @@ namespace Readinizer.Frontend.ViewModels
 
         public string WithSysmon { get; set; }
         
-        private void ShowDetail(Dictionary<string, int> param)
+        private static void ShowDetail(Dictionary<string, int> param)
         {
             if (param.First().Key.Equals("Domain"))
             {
@@ -94,7 +94,7 @@ namespace Readinizer.Frontend.ViewModels
         }
 
         public TreeStructureResultViewModel(ITreeNodesFactory treeNodesFactory, IUnitOfWork unitOfWork, IDialogService dialogService, 
-                                            IAnalysisService analysisService, IRSoPPotService rSoPPotService)
+                                            IAnalysisService analysisService, IRsopPotService rSoPPotService)
         {
             this.treeNodesFactory = treeNodesFactory;
             this.unitOfWork = unitOfWork;
@@ -133,20 +133,20 @@ namespace Readinizer.Frontend.ViewModels
 
         private async Task SetOusWithoutRSoPs()
         {
-            var allOrganisationalUnits = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-            var ousWithoutRsoP = allOrganisationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
+            var organizationalUnits = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
+            var ousWithoutRsoP = organizationalUnits.FindAll(x => x.HasReachableComputer.Equals(false));
             AddOu(ousWithoutRsoP.FirstOrDefault());
             OUsWithoutRSoP.Clear();
 
-            foreach (var organisationalUnit in ousWithoutRsoP.Skip(1))
+            foreach (var organizationalUnit in ousWithoutRsoP.Skip(1))
             {
                 bool found = false;
 
                 foreach (var sortedOu in OUsWithoutRSoP)
                 {
-                    if (sortedOu.ToList().Exists(x => x.ADDomain.Name.Equals(organisationalUnit.ADDomain.Name)))
+                    if (sortedOu.ToList().Exists(x => x.ADDomain.Name.Equals(organizationalUnit.ADDomain.Name)))
                     {
-                        sortedOu.Add(organisationalUnit);
+                        sortedOu.Add(organizationalUnit);
                         found = true;
                         break;
                     }
@@ -154,13 +154,13 @@ namespace Readinizer.Frontend.ViewModels
 
                 if (!found)
                 {
-                    AddOu(organisationalUnit);
+                    AddOu(organizationalUnit);
                 }
             }
 
-            void AddOu(OrganisationalUnit ou)
+            void AddOu(OrganizationalUnit ou)
             {
-                OUsWithoutRSoP.Add(new ObservableCollection<OrganisationalUnit> { ou });
+                OUsWithoutRSoP.Add(new ObservableCollection<OrganizationalUnit> { ou });
             }
             RaisePropertyChanged(nameof(OUsWithoutRSoP));
         }
@@ -174,7 +174,7 @@ namespace Readinizer.Frontend.ViewModels
         {
             var settings = new OpenFileDialogSettings
             {
-                Title = "Import RSoPs of unanalysed Organisational Units",
+                Title = "Import RSoPs of unanalyzed Organizational Units",
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
                 Filter = "XML-file (*.xml)|*.xml|All Files (*.*)|*.*",
                 Multiselect = true

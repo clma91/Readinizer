@@ -1,9 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Readinizer.Backend.Domain.Models;
 
-namespace Readinizer.Backend.Domain.ModelsJson
+namespace Readinizer.Backend.Domain.Models
 {
-    public class AuditSetting
+    public class AuditSetting : GpoSetting
     {
         [JsonIgnore]
         public int AuditSettingId { get; set; }
@@ -13,8 +12,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         [JsonIgnore]
         public Rsop Rsop { get; set; }
-
-        public string GpoId { get; set; }
 
         [JsonProperty("SubCategoryName")]
         public string SubcategoryName { get; set; }
@@ -28,17 +25,13 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("SettingValue")]
         public AuditSettingValue CurrentSettingValue { get; set; }
 
-        public bool IsPresent { get; set; }
-
-        public bool IsStatusOk => CurrentSettingValue.Equals(TargetSettingValue);
+        public override bool IsStatusOk => CurrentSettingValue.Equals(TargetSettingValue);
 
         public override bool Equals(object obj)
         {
-            if (GpoId != null && SubcategoryName != null)
+            if (GpoIdentifier != null && SubcategoryName != null)
             {
-                var auditSetting = obj as AuditSetting;
-
-                if (auditSetting == null)
+                if (!(obj is AuditSetting auditSetting))
                 {
                     return false;
                 }
@@ -52,6 +45,14 @@ namespace Readinizer.Backend.Domain.ModelsJson
         public override int GetHashCode()
         {
             return base.GetHashCode();
+        }
+
+        public enum AuditSettingValue
+        {
+            NoAuditing,
+            Success,
+            Failure,
+            SuccessAndFailure
         }
     }
 }

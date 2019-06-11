@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Readinizer.Backend.Domain.ModelsJson.Converter
@@ -14,14 +11,14 @@ namespace Readinizer.Backend.Domain.ModelsJson.Converter
             throw new NotImplementedException();
         }
 
-        public override bool CanWrite { get { return false; } }
+        public override bool CanWrite => false;
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
-            object returnValue = new Object();
+            var returnValue = new object();
             if (reader.TokenType == JsonToken.StartObject)
             {
-                T instance = (T)serializer.Deserialize(reader, typeof(T));
+                var instance = (T)serializer.Deserialize(reader, typeof(T));
                 returnValue = new List<T>() { instance };
             }
             else if (reader.TokenType == JsonToken.StartArray)

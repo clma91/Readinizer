@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Readinizer.Frontend.Views"
              xmlns:viewModels="clr-namespace:Readinizer.Frontend.ViewModels"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -31,7 +30,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
 
-            <Label Grid.Column="0" FontSize="20" Margin="0,5,0,0" FontWeight="DemiBold">Organisational Unit:</Label>
+            <Label Grid.Column="0" FontSize="20" Margin="0,5,0,0" FontWeight="DemiBold">Organizational Unit:</Label>
             <Label Grid.Column="1" Margin="0,5,0,0">
                 <TextBlock Text="{Binding Ou}" FontSize="20"></TextBlock>
             </Label>

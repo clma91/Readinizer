@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Readinizer.Backend.Domain.Models
 {
-    public class OrganisationalUnit
+    public class OrganizationalUnit
     {
         [JsonIgnore]
-        public int OrganisationalUnitId { get; set; }
+        public int OrganizationalUnitsId { get; set; }
 
         public string Name { get; set; }
 
@@ -30,7 +25,7 @@ namespace Readinizer.Backend.Domain.Models
         public virtual List<Rsop> Rsops { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<OrganisationalUnit> SubOrganisationalUnits { get; set; }
+        public virtual ICollection<OrganizationalUnit> SubOrganizationalUnits { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Computer> Computers { get; set; }

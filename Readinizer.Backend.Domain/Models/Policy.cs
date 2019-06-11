@@ -1,10 +1,9 @@
 ﻿using Newtonsoft.Json;
-using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
-namespace Readinizer.Backend.Domain.ModelsJson
+namespace Readinizer.Backend.Domain.Models
 {
-    public class Policy 
+    public class Policy : GpoSetting
     {
         [JsonIgnore]
         public int PolicyId { get; set; }
@@ -14,8 +13,6 @@ namespace Readinizer.Backend.Domain.ModelsJson
 
         [JsonIgnore]
         public Rsop Rsop { get; set; }
-
-        public string GpoId { get; set; }
 
         [JsonProperty("Name")]
         public string Name { get; set; }
@@ -31,13 +28,11 @@ namespace Readinizer.Backend.Domain.ModelsJson
         [JsonProperty("ModuleNames")]
         public ModuleNames ModuleNames { get; set; } = new ModuleNames();
 
-        public bool IsPresent { get; set; }
-
-        public bool IsStatusOk => CurrentState.Equals(TargetState);
+        public override bool IsStatusOk => CurrentState.Equals(TargetState);
 
         public override bool Equals(object obj)
         {
-            if (CurrentState != null && GpoId != null)
+            if (CurrentState != null && GpoIdentifier != null)
             {
                 var otherPolicy = obj as Policy;
 

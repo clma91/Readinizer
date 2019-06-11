@@ -1,8 +1,6 @@
 ﻿using System.Management;
-using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
-using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -17,29 +15,7 @@ namespace Readinizer.Backend.Business.Services
             this.pingService = pingService;
         }
 
-        public async Task sysmonCheck(string serviceName)
-        {
-        var allOUs = await unitOfWork.OrganisationalUnitRepository.GetAllEntities();
-        var allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
-
-        foreach (OrganisationalUnit OU in allOUs)
-            {
-                foreach (var computer in OU.Computers)
-                {
-                    var domain = OU.ADDomain;
-                    
-                    if (pingService.isPingable(computer.IpAddress))
-                    {
-                        computer.PingSuccessful = true;
-                        computer.isSysmonRunning =  isSysmonRunning(serviceName, System.Security.Principal.WindowsIdentity.GetCurrent().Name.ToString(), computer.ComputerName, domain.Name);
-                    }
-                }
-
-                await unitOfWork.SaveChangesAsync();
-            }
-        }
-
-        public bool isSysmonRunning(string serviceName, string user, string computerName, string domain)
+        public bool IsSysmonRunning(string serviceName, string user, string computerName, string domain)
         {
             var op = new ConnectionOptions();
             var scope = new ManagementScope(@"\\" + computerName +"."+ domain + "\\root\\cimv2", op);

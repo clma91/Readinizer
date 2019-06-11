@@ -1,13 +1,12 @@
 using System.Data.Entity;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.DataAccess.Interfaces
 {
     public interface IReadinizerDbContext
     {
         DbSet<ADDomain> ADDomains { get; set; }
-        DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
+        DbSet<OrganizationalUnit> OrganizationalUnits { get; set; }
         DbSet<Computer> Computers { get; set; }
         DbSet<Site> Sites { get; set; }
         DbSet<Rsop> RSoPs { get; set; }

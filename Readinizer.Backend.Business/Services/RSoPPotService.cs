@@ -9,12 +9,12 @@ using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Services
 {
-    public class RSoPPotService : IRSoPPotService
+    public class RsopPotService : IRsopPotService
     {
         private readonly IUnitOfWork unitOfWork;
         private static int index;
 
-        public RSoPPotService(IUnitOfWork unitOfWork)
+        public RsopPotService(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
@@ -59,7 +59,7 @@ namespace Readinizer.Backend.Business.Services
         {
             return new RsopPot
             {
-                Name = index++.ToString() + ". Group of identical security settings",
+                Name = index++ + ". Group of identical security settings",
                 DateTime = DateTime.Now.ToString("g", CultureInfo.InvariantCulture),
                 Domain = rsop.Domain,
                 Rsops = new List<Rsop> { rsop }
@@ -90,33 +90,33 @@ namespace Readinizer.Backend.Business.Services
             await unitOfWork.SaveChangesAsync();
         }
 
-        public RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop rsop)
+        public RsopPot RsopPotsEqual(List<RsopPot> rsopPots, Rsop currentRsop)
         {
             RsopPot foundPot = null;
 
             foreach (var pot in rsopPots)
             {
-                var currentRsop = pot.Rsops.FirstOrDefault();
-                if (currentRsop == null) continue;
+                var rsop = pot.Rsops.FirstOrDefault();
+                if (rsop == null) continue;
 
-                var auditSettingsEqual = SettingsEqual(currentRsop.AuditSettings, rsop.AuditSettings);
+                var auditSettingsEqual = SettingsEqual(rsop.AuditSettings, currentRsop.AuditSettings);
                 if (!auditSettingsEqual) continue;
 
-                var policiesEqual = SettingsEqual(currentRsop.Policies, rsop.Policies);
+                var policiesEqual = SettingsEqual(rsop.Policies, currentRsop.Policies);
                 if (!policiesEqual) continue;
 
-                var registrySettingsEqual = SettingsEqual(currentRsop.RegistrySettings, rsop.RegistrySettings);
+                var registrySettingsEqual = SettingsEqual(rsop.RegistrySettings, currentRsop.RegistrySettings);
                 if (!registrySettingsEqual) continue;
 
-                var securityOptionsEqual = SettingsEqual(currentRsop.SecurityOptions, rsop.SecurityOptions);
+                var securityOptionsEqual = SettingsEqual(rsop.SecurityOptions, currentRsop.SecurityOptions);
                 if (!securityOptionsEqual) continue;
 
-                var domainsEqual = currentRsop.Domain.Equals(rsop.Domain);
+                var domainsEqual = rsop.Domain.Equals(currentRsop.Domain);
                 if (!domainsEqual) continue;
 
-                if (RsopAndRsopPotsOuEqual(rsop, currentRsop)) continue;
+                if (RsopAndRsopPotsOuEqual(currentRsop, rsop)) continue;
 
-                pot.Rsops.Add(rsop);
+                pot.Rsops.Add(currentRsop);
                 foundPot = pot;
                 break;
             }
@@ -126,9 +126,8 @@ namespace Readinizer.Backend.Business.Services
 
         private static bool RsopAndRsopPotsOuEqual(Rsop rsop, Rsop currentRsop)
         {
-            var organisationalUnitsEqual = currentRsop.OrganisationalUnit.Name.Equals(rsop.OrganisationalUnit.Name);
-            if (organisationalUnitsEqual) return true;
-            return false;
+            var organisationalUnitsEqual = currentRsop.OrganizationalUnit.Name.Equals(rsop.OrganizationalUnit.Name);
+            return organisationalUnitsEqual;
         }
 
         public bool SettingsEqual<T>(ICollection<T> currentSettings, ICollection<T> otherSettings)
@@ -138,12 +137,12 @@ namespace Readinizer.Backend.Business.Services
                 return (currentSettings == null && otherSettings == null);
             }
 
-            if (currentSettings.Count() != otherSettings.Count())
+            if (currentSettings.Count != otherSettings.Count)
             {
                 return false;
             }
 
-            for (var i = 0; i < currentSettings.Count(); i++)
+            for (var i = 0; i < currentSettings.Count; i++)
             {
                 if (!currentSettings.ElementAt(i).Equals(otherSettings.ElementAt(i)))
                 {

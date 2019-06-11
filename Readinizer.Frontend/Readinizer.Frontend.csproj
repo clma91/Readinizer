@@ -181,11 +181,11 @@
     <Compile Include="Views\SysmonResultView.xaml.cs">
       <DependentUpon>SysmonResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\OUResultView.xaml.cs">
-      <DependentUpon>OUResultView.xaml</DependentUpon>
+    <Compile Include="Views\OuResultView.xaml.cs">
+      <DependentUpon>OuResultView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\RSoPResultView.xaml.cs">
-      <DependentUpon>RSoPResultView.xaml</DependentUpon>
+    <Compile Include="Views\RsopResultView.xaml.cs">
+      <DependentUpon>RsopResultView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SpinnerView.xaml.cs">
       <DependentUpon>SpinnerView.xaml</DependentUpon>
@@ -211,11 +211,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\OUResultView.xaml">
+    <Page Include="Views\OuResultView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\RSoPResultView.xaml">
+    <Page Include="Views\RsopResultView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

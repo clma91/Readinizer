@@ -13,7 +13,7 @@ namespace Readinizer.Backend.Business.Services
 {
     public class ADDomainService : IADDomainService
     {
-        private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
         private readonly IUnitOfWork unitOfWork;
 
         public ADDomainService(IUnitOfWork unitOfWork)
@@ -61,10 +61,10 @@ namespace Readinizer.Backend.Business.Services
                 logger.Error(severDownException, message);
                 throw new InvalidAuthenticationException(message);
             }
-            catch (ActiveDirectoryObjectNotFoundException adObjectioFoundException)
+            catch (ActiveDirectoryObjectNotFoundException adObjectNotFoundException)
             {
-                var message = $"The domain {adObjectioFoundException.Name} could not be contacted";
-                logger.Error(adObjectioFoundException, message);
+                var message = $"The domain {adObjectNotFoundException.Name} could not be contacted";
+                logger.Error(adObjectNotFoundException, message);
                 throw new InvalidAuthenticationException(message);
             }
             catch (Exception e)
@@ -90,7 +90,7 @@ namespace Readinizer.Backend.Business.Services
 
             foreach (TrustRelationshipInformation domainTrust in domainTrusts)
             {
-                if (domainTrust.TrustType.Equals(AD.TrustType.TreeRoot))
+                if (domainTrust.TrustType.Equals(TrustType.TreeRoot))
                 {
                     try
                     {

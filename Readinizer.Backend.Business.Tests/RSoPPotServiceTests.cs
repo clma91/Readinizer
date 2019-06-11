@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Readinizer.Backend.Business.Services;
-using Readinizer.Backend.DataAccess.UnityOfWork;
+using Readinizer.Backend.DataAccess.UnitOfWork;
 using Readinizer.Backend.Domain.Models;
 
 namespace Readinizer.Backend.Business.Tests
@@ -10,7 +10,7 @@ namespace Readinizer.Backend.Business.Tests
     [TestClass()]
     public class RsoPPotServiceTests : BaseReadinizerTestData
     {
-        public static RSoPPotService rsopPotService { get; set; } = new RSoPPotService(new UnitOfWork());
+        public static RsopPotService rsopPotService { get; set; } = new RsopPotService(new UnitOfWork());
 
         [TestMethod()]
         public void FillRsopPotList_NotEquallySettings_DifferentOus_Test()
@@ -48,7 +48,7 @@ namespace Readinizer.Backend.Business.Tests
         public void RsopPotsEqual_DifferentRsops_SameOu_Test()
         {
             var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
-            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, BadRsopRedinizerOu) != null;
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, BadRsopReadinizerOu) != null;
             Assert.IsFalse(rsopPotsAreEqual);
         }
 
@@ -56,7 +56,7 @@ namespace Readinizer.Backend.Business.Tests
         public void RsopPotsEqual_SameRsops_SameOu_Test()
         {
             var rsopPotList = new List<RsopPot> { RsopPotGoodReadinizerOu };
-            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, GoodRsopRedinizerOu) != null;
+            var rsopPotsAreEqual = rsopPotService.RsopPotsEqual(rsopPotList, GoodRsopReadinizerOu) != null;
             Assert.IsFalse(rsopPotsAreEqual);
         }
 
@@ -80,7 +80,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_SameAuditSettings_Test()
         {
             var auditSettingsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.AuditSettings, GoodRsopSalesOu.AuditSettings);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.AuditSettings, GoodRsopSalesOu.AuditSettings);
             Assert.IsTrue(auditSettingsAreEqual);
         }
 
@@ -88,7 +88,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_SamePolicies_Test()
         {
             var policiesAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.Policies, GoodRsopSalesOu.Policies);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.Policies, GoodRsopSalesOu.Policies);
             Assert.IsTrue(policiesAreEqual);
         }
 
@@ -96,7 +96,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_SameSecurityOptions_Test()
         {
             var securityOptionsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.SecurityOptions, GoodRsopSalesOu.SecurityOptions);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.SecurityOptions, GoodRsopSalesOu.SecurityOptions);
             Assert.IsTrue(securityOptionsAreEqual);
         }
 
@@ -104,7 +104,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_SameRegistrySettings_Test()
         {
             var registrySettingsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.RegistrySettings, GoodRsopSalesOu.RegistrySettings);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.RegistrySettings, GoodRsopSalesOu.RegistrySettings);
             Assert.IsTrue(registrySettingsAreEqual);
         }
 
@@ -112,7 +112,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_DifferentAuditSettings_Test()
         {
             var auditSettingsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.AuditSettings, BadRsopSalesOu.AuditSettings);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.AuditSettings, BadRsopSalesOu.AuditSettings);
             Assert.IsFalse(auditSettingsAreEqual);
         }
 
@@ -120,7 +120,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_DifferentPolicies_Test()
         {
             var policiesAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.Policies, BadRsopSalesOu.Policies);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.Policies, BadRsopSalesOu.Policies);
             Assert.IsFalse(policiesAreEqual);
         }
 
@@ -128,7 +128,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_DifferentSecurityOptions_Test()
         {
             var securityOptionsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.SecurityOptions, BadRsopSalesOu.SecurityOptions);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.SecurityOptions, BadRsopSalesOu.SecurityOptions);
             Assert.IsFalse(securityOptionsAreEqual);
         }
 
@@ -136,7 +136,7 @@ namespace Readinizer.Backend.Business.Tests
         public void SettingsEqual_DifferentRegistrySettings_Test()
         {
             var registrySettingsAreEqual =
-                rsopPotService.SettingsEqual(GoodRsopRedinizerOu.RegistrySettings, BadRsopSalesOu.RegistrySettings);
+                rsopPotService.SettingsEqual(GoodRsopReadinizerOu.RegistrySettings, BadRsopSalesOu.RegistrySettings);
             Assert.IsFalse(registrySettingsAreEqual);
         }
     }

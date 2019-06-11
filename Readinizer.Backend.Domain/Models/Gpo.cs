@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Readinizer.Backend.Domain.Models;
 using Readinizer.Backend.Domain.ModelsJson.Converter;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
-namespace Readinizer.Backend.Domain.ModelsJson
+namespace Readinizer.Backend.Domain.Models
 {
     public class Gpo
     {

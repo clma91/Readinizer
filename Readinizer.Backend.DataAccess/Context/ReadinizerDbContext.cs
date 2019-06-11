@@ -2,10 +2,9 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 using Readinizer.Backend.Domain.ModelsJson.HelperClasses;
 
-namespace Readinizer.Backend.DataAccess
+namespace Readinizer.Backend.DataAccess.Context
 {
 
     public class ReadinizerDbContext : DbContext, IReadinizerDbContext
@@ -16,7 +15,7 @@ namespace Readinizer.Backend.DataAccess
         }
 
         public virtual DbSet<ADDomain> ADDomains { get; set; }
-        public virtual DbSet<OrganisationalUnit> OrganisationalUnits { get; set; }
+        public virtual DbSet<OrganizationalUnit> OrganizationalUnits { get; set; }
         public virtual DbSet<Computer> Computers { get; set; }
         public virtual DbSet<Site> Sites { get; set; }
         public virtual DbSet<Rsop> RSoPs { get; set; }
@@ -46,7 +45,7 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<Site>().Property(x => x.Name).IsRequired();
 
 
-            modelBuilder.Entity<Site>().HasMany<ADDomain>(x => x.Domains).WithMany(x => x.Sites).Map(x =>
+            modelBuilder.Entity<Site>().HasMany(x => x.Domains).WithMany(x => x.Sites).Map(x =>
             {
                 x.MapLeftKey("SiteRefId");
                 x.MapRightKey("ADDomainRefId");
@@ -54,26 +53,26 @@ namespace Readinizer.Backend.DataAccess
             });
 
 
-            modelBuilder.Entity<OrganisationalUnit>().ToTable(nameof(OrganisationalUnit));
-            modelBuilder.Entity<OrganisationalUnit>().HasKey(x => x.OrganisationalUnitId);
-            modelBuilder.Entity<OrganisationalUnit>().HasMany(x => x.SubOrganisationalUnits).WithOptional()
+            modelBuilder.Entity<OrganizationalUnit>().ToTable(nameof(OrganizationalUnit));
+            modelBuilder.Entity<OrganizationalUnit>().HasKey(x => x.OrganizationalUnitsId);
+            modelBuilder.Entity<OrganizationalUnit>().HasMany(x => x.SubOrganizationalUnits).WithOptional()
                 .HasForeignKey(x => new {x.ParentId});
-            modelBuilder.Entity<OrganisationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganisationalUnits)
+            modelBuilder.Entity<OrganizationalUnit>().HasRequired(x => x.ADDomain).WithMany(x => x.OrganizationalUnits)
                 .HasForeignKey(x => new {x.ADDomainRefId});
 
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
             modelBuilder.Entity<Computer>().HasKey(x => x.ComputerId);
             modelBuilder.Entity<Computer>().HasRequired(x => x.Site).WithMany(x => x.Computers)
-                .HasForeignKey(x => new {x.SiteRefId});
+                .HasForeignKey(x => new {SiteRefId = (int?) x.SiteRefId});
 
 
-            modelBuilder.Entity<OrganisationalUnit>().HasMany<Computer>(x => x.Computers)
-                .WithMany(x => x.OrganisationalUnits).Map(x =>
+            modelBuilder.Entity<OrganizationalUnit>().HasMany(x => x.Computers)
+                .WithMany(x => x.OrganizationalUnits).Map(x =>
                 {
-                    x.MapLeftKey("OrganisationalUnitRefId");
+                    x.MapLeftKey("OrganizationalUnitId");
                     x.MapRightKey("ComputerRefId");
-                    x.ToTable("OrganisationalUnitComputer");
+                    x.ToTable("OrganizationalUnitComputer");
                 });
 
 
@@ -87,7 +86,7 @@ namespace Readinizer.Backend.DataAccess
             modelBuilder.Entity<Rsop>().ToTable(nameof(Rsop));
             modelBuilder.Entity<Rsop>().HasKey(x => x.RsopId);
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Domain).WithMany(x => x.Rsops).HasForeignKey(x => new { x.DomainRefId });
-            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganisationalUnit).WithMany(x => x.Rsops)
+            modelBuilder.Entity<Rsop>().HasOptional(x => x.OrganizationalUnit).WithMany(x => x.Rsops)
                 .HasForeignKey(x => new {x.OURefId});
             modelBuilder.Entity<Rsop>().HasOptional(x => x.Site).WithMany(x => x.Rsops).HasForeignKey(x => new { x.SiteRefId });
             

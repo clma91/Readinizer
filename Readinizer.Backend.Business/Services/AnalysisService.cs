@@ -69,7 +69,7 @@ namespace Readinizer.Backend.Business.Services
                 var rsop = new Rsop
                 {
                     Domain = organisationalUnit.ADDomain,
-                    OrganisationalUnit = organisationalUnit,
+                    OrganizationalUnit = organisationalUnit,
                     Site = site,
                     AuditSettings = auditSettings.OrderBy(x => x.SubcategoryName).ToList(),
                     Policies = policies.OrderBy(x => x.Name).ToList(),
@@ -113,19 +113,19 @@ namespace Readinizer.Backend.Business.Services
             return rsop;
         }
 
-        private OrganisationalUnit GetOrganisationalUnitOfRsop(JToken rsop)
+        private OrganizationalUnit GetOrganisationalUnitOfRsop(JToken rsop)
         {
-            var jsonComputerResultsSOM = rsop.SelectToken("$..ComputerResults.SOM");
+            var jsonComputerResultsSom = rsop.SelectToken("$..ComputerResults.SOM");
             var jsonComputerResultsDomain = rsop.SelectToken("$..ComputerResults.Domain");
-            var computerResultsSOM = jsonComputerResultsSOM.Value<string>();
+            var computerResultsSom = jsonComputerResultsSom.Value<string>();
             var domainName = jsonComputerResultsDomain.Value<string>();
-            var ouName = computerResultsSOM.Split('/').Last();
-            var organisationalUnit = unitOfWork.SpecificOrganisationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
+            var ouName = computerResultsSom.Split('/').Last();
+            var organisationalUnit = unitOfWork.SpecificOrganizationalUnitRepository.GetOrganisationalUnitByNames(ouName, domainName);
 
             if (organisationalUnit != null && (bool)!organisationalUnit.HasReachableComputer)
             {
                     organisationalUnit.HasReachableComputer = true;
-                    unitOfWork.OrganisationalUnitRepository.Update(organisationalUnit);
+                    unitOfWork.OrganizationalUnitRepository.Update(organisationalUnit);
             }
             return organisationalUnit;
         }
@@ -156,9 +156,9 @@ namespace Readinizer.Backend.Business.Services
                 x.IsPresent = presentAuditSettings.Contains(x);
                 x.CurrentSettingValue = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
                     .Select(z => z.CurrentSettingValue)
-                    .DefaultIfEmpty(AuditSettingValue.NoAuditing)
+                    .DefaultIfEmpty(AuditSetting.AuditSettingValue.NoAuditing)
                     .FirstOrDefault();
-                x.GpoId = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
+                x.GpoIdentifier = auditSettings.Where(y => y.SubcategoryName.Equals(x.SubcategoryName))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();
@@ -183,19 +183,13 @@ namespace Readinizer.Backend.Business.Services
             return recommendedSecurityOptions.Select(x =>
             {
                 x.IsPresent = presentSecurityOptions.Contains(x);
-                x.CurrentSettingNumber = securityOptions.Where(y => y.CurrentSettingNumber == x.TargetSettingNumber)
-                    .Select(z => z.CurrentSettingNumber)
-                    .DefaultIfEmpty("NotDefined")
-                    .FirstOrDefault();
-
-                x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay != null && y.CurrentDisplay.DisplayBoolean != null &&
-                                                                             y.KeyName.Equals(x.KeyName))
+                x.CurrentDisplay.DisplayBoolean = securityOptions.Where(y => y.CurrentDisplay?.DisplayBoolean != null && y.KeyName.Equals(x.KeyName))
                     .Select(z => z.CurrentDisplay.DisplayBoolean)
                     .DefaultIfEmpty("NotDefined")
                     .FirstOrDefault();
                 x.CurrentDisplay.Name = x.TargetDisplay.Name;
 
-                x.GpoId = securityOptions.Where(y => y.CurrentSettingNumber.Equals(x.CurrentSettingNumber))
+                x.GpoIdentifier = securityOptions.Where(y => y.CurrentDisplay != null)
                 .Select(z => z.Gpo.GpoIdentifier.Id)
                 .DefaultIfEmpty("NoGpoId")
                 .FirstOrDefault();
@@ -225,7 +219,7 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentValue)
                     .DefaultIfEmpty(new Value())
                     .FirstOrDefault();
-                w.GpoId = registrySettings.Where(x => x.CurrentValue != null)
+                w.GpoIdentifier = registrySettings.Where(x => x.CurrentValue != null)
                     .Where(y => y.CurrentValue.Name.Equals(w.TargetValue.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
@@ -236,7 +230,6 @@ namespace Readinizer.Backend.Business.Services
 
         public List<Policy> AnalysePolicies(JToken rsop)
         {
-            var test = ConfigurationManager.AppSettings["RecommendedPolicySettings"];
             var recommendedPolicies = GetRecommendedSettings(ConfigurationManager.AppSettings["RecommendedPolicySettings"], new List<Policy>());
 
             var jsonPolicies = rsop.SelectToken("$..Policy");
@@ -255,7 +248,7 @@ namespace Readinizer.Backend.Business.Services
                     .Select(z => z.CurrentState)
                     .DefaultIfEmpty("Disabled")
                     .FirstOrDefault();
-                x.GpoId = policies.Where(y => y.Name.Equals(x.Name))
+                x.GpoIdentifier = policies.Where(y => y.Name.Equals(x.Name))
                     .Select(z => z.Gpo.GpoIdentifier.Id)
                     .DefaultIfEmpty("NoGpoId")
                     .FirstOrDefault();

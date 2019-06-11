@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Readinizer.Backend.Business.Interfaces;
 using Readinizer.Backend.DataAccess.Interfaces;
 using Readinizer.Backend.Domain.Models;
-using Readinizer.Backend.Domain.ModelsJson;
 
 namespace Readinizer.Backend.Business.Services
 {
@@ -19,7 +18,7 @@ namespace Readinizer.Backend.Business.Services
 
         public async Task<List<SecuritySettingsParsed>> ParseSecuritySettings(int refId, string type)
         {
-            Rsop rsop = new Rsop();
+            var rsop = new Rsop();
             if (type.Equals("RSoPPot"))
             {
 
@@ -32,46 +31,52 @@ namespace Readinizer.Backend.Business.Services
             }
 
             var GPOs = await unitOfWork.GpoRepository.GetAllEntities();
-            List<SecuritySettingsParsed> settings = new List<SecuritySettingsParsed>();
-            foreach (var setting in rsop.AuditSettings)
+            var settings = new List<SecuritySettingsParsed>();
+            if (rsop != null)
             {
-                var parsedSetting = SecuritySettingFactory(setting.SubcategoryName, setting.CurrentSettingValue.ToString(), setting.TargetSettingValue.ToString());
-                var gopId = setting.GpoId;
+                foreach (var setting in rsop.AuditSettings)
+                {
+                    var parsedSetting = SecuritySettingFactory(setting.SubcategoryName,
+                        setting.CurrentSettingValue.ToString(), setting.TargetSettingValue.ToString());
+                    var gopId = setting.GpoIdentifier;
 
-                ParseSecuritySetting(gopId, parsedSetting, GPOs);
+                    ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
-                settings.Add(parsedSetting);
-            }
+                    settings.Add(parsedSetting);
+                }
 
-            foreach (var setting in rsop.Policies)
-            {
-                var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentState, setting.TargetState);
-                var gopId = setting.GpoId;
+                foreach (var setting in rsop.Policies)
+                {
+                    var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentState, setting.TargetState);
+                    var gopId = setting.GpoIdentifier;
 
-                ParseSecuritySetting(gopId, parsedSetting, GPOs);
+                    ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
-                settings.Add(parsedSetting);
-            }
+                    settings.Add(parsedSetting);
+                }
 
 
-            foreach (var setting in rsop.RegistrySettings)
-            {
-                var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentValue.Name, setting.TargetValue.Name);
-                var gopId = setting.GpoId;
+                foreach (var setting in rsop.RegistrySettings)
+                {
+                    var parsedSetting = SecuritySettingFactory(setting.Name, setting.CurrentValue.Name,
+                        setting.TargetValue.Name);
+                    var gopId = setting.GpoIdentifier;
 
-                ParseSecuritySetting(gopId, parsedSetting, GPOs);
+                    ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
-                settings.Add(parsedSetting);
-            }
+                    settings.Add(parsedSetting);
+                }
 
-            foreach (var setting in rsop.SecurityOptions)
-            {
-                var parsedSetting = SecuritySettingFactory(setting.Description, setting.CurrentDisplay.DisplayBoolean, setting.TargetDisplay.DisplayBoolean);
-                var gopId = setting.GpoId;
+                foreach (var setting in rsop.SecurityOptions)
+                {
+                    var parsedSetting = SecuritySettingFactory(setting.Description,
+                        setting.CurrentDisplay.DisplayBoolean, setting.TargetDisplay.DisplayBoolean);
+                    var gopId = setting.GpoIdentifier;
 
-                ParseSecuritySetting(gopId, parsedSetting, GPOs);
+                    ParseSecuritySetting(gopId, parsedSetting, GPOs);
 
-                settings.Add(parsedSetting);
+                    settings.Add(parsedSetting);
+                }
             }
 
 
@@ -90,14 +95,7 @@ namespace Readinizer.Backend.Business.Services
 
         private static void ParseSecuritySetting(string gopId, SecuritySettingsParsed parsedSetting, List<Gpo> GPOs)
         {
-            if (gopId.Equals("NoGpoId"))
-            {
-                parsedSetting.GPO = "-";
-            }
-            else
-            {
-                parsedSetting.GPO = GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(gopId)).Name;
-            }
+            parsedSetting.GPO = gopId.Equals("NoGpoId") ? "-" : GPOs.Find(x => x.GpoPath.GpoIdentifier.Id.Equals(gopId)).Name;
 
             if (parsedSetting.Value.Equals(parsedSetting.Target))
             {
