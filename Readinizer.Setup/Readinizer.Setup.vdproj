@@ -411,6 +411,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_5804B87DC0994B529E775C8766D670D4"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_585F1AC2343E129FABAD41E83E828840"
         "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
         "MsmSig" = "8:_UNDEFINED"
@@ -645,6 +651,18 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_8B90345887D85E2B476000D8BD205380"
+        "OwnerKey" = "8:_4F74B623DDC48043069136F8268FDBE4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_8B90345887D85E2B476000D8BD205380"
+        "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_8F94D9BBDD157654DB44B18DFF8C99C4"
         "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
         "MsmSig" = "8:_UNDEFINED"
@@ -809,12 +827,6 @@
         {
         "MsmKey" = "8:_A8806353D6C87A1A5B2848A5E0CFB338"
         "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A93877A340014A62A9C09C11D023E369"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1065,18 +1077,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E18EE8FAB64F89082DE5E4722D890634"
-        "OwnerKey" = "8:_4F74B623DDC48043069136F8268FDBE4"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E18EE8FAB64F89082DE5E4722D890634"
-        "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_E54F70C2232C7CE2B4C141BBD17F5089"
         "OwnerKey" = "8:_73AE4F5F5FD04E8993561670FB2B3516"
         "MsmSig" = "8:_UNDEFINED"
@@ -1192,12 +1192,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A93877A340014A62A9C09C11D023E369"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D0F0B1B549D3A823BC12E1C523AA7475"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1228,7 +1222,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E18EE8FAB64F89082DE5E4722D890634"
+        "OwnerKey" = "8:_8B90345887D85E2B476000D8BD205380"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2132,6 +2126,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
         "Release"
@@ -2139,7 +2141,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:Release\\Readinizer.Setup.msi"
+        "OutputFilename" = "8:Release\\Readinizer.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -3924,6 +3926,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5804B87DC0994B529E775C8766D670D4"
+            {
+            "SourcePath" = "8:..\\..\\..\\Desktop\\just-logo.ico"
+            "TargetName" = "8:just-logo.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_4A4BDFFDCBA6435CBAD197389B04B815"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_585F1AC2343E129FABAD41E83E828840"
             {
             "AssemblyRegister" = "3:1"
@@ -4832,6 +4854,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8B90345887D85E2B476000D8BD205380"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:TRUE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.GroupPolicy.Management.Interop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64"
+                "ScatterAssemblies"
+                {
+                    "_8B90345887D85E2B476000D8BD205380"
+                    {
+                    "Name" = "8:Microsoft.GroupPolicy.Management.Interop.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.GroupPolicy.Management.Interop.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_4A4BDFFDCBA6435CBAD197389B04B815"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8F94D9BBDD157654DB44B18DFF8C99C4"
             {
             "AssemblyRegister" = "3:1"
@@ -5419,37 +5472,6 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A93877A340014A62A9C09C11D023E369"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_A93877A340014A62A9C09C11D023E369"
-                    {
-                    "Name" = "8:Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\Readinizer.Backend.Business\\DependentAssemblies\\Microsoft.GroupPolicy.ServerAdminTools.GpmgmtLib.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_4A4BDFFDCBA6435CBAD197389B04B815"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A978737B9E2AA3C2A6714A73C5081240"
@@ -6619,37 +6641,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E18EE8FAB64F89082DE5E4722D890634"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.GroupPolicy.Management.Interop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=AMD64"
-                "ScatterAssemblies"
-                {
-                    "_E18EE8FAB64F89082DE5E4722D890634"
-                    {
-                    "Name" = "8:Microsoft.GroupPolicy.Management.Interop.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.GroupPolicy.Management.Interop.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_4A4BDFFDCBA6435CBAD197389B04B815"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E54F70C2232C7CE2B4C141BBD17F5089"
             {
             "AssemblyRegister" = "3:1"
@@ -7134,7 +7125,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_4A4BDFFDCBA6435CBAD197389B04B815"
             {
-            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -7215,9 +7206,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:Readinizer.Setup"
+        "ProductName" = "8:Readinizer"
         "ProductCode" = "8:{34BC777D-D6EB-4A52-B614-06B2E96E97BF}"
-        "PackageCode" = "8:{C2F4A775-D5A0-4A3F-9A8D-E38CB80E2374}"
+        "PackageCode" = "8:{374BDA45-A731-492F-9C6E-A2454B024272}"
         "UpgradeCode" = "8:{3435F2D5-0929-4FBD-AB52-48EE4597BEC6}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -7225,16 +7216,16 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:Readinizer"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:Readinizer.Setup"
+        "Title" = "8:Readinizer"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:Claudio Mattes, Kellenberger Lukas"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_5804B87DC0994B529E775C8766D670D4"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"

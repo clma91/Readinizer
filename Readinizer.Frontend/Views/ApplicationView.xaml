@@ -17,7 +17,8 @@
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}"
         mc:Ignorable="d"
-        Title="Readinizer" 
+        Title="Readinizer"
+        Icon="../favicon/favicon.ico"
         MinWidth="1100" MinHeight="780" MaxHeight="{Binding ScreenHeight}"
         Width="1100" Height="780">
 
