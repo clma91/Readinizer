@@ -36,8 +36,8 @@
             </Label>
         </Grid>
         <StackPanel Height="30" Width="800" Grid.Row="1">
-            <Label HorizontalAlignment="Center" Margin="0, 5, 0, 0">
-                <TextBlock TextDecorations="Underline" Text="Audit Settings:" FontSize="18"></TextBlock>
+            <Label HorizontalAlignment="Center">
+                <TextBlock Text="Audit Settings:"  FontSize="18"></TextBlock>
             </Label>
         </StackPanel>
         <Grid Grid.Row="2" MinHeight="265" Height="Auto" Width="Auto" MaxHeight="500">
