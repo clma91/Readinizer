@@ -10,3 +10,5 @@ Since an OU have the highest precedence when applying GPOs, it is sufficient to 
 In addition, the user has the possibility to simultaneously perform a Sysmon check. Sysmon is a tool by Mark Russinovich which logs the same as default event logger but where the executables are hashed, hence compromisation of such executables can be detected. The user can then drill down the RSoPs to a detailed view over all applied / recommended settings and which GPO applied those settings. 
 
 With the optimization part of the "Readinizer", the distribution of Sysmon to an entire fleet is simplified for the user, as well as the setup of central logging by Windows Event Forwarding - with appropriate templates - is made available in the form of manuals. The "Readinizer" also includes a GPO of recommended settings which can be imported.
+## Manuals and more information
+[Wiki](https://github.com/clma91/Readinizer/wiki)
