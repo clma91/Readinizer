@@ -110,7 +110,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.ColumnSpan="3" Grid.Row="0" HorizontalAlignment="Center">
                     <Label>
-                        <TextBlock Text="Group of Identical Security Settings:" TextDecorations="Underline" Margin="0,10,0,20"></TextBlock>
+                        <TextBlock Text="Group of Identical Security Settings:" Margin="0,10,0,20"></TextBlock>
                     </Label>
                 </StackPanel>
                 <StackPanel  Grid.Column="0" Grid.Row="1" HorizontalAlignment="Center">
