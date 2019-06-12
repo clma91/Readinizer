@@ -275,7 +275,7 @@ namespace Readinizer.Frontend.ViewModels
 
         private static void OnOptimizedGPO()
         {
-            Process.Start("https://github.com/clma91/Readinizer/releases");
+            Process.Start("https://github.com/clma91/Readinizer/wiki/Recommended-Group-Policy");
         }
   
         private static void ClearDb()
