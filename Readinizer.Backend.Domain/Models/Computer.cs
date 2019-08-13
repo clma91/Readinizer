@@ -20,7 +20,7 @@ namespace Readinizer.Backend.Domain.Models
         public bool PingSuccessful { get; set; }
 
         [JsonIgnore]
-        public int SiteRefId { get; set; }
+        public int? SiteRefId { get; set; }
 
         public Site Site { get; set; }
 

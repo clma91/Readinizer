@@ -29,7 +29,7 @@ namespace Readinizer.Backend.Business.Services
             clearOldRsops();
             List<OrganizationalUnit> allOUs = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
-            List<int> collectedSiteIds = new List<int>();
+            List<int?> collectedSiteIds = new List<int?>();
             foreach (OrganizationalUnit OU in allOUs)
             {
                 collectedSiteIds.Clear();
@@ -73,7 +73,7 @@ namespace Readinizer.Backend.Business.Services
             clearOldRsops();
             List<OrganizationalUnit> allOUs = await unitOfWork.OrganizationalUnitRepository.GetAllEntities();
             List<ADDomain> allDomains = await unitOfWork.ADDomainRepository.GetAllEntities();
-            List<int> collectedSiteIds = new List<int>();
+            List<int?> collectedSiteIds = new List<int?>();
             string user = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             foreach (OrganizationalUnit OU in allOUs)
             {
@@ -119,7 +119,7 @@ namespace Readinizer.Backend.Business.Services
         }
 
 
-        public void getRSoP(string computerPath, int ouId, int siteId, string user)
+        public void getRSoP(string computerPath, int ouId, int? siteId, string user)
         {
             try
             {

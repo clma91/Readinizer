@@ -45,9 +45,16 @@ namespace Readinizer.Backend.Business.Services
                         ComputerName = searchResult.GetDirectoryEntry().Name.Remove(0, "CN=".Length)
                     };
                     foundMember.IsDomainController = DCnames.Contains(foundMember.ComputerName);
-                    foundMember.IpAddress = getIP(foundMember, OU, allDomains);
+                    try
+                    {
+                        foundMember.IpAddress = getIP(foundMember, OU, allDomains);
+                    }
+                    catch (Exception e)
+                    {
+                        foundMember.IpAddress = null;
+                    }
+
                     foundMember.OrganizationalUnits.Add(OU);
-                    foundMember.SiteRefId = getSite(foundMember, sites);
 
                     unitOfWork.ComputerRepository.Add(foundMember);
                 }
@@ -117,6 +124,10 @@ namespace Readinizer.Backend.Business.Services
 
         public bool IsInRange(string address, string subnet)
         {
+            if(address == null)
+            {
+                return false;
+            }
             var range = IPAddressRange.Parse(subnet);
 
             return range.Contains(IPAddress.Parse(address));

@@ -63,7 +63,7 @@ namespace Readinizer.Backend.DataAccess.Context
 
             modelBuilder.Entity<Computer>().ToTable(nameof(Computer));
             modelBuilder.Entity<Computer>().HasKey(x => x.ComputerId);
-            modelBuilder.Entity<Computer>().HasRequired(x => x.Site).WithMany(x => x.Computers)
+            modelBuilder.Entity<Computer>().HasOptional(x => x.Site).WithMany(x => x.Computers)
                 .HasForeignKey(x => new {SiteRefId = (int?) x.SiteRefId});
 
 

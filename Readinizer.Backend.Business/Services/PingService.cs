@@ -8,6 +8,11 @@ namespace Readinizer.Backend.Business.Services
     {
         public bool IsPingable(string ipAddress)
         {
+            if (ipAddress == null)
+            {
+                return false;
+            }
+
             var isPingable = false;
             Ping pinger = null;
 
